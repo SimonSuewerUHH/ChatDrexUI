@@ -28,7 +28,7 @@ const chatStore = useChatStore()
           <v-row>
             <v-col
               v-for="(message, index) in chatStore.getCurrentChatMessages" :key="index"
-              cols="12"
+              cols="6"
             >
               <div
                 class="d-flex align-center"
@@ -36,6 +36,9 @@ const chatStore = useChatStore()
               >
                 <MessageBubble :message="message" />
               </div>
+            </v-col>
+            <v-col cols="6">
+              <Network />
             </v-col>
           </v-row>
         </v-container>

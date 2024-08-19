@@ -12,7 +12,7 @@ class SocketService {
 
   constructor() {
     this.client_id = Date.now();
-    this.wsUrl = process.env.API_URL;
+    this.wsUrl = process.env.API_URL || 'ws://localhost:8000/ws';
   }
 
   onConnect(callback: (data: any) => void) {
