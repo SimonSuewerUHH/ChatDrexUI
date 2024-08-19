@@ -38,7 +38,7 @@ class SocketService {
       timestamp: Date.now(),
     }
 
-    this.socket.send(JSON.stringify(request));
+    this.socket.send(JSON.stringify("request"));
     return request
   }
 
@@ -56,7 +56,7 @@ class SocketService {
         this.emitEvent('receiving:all', data);
         break;
       default:
-        console.warn('Unknown message type:', data.type);
+        console.warn('Unknown message type:', data.messageType);
     }
   }
 

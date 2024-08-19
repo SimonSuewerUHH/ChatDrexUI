@@ -13,6 +13,9 @@ if (!message) {
 }
 
 const messageClass = computed(() => {
+  if (!message.value) {
+    return '';
+  }
   return message.value.messageType === ChatMessageType.HUMAN ? 'message-human' : 'message-system'
 })
 
@@ -20,7 +23,7 @@ const messageClass = computed(() => {
 
 
 <template>
-      <v-card :class="messageClass" class="pa-3">
+      <v-card v-if="message" :class="messageClass" class="pa-3">
         <v-card-text>{{ message.message }}</v-card-text>
       </v-card>
 </template>
