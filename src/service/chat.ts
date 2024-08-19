@@ -1,6 +1,9 @@
 import { MessageType, RequestDTO, ResponseDTO } from '@/dto/request'
 import { uuid } from 'vue-uuid';
 import { toResponseDTO } from '@/utils/helper'
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 class SocketService {
   private socket: WebSocket | null = null;
@@ -9,7 +12,7 @@ class SocketService {
 
   constructor() {
     this.client_id = Date.now();
-    this.wsUrl = 'ws://localhost:8000/ws';
+    this.wsUrl = process.env.API_URL;
   }
 
   onConnect(callback: (data: any) => void) {
