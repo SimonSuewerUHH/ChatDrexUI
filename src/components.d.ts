@@ -13,6 +13,7 @@ declare module 'vue' {
     Conversation: typeof import('./components/Conversation.vue')['default']
     MessageBubble: typeof import('./components/MessageBubble.vue')['default']
     MessageInput: typeof import('./components/MessageInput.vue')['default']
+    Network: typeof import('./components/Network.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Welcome: typeof import('./components/Welcome.vue')['default']
