@@ -1,7 +1,15 @@
+<script lang="ts" setup>
+import { useChatStore } from '@/stores/chat'
+
+const chatStore = useChatStore()
+</script>
+
 <template>
-  <HelloWorld />
+
+  <v-main>
+    <Welcome v-if="!chatStore.hasMessages"/>
+    <Conversation />
+  </v-main>
 </template>
 
-<script lang="ts" setup>
-  //
-</script>
+
