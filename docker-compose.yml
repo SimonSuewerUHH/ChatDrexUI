@@ -15,15 +15,15 @@ services:
     restart: no
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:7474" ]
-      interval: 20s
-      timeout: 60s
+      interval: 120s
+      timeout: 100s
       retries: 5
 
   api:
     image: ghcr.io/simonsueweruhh/chatdrexapi:main
     container_name: nedrex_v1_chatdrex-api
     ports:
-      - 8000:8000
+      - 8000:8080
     depends_on:
       neo4j:
         condition: service_healthy
