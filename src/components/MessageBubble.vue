@@ -6,15 +6,15 @@ const props = defineProps<{
   message?: MessageDTO
 }>()
 
-const { message } = toRefs(props);
+const { message } = toRefs(props)
 
 if (!message) {
-  console.error("Message is required");
+  console.error('Message is required')
 }
 
 const messageClass = computed(() => {
   if (!message.value) {
-    return '';
+    return ''
   }
   return message.value.messageType === ChatMessageType.HUMAN ? 'message-human' : 'message-system'
 })
@@ -23,9 +23,16 @@ const messageClass = computed(() => {
 
 
 <template>
-      <v-card v-if="message" :class="messageClass" class="pa-3">
+
+  <v-card v-if="message" :class="messageClass" class="pa-3">
+      <div v-if="message.messageType !== ChatMessageType.SYSTEM">
         <v-card-text>{{ message.message }}</v-card-text>
-      </v-card>
+      </div>
+      <div v-else>
+        <SystemMessage :message="message" />
+      </div>
+  </v-card>
+
 </template>
 
 

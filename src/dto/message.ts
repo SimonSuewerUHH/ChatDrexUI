@@ -1,3 +1,5 @@
+import { DrugstOneGraph } from '@/dto/network'
+
 export enum ChatMessageType {
   HUMAN = 'human',
   AI = 'ai',
@@ -5,8 +7,12 @@ export enum ChatMessageType {
 }
 
 export interface MessageDTO {
-  message: string;
+  message: string | SystemMessageDTO;
   messageType: ChatMessageType;
   timestamp: number;
   messageId: string;
+}
+
+export interface SystemMessageDTO {
+  drugstOneNetwork?: DrugstOneGraph
 }

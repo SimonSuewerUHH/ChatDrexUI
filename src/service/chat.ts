@@ -9,7 +9,8 @@ class SocketService {
 
   constructor() {
     this.client_id = Date.now();
-    this.wsUrl = import.meta.env.VITE_API_URL || 'ws://localhost:8000/ws';
+    // import.meta.env.VITE_API_URL ||
+    this.wsUrl = 'ws://localhost:8000/ws';
   }
 
   onConnect(callback: (data: any) => void) {
@@ -38,12 +39,11 @@ class SocketService {
       timestamp: Date.now(),
     }
 
-    this.socket.send(JSON.stringify("request"));
+    this.socket.send(JSON.stringify(request));
     return request
   }
 
   private handleResponse(data: ResponseDTO) {
-    debugger;
     if(!data) {
       console.warn('Data is empty');
       return;
@@ -76,7 +76,6 @@ class SocketService {
     }
     this.socket = new WebSocket(`${this.wsUrl}/${this.client_id}`);
     this.socket.onmessage = (event) => {
-      debugger;
       const data: ResponseDTO = toResponseDTO(event.data);
       this.handleResponse(data);
     };

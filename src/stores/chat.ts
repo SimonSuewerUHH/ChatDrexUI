@@ -16,16 +16,13 @@ export const useChatStore = defineStore('chat', {
       window.addEventListener('receiving:all', (event: Event) => this.handleAllMessages(event as CustomEvent));
 
       socketService.onConnect(() => {
-        debugger;
         this.isConnected = true
       })
       socketService.onDisconnect(() => {
-        debugger;
         this.isConnected = false
       })
     },
     handleSingleMessage(event: CustomEvent) {
-      debugger;
       const data: ResponseDTO = event.detail;
       this.addMessage({
         message: data.messages[0].aiResponse,
@@ -43,7 +40,6 @@ export const useChatStore = defineStore('chat', {
 
     },
     handleAllMessages(event: CustomEvent) {
-      debugger;
       const data: ResponseDTO = event.detail;
       this.chats[this.currentChat] = []
 
@@ -73,7 +69,6 @@ export const useChatStore = defineStore('chat', {
       if (!this.chats[this.currentChat]) {
         this.chats[this.currentChat] = []
       }
-      debugger;
       this.chats[this.currentChat].push(message)
     },
     sendMessage(message: string) {

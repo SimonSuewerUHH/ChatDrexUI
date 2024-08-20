@@ -31,7 +31,6 @@ const enterOnly = (event: any) => {
 }
 
 const send = () => {
-  debugger;
   let msg = message.value
   // remove the last "\n"
   if (msg[msg.length - 1] === "\n") {

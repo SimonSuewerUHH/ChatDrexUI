@@ -11,11 +11,12 @@ declare module 'vue' {
     ChatHeader: typeof import('./components/ChatHeader.vue')['default']
     ChatWindow: typeof import('./components/ChatWindow.vue')['default']
     Conversation: typeof import('./components/Conversation.vue')['default']
+    DrugstOneNetwork: typeof import('./components/DrugstOneNetwork.vue')['default']
     MessageBubble: typeof import('./components/MessageBubble.vue')['default']
     MessageInput: typeof import('./components/MessageInput.vue')['default']
-    Network: typeof import('./components/Network.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SystemMessage: typeof import('./components/SystemMessage.vue')['default']
     Welcome: typeof import('./components/Welcome.vue')['default']
     WelcomeCard: typeof import('./components/WelcomeCard.vue')['default']
   }
