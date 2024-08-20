@@ -1,6 +1,6 @@
 services:
   client:
-    container_name: nedrex_v1_chatdrex-ui
+    container_name: nedrex_v1_chatdrex_ui
     image: ghcr.io/simonsueweruhh/chatdrexui:main
     ports:
       - '3001:8080'
@@ -21,7 +21,7 @@ services:
 
   api:
     image: ghcr.io/simonsueweruhh/chatdrexapi:main
-    container_name: nedrex_v1_chatdrex-api
+    container_name: nedrex_v1_chatdrex_api
     ports:
       - 8000:8080
     depends_on:
