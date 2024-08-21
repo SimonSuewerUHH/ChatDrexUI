@@ -1,8 +1,10 @@
+import { MessageDTO } from '@/dto/message'
 
 export enum MessageType {
   SENDING = 'sending',
   GET_ALL = 'get_all',
   RECEIVING_SINGLE = 'receiving:single',
+  RECEIVING_SYSTEM = 'receiving:system',
   RECEIVING_ALL = 'receiving:all',
 }
 
@@ -13,15 +15,7 @@ export interface RequestDTO {
   timestamp: number;
 }
 
-export interface ChatResponseDTO {
-  userInput: string;
-  systemResponse: string;
-  aiResponse: string;
-}
-
 export interface ResponseDTO {
-  messageId: string;
-  messages: ChatResponseDTO[];
+  messages: MessageDTO[];
   messageType: MessageType;
-  timestamp: number;
 }

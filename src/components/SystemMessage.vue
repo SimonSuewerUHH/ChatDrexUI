@@ -22,7 +22,6 @@ const hasDrugstOneNetwork = computed(() => {
   if (!hasSystemMessage) {
     return false
   }
-  debugger;
   return !!getSystemMessage.value.drugstOneNetwork
 })
 

@@ -4,6 +4,7 @@ import { ChatMessageType, MessageDTO } from '@/dto/message'
 
 const props = defineProps<{
   message?: MessageDTO
+  messages?: MessageDTO[]
 }>()
 
 const { message } = toRefs(props)
@@ -32,6 +33,19 @@ const messageClass = computed(() => {
         <SystemMessage :message="message" />
       </div>
   </v-card>
+  <v-card v-if="messages && messages.length > 0" class="pa-3 message-system">
+    <v-card-text>
+
+        <div v-for="(msg, index) in messages" :key="index">
+          <span v-if="msg.messageType !== ChatMessageType.SYSTEM">
+            {{ msg.message }}
+          </span>
+          <div v-else>
+            <SystemMessage :message="msg"/>
+          </div>
+        </div>
+      </v-card-text>
+  </v-card>
 
 </template>
 
@@ -46,6 +60,7 @@ const messageClass = computed(() => {
 .message-system {
   background-color: settings.$chat-bg-system;
 }
+
 
 </style>
   

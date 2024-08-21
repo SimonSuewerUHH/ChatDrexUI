@@ -1,7 +1,6 @@
 <script setup lang="ts">
 
 import { useChatStore } from '@/stores/chat'
-import { ChatMessageType } from '@/dto/message'
 
 const chatStore = useChatStore()
 
@@ -25,16 +24,19 @@ const chatStore = useChatStore()
         ref="chatWindow"
       >
         <v-container>
-          <v-row>
-            <v-col
-              v-for="(message, index) in chatStore.getCurrentChatMessages" :key="index"
-              cols="12"
-            >
-              <div
-                class="d-flex align-center"
-                :class="message.messageType == ChatMessageType.HUMAN ? 'justify-end' : 'justify-start'"
-              >
-                <MessageBubble :message="message" />
+          <v-row v-for="(messageId, indexMsgId) in chatStore.getCurrentConversation.getMessagesHistory()"
+                 :key="indexMsgId" class="test"
+          >
+          <p>test {{messageId}} ID: {{ indexMsgId }}</p>
+            <v-col cols="12">
+              <div class="d-flex align-center justify-end">
+                <MessageBubble :message="chatStore.getCurrentConversation.getRequestMessage(messageId)" />
+              </div>
+            </v-col>
+
+            <v-col cols="12">
+              <div class="d-flex align-center justify-start">
+                <MessageBubble :messages="chatStore.getCurrentConversation.getResponseMessages(messageId)" />
               </div>
             </v-col>
           </v-row>
@@ -59,4 +61,8 @@ const chatStore = useChatStore()
 
 <style scoped>
 
+.test{
+  background-color: red;
+  margin-bottom: 20px;
+}
 </style>

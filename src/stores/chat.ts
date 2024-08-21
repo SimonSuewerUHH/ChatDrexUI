@@ -1,12 +1,12 @@
 import { defineStore } from 'pinia'
 import { socketService } from '@/service/chat'
-import { MessageDTO, ChatMessageType } from '@/dto/message'
+import { MessageDTO, ChatMessageType, ConversationDTO } from '@/dto/message'
 import { ResponseDTO } from '@/dto/request'
 
 export const useChatStore = defineStore('chat', {
   state: () => ({
-    chats: {} as Record<string, MessageDTO[]>,
-    currentChat: 0,
+    conversations: {} as Record<string, ConversationDTO>,
+    currentConversation: 0,
     isConnected: false,
     loading: false,
   }),
@@ -24,52 +24,21 @@ export const useChatStore = defineStore('chat', {
     },
     handleSingleMessage(event: CustomEvent) {
       const data: ResponseDTO = event.detail;
-      this.addMessage({
-        message: data.messages[0].aiResponse,
-        messageType: ChatMessageType.AI,
-        timestamp: data.timestamp,
-        messageId: data.messageId,
-      });
-      this.addMessage({
-        message: data.messages[0].systemResponse,
-        messageType: ChatMessageType.SYSTEM,
-        timestamp: data.timestamp,
-        messageId: data.messageId,
+      data.messages.forEach(msg => {
+        this.addConversation(msg);
       });
       this.loading = false;
 
     },
     handleAllMessages(event: CustomEvent) {
-      const data: ResponseDTO = event.detail;
-      this.chats[this.currentChat] = []
-
-      data.messages.forEach(msg => {
-        this.addMessage({
-          message: data.messages[0].userInput,
-          messageType: ChatMessageType.HUMAN,
-          timestamp: data.timestamp,
-          messageId: data.messageId,
-        });
-        this.addMessage({
-          message: data.messages[0].aiResponse,
-          messageType: ChatMessageType.AI,
-          timestamp: data.timestamp,
-          messageId: data.messageId,
-        });
-        this.addMessage({
-          message: data.messages[0].systemResponse,
-          messageType: ChatMessageType.SYSTEM,
-          timestamp: data.timestamp,
-          messageId: data.messageId,
-        });
-      });
-      this.loading = false;
+      this.conversations[this.currentConversation] = new ConversationDTO();
+      this.handleSingleMessage(event);
     },
-    addMessage(message: MessageDTO) {
-      if (!this.chats[this.currentChat]) {
-        this.chats[this.currentChat] = []
+    addConversation(message: MessageDTO) {
+      if (!this.conversations[this.currentConversation]) {
+        this.conversations[this.currentConversation] = new ConversationDTO()
       }
-      this.chats[this.currentChat].push(message)
+      this.conversations[this.currentConversation].addMessage(message)
     },
     sendMessage(message: string) {
       this.loading = true;
@@ -77,7 +46,7 @@ export const useChatStore = defineStore('chat', {
       if (req == null) {
         this.loading = false;
       }else {
-        this.addMessage({
+        this.addConversation({
           message: req.message,
           messageType: ChatMessageType.HUMAN,
           timestamp: req.timestamp,
@@ -86,20 +55,20 @@ export const useChatStore = defineStore('chat', {
       }
     },
     setCurrentRoom(chatId: number) {
-      this.currentChat = chatId
+      this.currentConversation = chatId
       this.bindEvents()
     },
     connect() {
-      this.currentChat = Date.now()
-      socketService.connect(this.currentChat)
+      this.currentConversation = Date.now()
+      socketService.connect(this.currentConversation)
     }
   },
   getters: {
-    getCurrentChatMessages: (state) => {
-      return state.chats[state.currentChat] || []
+    getCurrentConversation: (state) => {
+      return state.conversations[state.currentConversation];
     },
     hasMessages: (state) => {
-      return (state.chats[state.currentChat] || []).length > 0
+      return state.conversations[state.currentConversation] && state.conversations[state.currentConversation].hasMessages()
     }
   }
 })
