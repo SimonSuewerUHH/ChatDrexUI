@@ -55,6 +55,9 @@ class SocketService {
       case MessageType.RECEIVING_ALL:
         this.emitEvent('receiving:all', data);
         break;
+      case MessageType.RECEIVING_SYSTEM:
+        this.emitEvent('receiving:system', data);
+        break
       default:
         console.warn('Unknown message type:', data.messageType);
     }

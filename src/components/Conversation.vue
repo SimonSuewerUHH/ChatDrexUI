@@ -8,61 +8,39 @@ const chatStore = useChatStore()
 </script>
 
 <template>
-  <div>
-    <div
-      v-if="chatStore.loading"
-      class="text-center"
+  <ChatHeader v-if="chatStore.hasMessages" />
+  <v-container class="main" v-if="chatStore.hasMessages">
+    <v-row v-for="(messageId, indexMsgId) in chatStore.getCurrentConversation.getMessagesHistory()"
+           :key="indexMsgId" class="test"
     >
-      <v-progress-circular
-        indeterminate
-        color="primary"
-      ></v-progress-circular>
-    </div>
-    <div>
-      <div
-        v-if="chatStore.hasMessages"
-        ref="chatWindow"
-      >
-        <v-container>
-          <v-row v-for="(messageId, indexMsgId) in chatStore.getCurrentConversation.getMessagesHistory()"
-                 :key="indexMsgId" class="test"
-          >
-          <p>test {{messageId}} ID: {{ indexMsgId }}</p>
-            <v-col cols="12">
-              <div class="d-flex align-center justify-end">
-                <MessageBubble :message="chatStore.getCurrentConversation.getRequestMessage(messageId)" />
-              </div>
-            </v-col>
+      <v-col cols="12">
+        <div class="d-flex align-center justify-end">
+          <MessageBubble :message="chatStore.getCurrentConversation.getRequestMessage(messageId)" />
+        </div>
+      </v-col>
 
-            <v-col cols="12">
-              <div class="d-flex align-center justify-start">
-                <MessageBubble :messages="chatStore.getCurrentConversation.getResponseMessages(messageId)" />
-              </div>
-            </v-col>
-          </v-row>
-        </v-container>
-      </div>
-    </div>
-  </div>
-
-
-  <v-footer
-    app
-    class="footer"
-  >
-    <div class="d-flex align-center">
-      <MessageInput ref="editor" />
-    </div>
-
-  </v-footer>
-
+      <v-col cols="12">
+        <div class="d-flex align-center justify-start">
+          <MessageBubble :messages="chatStore.getCurrentConversation.getResponseMessages(messageId)"
+                         :loaded="chatStore.getCurrentConversation.getLoaded(messageId)"
+                         :errors="chatStore.getCurrentConversation.getErrors(messageId)"
+          />
+        </div>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 
 <style scoped>
 
-.test{
-  background-color: red;
-  margin-bottom: 20px;
+.main {
+  overflow-y: auto;
+  height: calc(100vh - 64px - 110px);
+  box-sizing: border-box;
+  margin-top: 10px;
+  padding: 0 !important;
 }
+
+
 </style>

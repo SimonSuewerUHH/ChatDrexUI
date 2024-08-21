@@ -11,7 +11,7 @@ defineProps({
 
 const textArea = ref()
 const message = ref('')
-const chatStore = useChatStore();
+const chatStore = useChatStore()
 
 
 const usePrompt = (prompt: string) => {
@@ -33,12 +33,12 @@ const enterOnly = (event: any) => {
 const send = () => {
   let msg = message.value
   // remove the last "\n"
-  if (msg[msg.length - 1] === "\n") {
+  if (msg[msg.length - 1] === '\n') {
     msg = msg.slice(0, -1)
   }
   if (msg.length > 0) {
     chatStore.sendMessage(msg)
-    message.value = ""
+    message.value = ''
   }
 
 }
@@ -51,42 +51,44 @@ defineExpose({
 </script>
 
 <template>
-  <v-container fluid class="message-input-container pa-2 d-flex align-center justify-space-between">
-    <v-textarea
-      ref="textArea"
-      v-model="message"
-      placeholder="Type your message..."
-      auto-grow
-      no-resize
-      flat
-      hide-details
-      outlined
-      class="rounded-input"
-      rows="1"
-      @keypress.enter.exact="enterOnly"
-    ></v-textarea>
-    <v-btn
-      :disabled="chatStore.loading"
-      icon="mdi-send"
-      title="Send"
-      class="ml-3"
-      @click="clickSendBtn"
-    ></v-btn>
-  </v-container>
+  <v-footer height="92" app fixed>
+    <v-container fluid class="message-input-container pa-2 d-flex align-center justify-space-between">
+      <v-textarea
+        ref="textArea"
+        v-model="message"
+        placeholder="Type your message..."
+        auto-grow
+        no-resize
+        flat
+        hide-details
+        outlined
+        class="rounded-input"
+        rows="1"
+        @keypress.enter.exact="enterOnly"
+      ></v-textarea>
+      <v-btn
+        :disabled="chatStore.loading"
+        icon="mdi-send"
+        title="Send"
+        class="ml-3"
+        @click="clickSendBtn"
+      ></v-btn>
+    </v-container>
+  </v-footer>
 </template>
 
 <style scoped>
 .message-input-container {
-  position: fixed;
+  position: absolute;
   left: 50%;
   transform: translateX(-50%);
-
   width: 800px;
   bottom: 0;
   background-color: black;
   z-index: 10;
   border-radius: 50px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+  margin-top: 10px;
 }
 
 .rounded-input .v-input__control {

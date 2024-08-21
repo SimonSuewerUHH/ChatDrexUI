@@ -14,6 +14,8 @@ export const useChatStore = defineStore('chat', {
     bindEvents() {
       window.addEventListener('receiving:single', (event: Event) => this.handleSingleMessage(event as CustomEvent));
       window.addEventListener('receiving:all', (event: Event) => this.handleAllMessages(event as CustomEvent));
+      window.addEventListener('receiving:system', (event: Event) => this.handleSystemMessage(event as CustomEvent));
+
 
       socketService.onConnect(() => {
         this.isConnected = true
@@ -30,15 +32,51 @@ export const useChatStore = defineStore('chat', {
       this.loading = false;
 
     },
+    handleSystemMessage(event: CustomEvent) {
+      const data: ResponseDTO = event.detail;
+      console.log('handleSystemMessage', data);
+      debugger;
+      data.messages.forEach(msg => {
+        if (msg.messageType === ChatMessageType.ERROR) {
+          this.addError(msg);
+        }
+        if (msg.messageType === ChatMessageType.API) {
+          const messageText = (msg.message as string).toUpperCase();
+          if (messageText === 'STOP') {
+            this.addLoading(msg, true);
+          }else if (messageText === 'START') {
+            this.addLoading(msg, false);
+          }else {
+            console.warn('Unknown system message:', msg.message);
+          }
+        }
+      });
+      this.loading = false;
+
+    },
+    checkConversation() {
+      if (!this.conversations[this.currentConversation]) {
+        this.conversations[this.currentConversation] = new ConversationDTO()
+      }
+    },
     handleAllMessages(event: CustomEvent) {
       this.conversations[this.currentConversation] = new ConversationDTO();
       this.handleSingleMessage(event);
     },
     addConversation(message: MessageDTO) {
-      if (!this.conversations[this.currentConversation]) {
-        this.conversations[this.currentConversation] = new ConversationDTO()
-      }
+      console.log('addConversation', message)
+      this.checkConversation();
       this.conversations[this.currentConversation].addMessage(message)
+    },
+    addError(message: MessageDTO) {
+      console.log('addError', message)
+      this.checkConversation();
+      this.conversations[this.currentConversation].addError(message)
+    },
+    addLoading(message: MessageDTO, loaded = true) {
+      console.log('addLoading', message)
+      this.checkConversation();
+      this.conversations[this.currentConversation].addLoading(message, loaded)
     },
     sendMessage(message: string) {
       this.loading = true;

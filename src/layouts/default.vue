@@ -1,13 +1,19 @@
 <template>
   <v-app>
-    <v-main>
+    <v-main class="main">
       <router-view />
     </v-main>
 
-   <!-- <AppFooter />!-->
+    <MessageInput  />
+
   </v-app>
 </template>
 
 <script lang="ts" setup>
-  //
+
 </script>
+<style scoped lang="scss">
+  .main {
+    padding: 0 !important;
+  }
+</style>
