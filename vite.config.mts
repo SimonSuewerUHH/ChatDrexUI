@@ -15,7 +15,6 @@ import { fileURLToPath, URL } from 'node:url'
 export default defineConfig({
   plugins: [
     VueRouter({
-      base: import.meta.env.VITE_BASE_URL || '/',
       dts: 'src/typed-router.d.ts'
     }),
     Layouts(),
