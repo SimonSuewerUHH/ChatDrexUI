@@ -10,7 +10,7 @@ class SocketService {
   constructor() {
     this.client_id = Date.now();
     // import.meta.env.VITE_API_URL ||
-    this.wsUrl = 'ws://localhost:8000/ws';
+    this.wsUrl = import.meta.env.VITE_API_URL || 'ws://localhost:8000/ws';
   }
 
   onConnect(callback: (data: any) => void) {
