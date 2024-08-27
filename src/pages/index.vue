@@ -6,10 +6,13 @@ const chatStore = useChatStore()
 
 <template>
 
-  <v-main>
-    <Welcome v-if="!chatStore.hasMessages"/>
+  <v-main class="scroll-window">
+    <Welcome v-if="!chatStore.hasMessages" />
     <Conversation />
   </v-main>
 </template>
 
+
+<style scoped>
+</style>
 

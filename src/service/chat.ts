@@ -10,7 +10,7 @@ class SocketService {
   constructor() {
     this.client_id = Date.now();
     // import.meta.env.VITE_API_URL ||
-    this.wsUrl = 'ws://localhost:8000/ws';
+    this.wsUrl = import.meta.env.VITE_API_URL || 'ws://localhost:8000/ws';
   }
 
   onConnect(callback: (data: any) => void) {
@@ -55,6 +55,9 @@ class SocketService {
       case MessageType.RECEIVING_ALL:
         this.emitEvent('receiving:all', data);
         break;
+      case MessageType.RECEIVING_SYSTEM:
+        this.emitEvent('receiving:system', data);
+        break
       default:
         console.warn('Unknown message type:', data.messageType);
     }

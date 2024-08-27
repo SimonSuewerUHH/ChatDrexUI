@@ -9,7 +9,6 @@ declare module 'vue' {
   export interface GlobalComponents {
     AppFooter: typeof import('./components/AppFooter.vue')['default']
     ChatHeader: typeof import('./components/ChatHeader.vue')['default']
-    ChatWindow: typeof import('./components/ChatWindow.vue')['default']
     Conversation: typeof import('./components/Conversation.vue')['default']
     DrugstOneNetwork: typeof import('./components/DrugstOneNetwork.vue')['default']
     MessageBubble: typeof import('./components/MessageBubble.vue')['default']
