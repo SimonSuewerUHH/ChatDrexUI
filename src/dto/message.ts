@@ -3,6 +3,7 @@ import { DrugstOneGraph } from '@/dto/network'
 export enum ChatMessageType {
   HUMAN = 'human',
   AI = 'ai',
+  AI_TOOL = 'aiTool',
   SYSTEM = 'system',
   API = 'api',
   ERROR = 'error',
@@ -16,6 +17,14 @@ export interface MessageDTO {
   messageId: string;
 }
 
+export interface ToolDTO {
+  name: string;
+  started: boolean;
+  content: any;
+  input: any;
+}
+
+
 
 export interface SystemMessageDTO {
   drugstOneNetwork?: DrugstOneGraph
@@ -25,12 +34,14 @@ export class ConversationDetailDTO {
   messages: MessageDTO[];
   loaded?: boolean;
   timestamp: number;
+  tools: ToolDTO[];
   errors: string[];
 
   constructor(timestamp: number) {
     this.messages = [];
     this.timestamp = timestamp;
     this.errors = [];
+    this.tools = [];
   }
 
   public push(message: MessageDTO) {
@@ -66,7 +77,45 @@ export class ConversationDTO {
 
   addMessage(message: MessageDTO) {
     const messageId = this.checkStorage(message);
-    this.messages.get(messageId)!.push(message);
+    if (message.messageType === ChatMessageType.AI_TOOL) {
+      this.addTool(message);
+    }else if (message.messageType === ChatMessageType.AI || message.messageType === ChatMessageType.HUMAN) {
+      this.messages.get(messageId)!.push(message);
+    }
+  }
+
+  addTool(message: MessageDTO) {
+    debugger;
+    const messageId = this.checkStorage(message);
+    let toolName = message.message as string;
+    if(toolName.toLowerCase().startsWith("start")){
+      toolName = toolName.replace("start", "");
+      this.messages.get(messageId)!.tools.push({
+        started: true,
+        content: null,
+        input: null,
+        name: toolName
+      });
+    }else if(toolName.toLowerCase().startsWith("stop")){
+      const oldTool = this.messages.get(messageId)!.tools.at(-1);
+      if(oldTool && oldTool.started) {
+        oldTool.started = false;
+      }
+    }else if(toolName.toLowerCase().startsWith("content")){
+      const toolContent = toolName.replace("content", "");
+      const oldTool = this.messages.get(messageId)!.tools.at(-1);
+      if(oldTool && oldTool.started) {
+        oldTool.content = toolContent;
+        oldTool.started = false;
+      }
+    }else if(toolName.toLowerCase().startsWith("input")){
+      const toolContent = toolName.replace("input", "");
+      const oldTool = this.messages.get(messageId)!.tools.at(-1);
+      if(oldTool && oldTool.started) {
+        oldTool.input = toolContent;
+      }
+    }
+
   }
 
   addError(message: MessageDTO) {
@@ -103,5 +152,9 @@ export class ConversationDTO {
 
   getErrors(messageId: string) {
     return this.messages.get(messageId)?.errors;
+  }
+
+  getTools(messageId: string) {
+    return this.messages.get(messageId)?.tools;
   }
 }

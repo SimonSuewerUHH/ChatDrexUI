@@ -15,7 +15,8 @@ const chatStore = useChatStore()
     >
       <v-col cols="12">
         <div class="d-flex align-center justify-end">
-          <MessageBubble :message="chatStore.getCurrentConversation.getRequestMessage(messageId)" />
+          <MessageBubble :message="chatStore.getCurrentConversation.getRequestMessage(messageId)"
+                         :loaded="true" />
         </div>
       </v-col>
 
@@ -24,6 +25,7 @@ const chatStore = useChatStore()
           <MessageBubble :messages="chatStore.getCurrentConversation.getResponseMessages(messageId)"
                          :loaded="chatStore.getCurrentConversation.getLoaded(messageId)"
                          :errors="chatStore.getCurrentConversation.getErrors(messageId)"
+                         :tools="chatStore.getCurrentConversation.getTools(messageId)"
           />
         </div>
       </v-col>
