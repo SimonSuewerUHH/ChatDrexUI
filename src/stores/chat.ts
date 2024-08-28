@@ -64,7 +64,6 @@ export const useChatStore = defineStore('chat', {
       this.handleSingleMessage(event);
     },
     addConversation(message: MessageDTO) {
-      console.log('addConversation', message)
       this.checkConversation();
       this.conversations[this.currentConversation].addMessage(message)
     },

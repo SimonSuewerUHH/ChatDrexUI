@@ -1,16 +1,17 @@
 <script setup lang="ts">
 
-import { ChatMessageType, MessageDTO } from '@/dto/message'
+import { ChatMessageType, MessageDTO, ToolDTO } from '@/dto/message'
 
 const props = defineProps<{
   message?: MessageDTO
+  tools?: ToolDTO[]
   messages?: MessageDTO[]
   loaded?: boolean
   errors?: string[]
 }>()
 
 let dialog = ref(false)
-const { message } = toRefs(props)
+const { message, tools, messages } = toRefs(props)
 
 if (!message) {
   console.error('Message is required')
@@ -42,14 +43,16 @@ const messageClass = computed(() => {
       </v-btn>
     </v-card-title>
     <v-card-text>
-      <div v-for="(msg, index) in messages" :key="index">
+      <ToolPanels :tools="tools"></ToolPanels>
+
+      <template v-for="(msg, index) in messages" :key="index">
           <span v-if="msg.messageType !== ChatMessageType.SYSTEM">
             {{ msg.message }}
           </span>
         <div v-else>
           <SystemMessage :message="msg" />
         </div>
-      </div>
+      </template>
     </v-card-text>
     <v-progress-linear v-if="!loaded"
                        color="white"
@@ -64,12 +67,12 @@ const messageClass = computed(() => {
       <v-card-text>
         <v-list dense>
           <v-list-item v-for="(error, index) in errors" :key="index">
-            <v-list-item-icon>
-              <v-icon color="red">mdi-alert</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
+              <template v-slot:prepend>
+                <v-icon color="red">mdi-alert</v-icon>
+              </template>
+            <v-list-item-title>
               {{ error }}
-            </v-list-item-content>
+            </v-list-item-title>
           </v-list-item>
         </v-list>
       </v-card-text>
