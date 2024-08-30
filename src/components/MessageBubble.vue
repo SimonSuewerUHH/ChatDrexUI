@@ -79,7 +79,7 @@ const messageClass = computed(() => {
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="red" @click="dialog = false">Schließen</v-btn>
+        <v-btn color="red" @click="dialog = false">Close</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

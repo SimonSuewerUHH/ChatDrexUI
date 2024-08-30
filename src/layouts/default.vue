@@ -3,9 +3,6 @@
     <v-main class="main">
       <router-view />
     </v-main>
-
-    <MessageInput  />
-
   </v-app>
 </template>
 

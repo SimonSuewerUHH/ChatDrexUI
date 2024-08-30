@@ -77,7 +77,7 @@ defineExpose({
   </v-footer>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .message-input-container {
   position: absolute;
   left: 50%;

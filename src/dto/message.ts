@@ -158,3 +158,15 @@ export class ConversationDTO {
     return this.messages.get(messageId)?.tools;
   }
 }
+
+
+export class ConversationOverview {
+  firstMessage: string;
+  sessionId: string;
+
+  constructor(conv: ConversationDTO, sessionId: string) {
+    const fM = conv.getMessagesHistory()[0];
+    this.firstMessage = conv.getRequestMessage(fM)?.message as string;
+    this.sessionId = sessionId;
+  }
+}

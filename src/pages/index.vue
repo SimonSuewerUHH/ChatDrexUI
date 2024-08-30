@@ -9,6 +9,9 @@ const chatStore = useChatStore()
   <v-main class="scroll-window">
     <Welcome v-if="!chatStore.hasMessages" />
     <Conversation />
+    <MessageInput  />
+    <Debug />
+
   </v-main>
 </template>
 

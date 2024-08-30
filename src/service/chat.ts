@@ -2,17 +2,23 @@ import { MessageType, RequestDTO, ResponseDTO } from '@/dto/request'
 import { uuid } from 'vue-uuid';
 import { toResponseDTO } from '@/utils/helper'
 
-class SocketService {
+export class SocketService {
   private socket: WebSocket | null = null;
-  private client_id: number;
+  private client_id: string;
   private wsUrl: string;
 
-  constructor() {
-    this.client_id = Date.now();
+  constructor(client_id: string = Date.now().toString()) {
+    this.client_id = client_id;
     // import.meta.env.VITE_API_URL ||
     this.wsUrl = import.meta.env.VITE_API_URL || 'ws://localhost:8000/ws';
   }
 
+  isConnected() {
+    if (!this.socket) {
+      return false;
+    }
+    return this.socket.readyState === WebSocket.OPEN;
+  }
   onConnect(callback: (data: any) => void) {
     if (!this.socket) {
       console.warn('Socket is not initialized');
@@ -68,7 +74,7 @@ class SocketService {
     window.dispatchEvent(customEvent);
   }
 
-  connect(client_id: number) {
+  connect(client_id: string) {
     this.client_id = client_id;
     if (this.socket) {
       if(this.socket.readyState === WebSocket.OPEN) {
@@ -94,4 +100,3 @@ class SocketService {
   }
 }
 
-export const socketService = new SocketService();

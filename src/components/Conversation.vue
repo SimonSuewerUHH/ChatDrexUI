@@ -1,14 +1,28 @@
 <script setup lang="ts">
-
+import { useRoute, useRouter } from 'vue-router'
 import { useChatStore } from '@/stores/chat'
 
+const route = useRoute();
+const router = useRouter();
+
+const chatId = route.params.id
+debugger;
 const chatStore = useChatStore()
+
+const success = chatStore.setCurrentConversation(chatId)
+
+if (!success) {
+  router.push({
+    path: '/conversation'
+  })
+}
 
 
 </script>
 
 <template>
   <ChatHeader v-if="chatStore.hasMessages" />
+  <p> Conversation {{ chatId }}</p>
   <v-container class="main" v-if="chatStore.hasMessages">
     <v-row v-for="(messageId, indexMsgId) in chatStore.getCurrentConversation.getMessagesHistory()"
            :key="indexMsgId" class="test"
