@@ -81,7 +81,7 @@ export class ConversationDTO {
     if (message.messageType === ChatMessageType.AI_TOOL) {
 
       this.addTool(message);
-    }else if (message.messageType === ChatMessageType.AI || message.messageType === ChatMessageType.HUMAN) {
+    }else if (message.messageType === ChatMessageType.AI || message.messageType === ChatMessageType.HUMAN || message.messageType === ChatMessageType.SYSTEM) {
       this.messages.get(messageId)!.push(message);
     }
   }
