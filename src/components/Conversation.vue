@@ -1,23 +1,29 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router'
 import { useChatStore } from '@/stores/chat'
+import { watch } from 'vue';
 
-const route = useRoute();
-const router = useRouter();
+const route = useRoute()
+const router = useRouter()
 
-const chatId = route.params.id
-debugger;
+const chatId = (route.params as any).id;
 const chatStore = useChatStore()
-
-const success = chatStore.setCurrentConversation(chatId)
-
-if (!success) {
-  router.push({
-    path: '/conversation'
-  })
+if (chatId) {
+  const setStoreSuccess = chatStore.setCurrentConversation(chatId);
+  if (!setStoreSuccess) {
+    router.push({
+      path: '/conversation'
+    })
+  }
 }
 
-
+watch(() => chatStore.hasMessages, (newVal) => {
+  if (newVal) {
+    router.push({
+      path: '/conversation/' + chatStore.currentConversation
+    });
+  }
+});
 </script>
 
 <template>
@@ -56,6 +62,7 @@ if (!success) {
   box-sizing: border-box;
   margin-top: 10px;
   padding: 0 !important;
+  overflow-x: hidden;
 }
 
 

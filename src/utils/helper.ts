@@ -1,21 +1,30 @@
 import { ResponseDTO } from '@/dto/request'
+import _ from 'lodash'
+import { ChatMessageType, MessageDTO } from '@/dto/message'
 
-export const toCamelCase = (snake: string) => {
-  if (/^[a-z]+[A-Za-z0-9]*$/.test(snake) && !/\d[a-z]/.test(snake)) {
-    return snake
-  }
+export const toCamelCase = (obj: any) => {
 
-  const camel = snake
-    .split('_')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join('')
-  return camel.replace(/^_*[A-Z]/, (match) => match.toLowerCase())
+  return _.transform(obj, (acc: any, value: string, key: string, target: any) => {
+    const camelKey = _.isArray(target) ? key : _.camelCase(key)
+
+    acc[camelKey] = _.isObject(value) ? toCamelCase(value) : value
+  })
+
 }
 
+
 export const toResponseDTO = (snake: string) => {
-  const camel = toCamelCase(snake)
-  const data: ResponseDTO = JSON.parse(camel);
-  return data;
+  const obj = JSON.parse(snake)
+  const data: ResponseDTO = toCamelCase(obj) as ResponseDTO
+  data.messages = data.messages.map(
+    (message) => {
+      message.messageId = message.messageId.replaceAll('_', '').toLowerCase()
+      message.messageType = _.camelCase(message.messageType.toString()) as ChatMessageType
+
+      return message as MessageDTO
+    }
+  )
+  return data
 }
 
 

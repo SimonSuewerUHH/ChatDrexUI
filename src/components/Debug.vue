@@ -1,28 +1,28 @@
 <script setup lang="ts">
 import { useChatStore } from '@/stores/chat'
+import { computed, ref, watch } from 'vue'
 
 const chatStore = useChatStore()
 
-const isConnected = chatStore.isSocketConnected
+const isConnected = computed(() => chatStore.isConnected)
 let dialog = ref(false)
 
-const getClass = () => {
-  if(!isConnected) {
-    return 'red';
-  }
-  return 'white';
+const getClass = ref('white')
 
-}
+watch(isConnected, (newVal) => {
+  getClass.value = newVal ? 'white' : 'red'
+})
+
 </script>
 
 <template>
 
   <v-btn icon @click="dialog = true" class="debug-btn">
-    <v-icon :color="getClass()">mdi-bug-outline</v-icon>
+    <v-icon :color="getClass">mdi-bug-outline</v-icon>
   </v-btn>
 
 
-  <v-dialog v-model="dialog" max-width="600px">
+  <v-dialog v-model="dialog" max-width="300px">
     <v-card>
       <v-card-title>Debug</v-card-title>
       <v-card-text>
@@ -38,6 +38,12 @@ const getClass = () => {
               {{ isConnected ? 'The socket is connected' : 'The socket is not connected' }}
             </v-list-item-subtitle>
 
+          </v-list-item>
+
+          <v-list-item
+            title="Current Session"
+            :subtitle="chatStore.currentConversation"
+          >
           </v-list-item>
         </v-list>
       </v-card-text>

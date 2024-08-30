@@ -77,7 +77,9 @@ export class ConversationDTO {
 
   addMessage(message: MessageDTO) {
     const messageId = this.checkStorage(message);
+    debugger;
     if (message.messageType === ChatMessageType.AI_TOOL) {
+
       this.addTool(message);
     }else if (message.messageType === ChatMessageType.AI || message.messageType === ChatMessageType.HUMAN) {
       this.messages.get(messageId)!.push(message);
@@ -85,11 +87,10 @@ export class ConversationDTO {
   }
 
   addTool(message: MessageDTO) {
-    debugger;
     const messageId = this.checkStorage(message);
     let toolName = message.message as string;
     if(toolName.toLowerCase().startsWith("start")){
-      toolName = toolName.replace("start", "");
+      toolName = toolName.replace("START", "");
       this.messages.get(messageId)!.tools.push({
         started: true,
         content: null,
@@ -102,14 +103,14 @@ export class ConversationDTO {
         oldTool.started = false;
       }
     }else if(toolName.toLowerCase().startsWith("content")){
-      const toolContent = toolName.replace("content", "");
+      const toolContent = toolName.replace("CONTENT", "");
       const oldTool = this.messages.get(messageId)!.tools.at(-1);
       if(oldTool && oldTool.started) {
         oldTool.content = toolContent;
         oldTool.started = false;
       }
     }else if(toolName.toLowerCase().startsWith("input")){
-      const toolContent = toolName.replace("input", "");
+      const toolContent = toolName.replace("INPUT", "");
       const oldTool = this.messages.get(messageId)!.tools.at(-1);
       if(oldTool && oldTool.started) {
         oldTool.input = toolContent;

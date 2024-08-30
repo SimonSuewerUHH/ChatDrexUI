@@ -17,61 +17,48 @@ export const useChatStore = defineStore('chat', {
         console.warn('Socket is not initialized');
         return;
       }
-      window.addEventListener('receiving:single', (event: Event) => this.handleSingleMessage(event as CustomEvent));
-      window.addEventListener('receiving:all', (event: Event) => this.handleAllMessages(event as CustomEvent));
-      window.addEventListener('receiving:system', (event: Event) => this.handleSystemMessage(event as CustomEvent));
 
+      this.socketService.getSingleMessage().subscribe((data: ResponseDTO) => {
+        this.handleSingleMessage(data);
+      });
+      this.socketService.getAllMessage().subscribe((data: ResponseDTO) => {
+        this.conversations[this.currentConversation] = new ConversationDTO();
+        this.handleSingleMessage(data);
+      });
+      this.socketService.getSystemMessage().subscribe((data: ResponseDTO) => {
+        console.log('handleSystemMessage', data);
+        data.messages.forEach(msg => {
+          if (msg.messageType === ChatMessageType.ERROR) {
+            this.addError(msg);
+          }
+          if (msg.messageType === ChatMessageType.API) {
+            const messageText = (msg.message as string).toUpperCase();
+            if (messageText === 'STOP') {
+              this.addLoading(msg, true);
+            }else if (messageText === 'START') {
+              this.addLoading(msg, false);
+            }else {
+              console.warn('Unknown system message:', msg.message);
+            }
+          }
+        });
+        this.loading = false;
+      });
 
-      this.socketService.onConnect(() => {
-        this.isConnected = true
-      })
-      this.socketService.onDisconnect(() => {
-        this.isConnected = false
-      })
+      this.socketService.isConnected().subscribe((data:boolean) => {
+        this.isConnected = data;
+      });
     },
-    removeEvents() {
-      window.removeEventListener('receiving:single', (event: Event) => this.handleSingleMessage(event as CustomEvent));
-      window.removeEventListener('receiving:all', (event: Event) => this.handleAllMessages(event as CustomEvent));
-      window.removeEventListener('receiving:system', (event: Event) => this.handleSystemMessage(event as CustomEvent));
-    },
-    handleSingleMessage(event: CustomEvent) {
-      const data: ResponseDTO = event.detail;
+    handleSingleMessage(data: ResponseDTO) {
       data.messages.forEach(msg => {
         this.addConversation(msg);
       });
       this.loading = false;
-
-    },
-    handleSystemMessage(event: CustomEvent) {
-      const data: ResponseDTO = event.detail;
-      console.log('handleSystemMessage', data);
-      debugger;
-      data.messages.forEach(msg => {
-        if (msg.messageType === ChatMessageType.ERROR) {
-          this.addError(msg);
-        }
-        if (msg.messageType === ChatMessageType.API) {
-          const messageText = (msg.message as string).toUpperCase();
-          if (messageText === 'STOP') {
-            this.addLoading(msg, true);
-          }else if (messageText === 'START') {
-            this.addLoading(msg, false);
-          }else {
-            console.warn('Unknown system message:', msg.message);
-          }
-        }
-      });
-      this.loading = false;
-
     },
     checkConversation() {
       if (!this.conversations[this.currentConversation]) {
         this.conversations[this.currentConversation] = new ConversationDTO()
       }
-    },
-    handleAllMessages(event: CustomEvent) {
-      this.conversations[this.currentConversation] = new ConversationDTO();
-      this.handleSingleMessage(event);
     },
     addConversation(message: MessageDTO) {
       this.checkConversation();
@@ -88,7 +75,7 @@ export const useChatStore = defineStore('chat', {
       this.conversations[this.currentConversation].addLoading(message, loaded)
     },
     sendMessage(message: string) {
-      if(!this.socketService) {
+      if(!this.isConnected) {
         this.connect();
       }
       if(!this.socketService) {
@@ -122,9 +109,7 @@ export const useChatStore = defineStore('chat', {
       if(this.socketService) {
         this.socketService.disconnect();
       }
-      this.isConnected = false;
       this.socketService = null;
-      this.removeEvents();
     },
     connect() {
       this.currentConversation = Date.now().toString();
@@ -136,8 +121,8 @@ export const useChatStore = defineStore('chat', {
         console.warn('Socket is not initialized');
         return;
       }
-      this.socketService.connect(this.currentConversation);
       this.bindEvents();
+      return this.currentConversation;
     }
   },
   getters: {
@@ -153,9 +138,6 @@ export const useChatStore = defineStore('chat', {
     },
     hasMessages: (state) => {
       return state.conversations[state.currentConversation] && state.conversations[state.currentConversation].hasMessages()
-    },
-    isSocketConnected: (state) => {
-      return state.isConnected;
     }
   }
 })
