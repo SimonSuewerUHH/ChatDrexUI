@@ -1,67 +1,64 @@
 import { defineStore } from 'pinia'
-import { socketService } from '@/service/chat'
-import { MessageDTO, ChatMessageType, ConversationDTO } from '@/dto/message'
+import { SocketService } from '@/service/chat'
+import { MessageDTO, ChatMessageType, ConversationDTO, ConversationOverview } from '@/dto/message'
 import { ResponseDTO } from '@/dto/request'
 
 export const useChatStore = defineStore('chat', {
   state: () => ({
     conversations: {} as Record<string, ConversationDTO>,
-    currentConversation: 0,
+    socketService: null as SocketService | null,
+    currentConversation: "0",
     isConnected: false,
     loading: false,
   }),
   actions: {
     bindEvents() {
-      window.addEventListener('receiving:single', (event: Event) => this.handleSingleMessage(event as CustomEvent));
-      window.addEventListener('receiving:all', (event: Event) => this.handleAllMessages(event as CustomEvent));
-      window.addEventListener('receiving:system', (event: Event) => this.handleSystemMessage(event as CustomEvent));
+      if (!this.socketService) {
+        console.warn('Socket is not initialized');
+        return;
+      }
 
+      this.socketService.getSingleMessage().subscribe((data: ResponseDTO) => {
+        this.handleSingleMessage(data);
+      });
+      this.socketService.getAllMessage().subscribe((data: ResponseDTO) => {
+        this.conversations[this.currentConversation] = new ConversationDTO();
+        this.handleSingleMessage(data);
+      });
+      this.socketService.getSystemMessage().subscribe((data: ResponseDTO) => {
+        console.log('handleSystemMessage', data);
+        data.messages.forEach(msg => {
+          if (msg.messageType === ChatMessageType.ERROR) {
+            this.addError(msg);
+          }
+          if (msg.messageType === ChatMessageType.API) {
+            const messageText = (msg.message as string).toUpperCase();
+            if (messageText === 'STOP') {
+              this.addLoading(msg, true);
+            }else if (messageText === 'START') {
+              this.addLoading(msg, false);
+            }else {
+              console.warn('Unknown system message:', msg.message);
+            }
+          }
+        });
+        this.loading = false;
+      });
 
-      socketService.onConnect(() => {
-        this.isConnected = true
-      })
-      socketService.onDisconnect(() => {
-        this.isConnected = false
-      })
+      this.socketService.isConnected().subscribe((data:boolean) => {
+        this.isConnected = data;
+      });
     },
-    handleSingleMessage(event: CustomEvent) {
-      const data: ResponseDTO = event.detail;
+    handleSingleMessage(data: ResponseDTO) {
       data.messages.forEach(msg => {
         this.addConversation(msg);
       });
       this.loading = false;
-
-    },
-    handleSystemMessage(event: CustomEvent) {
-      const data: ResponseDTO = event.detail;
-      console.log('handleSystemMessage', data);
-      debugger;
-      data.messages.forEach(msg => {
-        if (msg.messageType === ChatMessageType.ERROR) {
-          this.addError(msg);
-        }
-        if (msg.messageType === ChatMessageType.API) {
-          const messageText = (msg.message as string).toUpperCase();
-          if (messageText === 'STOP') {
-            this.addLoading(msg, true);
-          }else if (messageText === 'START') {
-            this.addLoading(msg, false);
-          }else {
-            console.warn('Unknown system message:', msg.message);
-          }
-        }
-      });
-      this.loading = false;
-
     },
     checkConversation() {
       if (!this.conversations[this.currentConversation]) {
         this.conversations[this.currentConversation] = new ConversationDTO()
       }
-    },
-    handleAllMessages(event: CustomEvent) {
-      this.conversations[this.currentConversation] = new ConversationDTO();
-      this.handleSingleMessage(event);
     },
     addConversation(message: MessageDTO) {
       this.checkConversation();
@@ -78,8 +75,15 @@ export const useChatStore = defineStore('chat', {
       this.conversations[this.currentConversation].addLoading(message, loaded)
     },
     sendMessage(message: string) {
+      if(!this.isConnected) {
+        this.connect();
+      }
+      if(!this.socketService) {
+        console.warn('Socket is not initialized');
+        return;
+      }
       this.loading = true;
-      const req = socketService.sendMessage(message)
+      const req = this.socketService.sendMessage(message)
       if (req == null) {
         this.loading = false;
       }else {
@@ -91,18 +95,46 @@ export const useChatStore = defineStore('chat', {
         });
       }
     },
-    setCurrentRoom(chatId: number) {
-      this.currentConversation = chatId
-      this.bindEvents()
+    setCurrentConversation(chatId: string) {
+      const conversation = this.conversations[chatId];
+      if (!conversation) {
+        console.error(`Conversation with ID ${chatId} does not exist`);
+        return false;
+      }
+      this.currentConversation = chatId;
+      this.bindEvents();
+      return true;
+    },
+    disconnect() {
+      if(this.socketService) {
+        this.socketService.disconnect();
+      }
+      this.socketService = null;
     },
     connect() {
-      this.currentConversation = Date.now()
-      socketService.connect(this.currentConversation)
+      this.currentConversation = Date.now().toString();
+      if(this.isConnected) {
+        this.disconnect();
+      }
+      this.socketService = new SocketService(this.currentConversation);
+      if (!this.socketService) {
+        console.warn('Socket is not initialized');
+        return;
+      }
+      this.bindEvents();
+      return this.currentConversation;
     }
   },
   getters: {
     getCurrentConversation: (state) => {
       return state.conversations[state.currentConversation];
+    },
+    getConversations: (state) => {
+      return Object.entries(state.conversations).map(
+        ([key, value]) => {
+          return new ConversationOverview(value, key)
+        }
+      );
     },
     hasMessages: (state) => {
       return state.conversations[state.currentConversation] && state.conversations[state.currentConversation].hasMessages()

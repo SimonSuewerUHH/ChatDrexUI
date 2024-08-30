@@ -10,6 +10,8 @@ declare module 'vue' {
     AppFooter: typeof import('./components/AppFooter.vue')['default']
     ChatHeader: typeof import('./components/ChatHeader.vue')['default']
     Conversation: typeof import('./components/Conversation.vue')['default']
+    ConversationHistory: typeof import('./components/ConversationHistory.vue')['default']
+    Debug: typeof import('./components/Debug.vue')['default']
     DrugstOneNetwork: typeof import('./components/DrugstOneNetwork.vue')['default']
     MessageBubble: typeof import('./components/MessageBubble.vue')['default']
     MessageInput: typeof import('./components/MessageInput.vue')['default']

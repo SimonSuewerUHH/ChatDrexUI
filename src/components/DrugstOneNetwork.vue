@@ -6,7 +6,6 @@ const props = defineProps<{
   network?: DrugstOneGraph
 }>()
 const { network } = toRefs(props)
-debugger;
 const groups = {
   "nodeGroups": {
       "default": {
@@ -169,15 +168,22 @@ const config = {
             "drug-target": ["trustrank", "multisteiner", "keypathwayminer", "degree", "closeness", "betweenness"]
         }
     }
-/*
+
 onMounted(() => {
-  const script = document.createElement('script');
-  script.src = 'https://cdn.drugst.one/latest/drugstone.js';
-  script.async = true;
-  document.head.appendChild(script);
-});
-@import "https://cdn.drugst.one/latest/styles.css";
-*/
+  if (!document.querySelector('script[src="https://cdn.drugst.one/latest/drugstone.js"]')) {
+    const script = document.createElement('script')
+    script.src = 'https://cdn.drugst.one/latest/drugstone.js'
+    script.async = true
+    document.head.appendChild(script)
+  }
+  if (!document.querySelector('link[href="https://cdn.drugst.one/latest/styles.css"]')) {
+    const link = document.createElement('link')
+    link.rel = 'stylesheet'
+    link.href = 'https://cdn.drugst.one/latest/styles.css'
+    document.head.appendChild(link)
+  }
+})
+
 
 </script>
 
@@ -193,6 +199,5 @@ onMounted(() => {
 </template>
 
 <style scoped>
-
 
 </style>
