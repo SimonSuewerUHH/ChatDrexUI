@@ -1,10 +1,21 @@
 <script setup lang="ts">
 import { useChatStore } from '@/stores/chat'
 import { computed, ref, watch } from 'vue'
+import { useAuthStore } from '@/stores/auth'
 
 const chatStore = useChatStore()
+const authStore = useAuthStore()
 
 const isConnected = computed(() => chatStore.isConnected)
+const user = computed(() => authStore.user)
+
+const printUserProperties = () => {
+  if (user.value) {
+    return Object.entries(user.value)
+  }
+  return 'User is not logged in'
+}
+
 let dialog = ref(false)
 
 const getClass = ref('white')
@@ -22,7 +33,7 @@ watch(isConnected, (newVal) => {
   </v-btn>
 
 
-  <v-dialog v-model="dialog" max-width="300px">
+  <v-dialog v-model="dialog" max-width="600px">
     <v-card>
       <v-card-title>Debug</v-card-title>
       <v-card-text>
@@ -45,6 +56,24 @@ watch(isConnected, (newVal) => {
             :subtitle="chatStore.currentConversation"
           >
           </v-list-item>
+
+          <v-list-item>
+            <template v-slot:prepend v-if="!authStore.isLoggedIn">
+              <v-icon color="red">mdi-alert</v-icon>
+            </template>
+            <v-list-item-title>
+              Logged in
+            </v-list-item-title>
+            <v-list-item-subtitle v-if="authStore.isLoggedIn" class="login-subtitle">
+              <p v-for="el in printUserProperties()">
+                <span>{{ el[0]}}:</span> {{ el[1] }}
+              </p>
+             </v-list-item-subtitle>
+            <v-list-item-subtitle v-else>
+              User is not logged in
+            </v-list-item-subtitle>
+          </v-list-item>
+
         </v-list>
       </v-card-text>
 
@@ -59,10 +88,13 @@ watch(isConnected, (newVal) => {
 
 <style scoped>
 
+.login-subtitle {
+  -webkit-line-clamp: initial !important ;
+}
 .debug-btn {
   z-index: 9999;
   position: fixed;
   top: 10px;
-  right: 10px;
+  right: 70px;
 }
 </style>

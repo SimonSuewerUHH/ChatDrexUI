@@ -34,7 +34,6 @@ function newConversation() {
 
       <MessageInput />
     </v-main>
-    <Debug />
   </v-app>
 
 

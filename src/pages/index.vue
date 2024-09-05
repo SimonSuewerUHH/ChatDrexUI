@@ -14,7 +14,6 @@ console.log('create new chat with id', newId);
     <Welcome v-if="!chatStore.hasMessages" />
     <Conversation />
     <MessageInput  />
-    <Debug />
 
   </v-main>
 </template>
