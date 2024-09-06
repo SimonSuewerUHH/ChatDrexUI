@@ -9,6 +9,8 @@ export enum MessageType {
 }
 
 export interface RequestDTO {
+  token?: string;
+  threadId: string;
   messageId: string;
   message: string;
   messageType: MessageType;

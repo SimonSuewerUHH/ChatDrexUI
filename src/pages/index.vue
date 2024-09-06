@@ -3,8 +3,6 @@ import { useChatStore } from '@/stores/chat'
 
 const chatStore = useChatStore()
 
-const newId = chatStore.connect();
-console.log('create new chat with id', newId);
 
 </script>
 

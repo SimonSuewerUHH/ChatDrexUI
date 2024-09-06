@@ -28,10 +28,9 @@ const edit = () => props.keycloakService.manageAccount()
 
 <template>
   <v-container
-
+    class="avatar-wrapper"
   >
-    <v-row class="avatar-wrapper">
-      <v-menu>
+      <v-menu >
         <template v-slot:activator="{ props }">
           <v-btn
             icon
@@ -95,7 +94,6 @@ const edit = () => props.keycloakService.manageAccount()
           </v-card-text>
         </v-card>
       </v-menu>
-    </v-row>
   </v-container>
 </template>
 
@@ -106,8 +104,11 @@ const edit = () => props.keycloakService.manageAccount()
 .avatar-wrapper {
   z-index: 9999;
   position: fixed;
-  top: 22px;
-  right: 22px;
+  top: 10px;
+  right: 10px;
+  width: 50px;
+  height: 50px;
+  padding: 0;
 }
 
 </style>

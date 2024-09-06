@@ -2,6 +2,7 @@ import { MessageType, RequestDTO, ResponseDTO } from '@/dto/request'
 import { uuid } from 'vue-uuid'
 import { filter, fromEvent, map, merge, Observable, tap } from 'rxjs'
 import { toResponseDTO } from '@/utils/helper'
+import { useAuthStore } from '@/stores/auth'
 
 export class SocketService {
   private socket: WebSocket | null = null
@@ -9,12 +10,13 @@ export class SocketService {
   private wsUrl: string
   private $messages: Observable<ResponseDTO> | null = null
   private $connected: Observable<boolean> | null = null
+  private authStore
 
   constructor(client_id: string = Date.now().toString()) {
     this.client_id = client_id
-    // import.meta.env.VITE_API_URL ||
-    this.wsUrl = import.meta.env.VITE_API_URL || 'ws://localhost:8000/ws'
-    this.connect()
+    //import.meta.env.VITE_API_URL ||
+    this.wsUrl = 'ws://localhost:8000/ws'
+    this.authStore = useAuthStore()
   }
 
 
@@ -42,12 +44,15 @@ export class SocketService {
     )
   }
 
-  sendMessage(message: string): RequestDTO | null {
+  sendMessage(message: string, threadId: string): RequestDTO | null {
     if (!this.socket) {
       console.warn('Socket is not initialized')
       return null
     }
+    const token = this.authStore.token
     const request: RequestDTO = {
+      token: token,
+      threadId: threadId,
       messageId: uuid.v4(),
       message: message,
       messageType: MessageType.SENDING,
@@ -96,6 +101,7 @@ export class SocketService {
   }
 
   connect() {
+    debugger;
     if (this.socket) {
       if (this.socket.readyState === WebSocket.OPEN) {
         console.warn('Socket is already connected')

@@ -24,6 +24,9 @@ export const useAuthStore = defineStore({
     isLoggedIn(): boolean {
       return !!this.accessToken
     },
+    token(): string | undefined {
+      return this.accessToken || undefined
+    }
   },
   actions: {
     addRole(role: string) : void {
