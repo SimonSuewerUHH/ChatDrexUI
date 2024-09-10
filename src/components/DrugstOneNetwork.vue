@@ -147,7 +147,7 @@ const config = {
     "networkMenuButtonAdjacentDisordersProteinsLabel": "Disorders (protein)",
     "networkMenuButtonAdjacentDisordersDrugsLabel": "Disorders (drug)",
     "networkMenuButtonAnimationLabel": "Animation",
-    "identifier": "entrez",
+    "identifier": "uniprot",
     "selfReferences": false,
     "customEdges": {
         "default": true,
