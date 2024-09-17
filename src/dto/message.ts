@@ -15,6 +15,7 @@ export interface MessageDTO {
   messageType: ChatMessageType;
   timestamp: number;
   messageId: string;
+  threadId: string;
 }
 
 export interface ToolDTO {

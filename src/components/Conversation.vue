@@ -28,7 +28,6 @@ watch(() => chatStore.hasMessages, (newVal) => {
 
 <template>
   <ChatHeader v-if="chatStore.hasMessages" />
-  <p> Conversation {{ chatId }}</p>
   <v-container class="main" v-if="chatStore.hasMessages">
     <v-row v-for="(messageId, indexMsgId) in chatStore.getCurrentConversation.getMessagesHistory()"
            :key="indexMsgId" class="test"

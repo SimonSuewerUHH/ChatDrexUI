@@ -8,8 +8,7 @@ const router = useRouter();
 
 
 function newConversation() {
-  chatStore.connect();
-  const currentId = chatStore.currentConversation;
+  const currentId = chatStore.createNewConversation();
   router.push({
     path: '/conversation/' + currentId,
   });
@@ -34,7 +33,6 @@ function newConversation() {
 
       <MessageInput />
     </v-main>
-    <Debug />
   </v-app>
 
 

@@ -55,24 +55,31 @@ export const useChatStore = defineStore('chat', {
       });
       this.loading = false;
     },
-    checkConversation() {
-      if (!this.conversations[this.currentConversation]) {
-        this.conversations[this.currentConversation] = new ConversationDTO()
+    checkConversation(threadId?: string | undefined) {
+      if (!threadId) {
+        threadId = this.currentConversation;
+      }
+      if (!this.conversations[threadId]) {
+        this.conversations[threadId] = new ConversationDTO()
       }
     },
     addConversation(message: MessageDTO) {
-      this.checkConversation();
-      this.conversations[this.currentConversation].addMessage(message)
+      debugger;
+      const threadId = message.threadId;
+      this.checkConversation(threadId);
+      this.conversations[threadId].addMessage(message)
     },
     addError(message: MessageDTO) {
       console.log('addError', message)
-      this.checkConversation();
-      this.conversations[this.currentConversation].addError(message)
+      const threadId = message.threadId;
+      this.checkConversation(threadId);
+      this.conversations[threadId].addError(message)
     },
     addLoading(message: MessageDTO, loaded = true) {
       console.log('addLoading', message)
-      this.checkConversation();
-      this.conversations[this.currentConversation].addLoading(message, loaded)
+      const threadId = message.threadId;
+      this.checkConversation(threadId);
+      this.conversations[threadId].addLoading(message, loaded)
     },
     sendMessage(message: string) {
       if(!this.isConnected) {
@@ -83,11 +90,12 @@ export const useChatStore = defineStore('chat', {
         return;
       }
       this.loading = true;
-      const req = this.socketService.sendMessage(message)
+      const req = this.socketService.sendMessage(message, this.currentConversation);
       if (req == null) {
         this.loading = false;
       }else {
         this.addConversation({
+          threadId: this.currentConversation,
           message: req.message,
           messageType: ChatMessageType.HUMAN,
           timestamp: req.timestamp,
@@ -102,7 +110,6 @@ export const useChatStore = defineStore('chat', {
         return false;
       }
       this.currentConversation = chatId;
-      this.bindEvents();
       return true;
     },
     disconnect() {
@@ -111,18 +118,22 @@ export const useChatStore = defineStore('chat', {
       }
       this.socketService = null;
     },
-    connect() {
+    createNewConversation() {
       this.currentConversation = Date.now().toString();
+      this.conversations[this.currentConversation] = new ConversationDTO();
+      return this.currentConversation;
+    },
+    connect() {
       if(this.isConnected) {
-        this.disconnect();
+        return;
       }
-      this.socketService = new SocketService(this.currentConversation);
+      this.socketService = new SocketService();
       if (!this.socketService) {
         console.warn('Socket is not initialized');
         return;
       }
+      this.socketService.connect();
       this.bindEvents();
-      return this.currentConversation;
     }
   },
   getters: {
