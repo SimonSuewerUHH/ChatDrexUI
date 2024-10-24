@@ -5,13 +5,14 @@ export enum ChatMessageType {
   AI = 'ai',
   AI_TOOL = 'aiTool',
   SYSTEM = 'system',
+  AI_RESEARCH = 'research',
   API = 'api',
   ERROR = 'error',
 
 }
 
 export interface MessageDTO {
-  message: string | SystemMessageDTO;
+  message: string | SystemMessageDTO | ResearchResultsDTO;
   messageType: ChatMessageType;
   timestamp: number;
   messageId: string;
@@ -21,7 +22,7 @@ export interface MessageDTO {
 export interface ToolDTO {
   name: string;
   started: boolean;
-  content: any;
+  content: any; // HERE WE CAN DEFINE CLEAR STRUCTURE FOR TOOL CONTENT LIKE PAPER; BUT WE NEED TO STORE
   input: any;
 }
 
@@ -29,6 +30,16 @@ export interface ToolDTO {
 
 export interface SystemMessageDTO {
   drugstOneNetwork?: DrugstOneGraph
+}
+
+export interface ResearchResultDTO {
+  topic: string;
+  answer: string;
+  sources: string[];
+}
+
+export interface ResearchResultsDTO {
+  results: ResearchResultDTO[];
 }
 
 export class ConversationDetailDTO {
