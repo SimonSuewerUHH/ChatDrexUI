@@ -46,9 +46,14 @@ const messageClass = computed(() => {
       <ToolPanels :tools="tools"></ToolPanels>
 
       <template v-for="(msg, index) in messages" :key="index">
-          <span v-if="msg.messageType !== ChatMessageType.SYSTEM">
-            {{ msg.message }}
+        <span v-if="msg.messageType !== ChatMessageType.SYSTEM">
+           <span v-if="msg.messageType !== ChatMessageType.AI_RESEARCH">
+          {{ msg.message }}
           </span>
+          <span v-else>
+           TODO HERE RESEARCH RESULT COMPONENT
+          </span>
+        </span>
         <div v-else>
           <SystemMessage :message="msg" />
         </div>
@@ -67,9 +72,9 @@ const messageClass = computed(() => {
       <v-card-text>
         <v-list dense>
           <v-list-item v-for="(error, index) in errors" :key="index">
-              <template v-slot:prepend>
-                <v-icon color="red">mdi-alert</v-icon>
-              </template>
+            <template v-slot:prepend>
+              <v-icon color="red">mdi-alert</v-icon>
+            </template>
             <v-list-item-title>
               {{ error }}
             </v-list-item-title>
