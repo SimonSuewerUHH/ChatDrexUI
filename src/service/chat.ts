@@ -15,7 +15,7 @@ export class SocketService {
   constructor(client_id: string = Date.now().toString()) {
     this.client_id = client_id
     //import.meta.env.VITE_API_URL ||
-    this.wsUrl = 'ws://localhost:8000/ws'
+    this.wsUrl =  import.meta.env.VITE_API_URL || 'ws://localhost:8000/ws'
     this.authStore = useAuthStore()
   }
 
