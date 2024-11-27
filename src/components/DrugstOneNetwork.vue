@@ -59,9 +59,16 @@ const groups = {
         'gene': {
             'type': 'gene',
             'color': '#4da300',
-            'font': { 'color': '#f0f0f0' },
+            'font': { 'color': '#000000' },
             'groupName': 'Gene',
             'shape': 'circle'
+        },
+        'disorder': {
+            'type': 'default disorder type',
+            'color': '#0080a3',
+            'font': { 'color': '#000000' },
+            'groupName': 'Disorder',
+            'shape': 'triangle'
         },
         "founddrug": {
             "groupName": "Drugs",
