@@ -63,6 +63,13 @@ const groups = {
             'groupName': 'Gene',
             'shape': 'circle'
         },
+        'diamondNode': {
+            'type': 'diamond type',
+            'color': '#FFFF00',
+            'font': { 'color': '#000000' },
+            'groupName': 'Diamond',
+            'shape': 'diamond'
+        },
         'disorder': {
             'type': 'default disorder type',
             'color': '#0080a3',
@@ -80,7 +87,7 @@ const groups = {
                     "background": "#F12590"
                 }
             },
-            "shape": "diamond",
+            "shape": "triangle",
             "type": "default drug type"
         },
         "seednode": {
@@ -96,7 +103,7 @@ const groups = {
                 }
             },
             "font": {
-                "color": "#F1111D",
+                "color": "#000000",
                 "size": 14
             }
         }
