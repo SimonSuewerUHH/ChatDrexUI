@@ -8,7 +8,6 @@ export enum ChatMessageType {
   AI_RESEARCH = 'research',
   API = 'api',
   ERROR = 'error',
-
 }
 
 export interface MessageDTO {
@@ -29,14 +28,21 @@ export interface ToolDTO {
 
 
 export interface SystemMessageDTO {
-  drugstOneNetwork?: DrugstOneGraph
+  drugstOneNetwork?: DrugstOneGraph;
 }
 
 export interface ResearchResultDTO {
   topic: string;
   answer: string;
-  sources: string[];
+  sources: {
+    id: number;
+    title: string;
+    authors: string;
+    doi: string;
+    url: string;
+  }[];
 }
+
 
 export interface ResearchResultsDTO {
   results: ResearchResultDTO[];
@@ -93,7 +99,7 @@ export class ConversationDTO {
     if (message.messageType === ChatMessageType.AI_TOOL) {
 
       this.addTool(message);
-    }else if (message.messageType === ChatMessageType.AI || message.messageType === ChatMessageType.HUMAN || message.messageType === ChatMessageType.SYSTEM) {
+    }else if (message.messageType === ChatMessageType.AI || message.messageType === ChatMessageType.AI_RESEARCH || message.messageType === ChatMessageType.HUMAN || message.messageType === ChatMessageType.SYSTEM) {
       this.messages.get(messageId)!.push(message);
     }
   }
