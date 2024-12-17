@@ -100,7 +100,7 @@ const groupedMessages = computed(() => {
 }
 
 .message-system {
-  min-width: 30%;
+  min-width: 70%;
   max-width: 80%;
   background-color: settings.$chat-bg-system;
 }
