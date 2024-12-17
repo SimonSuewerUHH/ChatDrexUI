@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import { ChatMessageType, MessageDTO, ToolDTO } from '@/dto/message'
 
 const props = defineProps<{
@@ -24,6 +23,11 @@ const messageClass = computed(() => {
   return message.value.messageType === ChatMessageType.HUMAN ? 'message-human' : 'message-system'
 })
 
+
+const groupedMessages = computed(() => {
+  return messages.value?.filter(msg => msg.messageType !== ChatMessageType.SYSTEM).map(msg => msg.message).join('') || ''
+})
+
 </script>
 
 <template>
@@ -44,18 +48,11 @@ const messageClass = computed(() => {
     </v-card-title>
     <v-card-text>
       <ToolPanels :tools="tools"></ToolPanels>
+      <markdown :source="groupedMessages" />
 
       <template v-for="(msg, index) in messages" :key="index">
-        <span v-if="msg.messageType !== ChatMessageType.SYSTEM">
-           <span v-if="msg.messageType !== ChatMessageType.AI_RESEARCH">
-          {{ msg.message }}
-          </span>
-          <span v-else>
-           TODO HERE RESEARCH RESULT COMPONENT
-          </span>
-        </span>
-        <div v-else>
-          <SystemMessage :message="msg" />
+        <div v-if="msg.messageType === ChatMessageType.SYSTEM">
+           <SystemMessage :message="msg" />
         </div>
       </template>
     </v-card-text>

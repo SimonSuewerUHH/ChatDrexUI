@@ -189,7 +189,7 @@ onMounted(() => {
 
 
 <template>
-  <v-container v-if="network">
+  <v-container v-if="network && network.network">
     <drugst-one
       :groups=groups
       :config=config

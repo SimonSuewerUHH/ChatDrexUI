@@ -14,6 +14,7 @@ declare module 'vue' {
     ConversationHistory: typeof import('./components/ConversationHistory.vue')['default']
     Debug: typeof import('./components/Debug.vue')['default']
     DrugstOneNetwork: typeof import('./components/DrugstOneNetwork.vue')['default']
+    Markdown: typeof import('./components/markdown.vue')['default']
     MessageBubble: typeof import('./components/MessageBubble.vue')['default']
     MessageInput: typeof import('./components/MessageInput.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
