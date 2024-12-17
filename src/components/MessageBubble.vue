@@ -48,12 +48,10 @@ const messageClass = computed(() => {
       <template v-for="(msg, index) in messages" :key="index">
         <span v-if="msg.messageType !== ChatMessageType.SYSTEM">
           <span v-if="msg.messageType !== ChatMessageType.AI_RESEARCH">
-            {{ msg.messageType }}
-            CURRENT TODO 
+            {{ msg.message }}
           </span>
-          <span v-else>
-            {{ msg.messageType }}
-           TODO HERE RESEARCH RESULT COMPONENT
+          <span v-if="msg.messageType == ChatMessageType.AI_RESEARCH">
+            {{ msg.message }}
           </span>
         </span>
         <div v-else>

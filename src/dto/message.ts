@@ -25,27 +25,12 @@ export interface ToolDTO {
   input: any;
 }
 
-
-
 export interface SystemMessageDTO {
   drugstOneNetwork?: DrugstOneGraph;
 }
 
-export interface ResearchResultDTO {
-  topic: string;
-  answer: string;
-  sources: {
-    id: number;
-    title: string;
-    authors: string;
-    doi: string;
-    url: string;
-  }[];
-}
-
-
 export interface ResearchResultsDTO {
-  results: ResearchResultDTO[];
+  answer: string;
 }
 
 export class ConversationDetailDTO {
