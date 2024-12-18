@@ -64,7 +64,6 @@ export const useChatStore = defineStore('chat', {
       }
     },
     addConversation(message: MessageDTO) {
-      debugger;
       const threadId = message.threadId;
       this.checkConversation(threadId);
       this.conversations[threadId].addMessage(message)

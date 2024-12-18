@@ -144,12 +144,6 @@ const groups = {
 }
 const config = {
     "title": "Drugst.One",
-    "backendUrl": "",
-    "legendUrl": "",
-    "legendClass": "legend",
-    "legendPos": "left",
-    "taskTargetName": "Drug target search",
-    "taskDrugName": "Drug search",
     "showSidebar": "left",
     "showLegendNodes": false,
     "showLegendEdges": false,
