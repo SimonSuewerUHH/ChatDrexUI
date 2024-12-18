@@ -13,6 +13,7 @@ export interface DrugstOneEdge {
 export interface DrugstOneNetwork {
   nodes: DrugstOneNode[];
   edges: DrugstOneEdge[];
+  networkType: string;
 }
 
 export interface DrugstOneGraph {

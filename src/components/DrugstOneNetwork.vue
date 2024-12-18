@@ -1,11 +1,37 @@
 <script setup lang="ts">
 //import { onMounted } from 'vue';
-import { DrugstOneGraph } from '@/dto/network'
+import { defineProps, computed, onMounted, toRefs } from 'vue';
+import { DrugstOneGraph } from '@/dto/network';
 
 const props = defineProps<{
   network?: DrugstOneGraph
 }>()
 const { network } = toRefs(props)
+
+const networkType = computed(() => network.value?.network?.networkType || 'default');
+
+// Set the identifier dynamically based on network_type
+const identifier = computed(() => {
+  switch (networkType.value) {
+    case 'diamond_tool':
+      return 'entrez';
+    case 'trustrank_tool':
+      return 'uniprot';
+    case 'cypher_qa_tool':
+      return 'symbol';
+    default:
+      return 'uniprot'; 
+  }
+});
+
+const formattedNetwork = computed(() => {
+  if (network.value?.network) {
+    const { nodes, edges } = network.value.network;
+    return { nodes, edges };
+  }
+  return { nodes: [], edges: [] };
+});
+
 const groups = {
     "nodeGroups": {
         "default": {
@@ -161,7 +187,7 @@ const config = {
     "networkMenuButtonAdjacentDisordersProteinsLabel": "Disorders (protein)",
     "networkMenuButtonAdjacentDisordersDrugsLabel": "Disorders (drug)",
     "networkMenuButtonAnimationLabel": "Animation",
-    "identifier": "uniprot",
+    "identifier": identifier.value,
     "selfReferences": false,
     "customEdges": {
         "default": true,
@@ -207,7 +233,7 @@ onMounted(() => {
     <drugst-one
       :groups=groups
       :config=config
-      :network=network.network>
+      :network=formattedNetwork>
     </drugst-one>
   </v-container>
 </template>
