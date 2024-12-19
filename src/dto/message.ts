@@ -80,7 +80,6 @@ export class ConversationDTO {
 
   addMessage(message: MessageDTO) {
     const messageId = this.checkStorage(message);
-    debugger;
     if (message.messageType === ChatMessageType.AI_TOOL) {
 
       this.addTool(message);

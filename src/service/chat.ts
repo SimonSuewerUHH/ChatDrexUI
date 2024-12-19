@@ -101,7 +101,6 @@ export class SocketService {
   }
 
   connect() {
-    debugger;
     if (this.socket) {
       if (this.socket.readyState === WebSocket.OPEN) {
         console.warn('Socket is already connected')

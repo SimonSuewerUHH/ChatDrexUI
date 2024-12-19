@@ -38,7 +38,6 @@ export class KeycloakService {
   }
 
   logout(): void {
-    debugger;
     this.keycloakInstance.logout()
   }
 
