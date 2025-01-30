@@ -1,0 +1,14 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    @for (item of breadcrumbs; track item) {
+      <li [ngClass]="{'breadcrumb-item': true, 'active': $last}"
+          [attr.aria-current]="$last ? 'page' : null">
+        @if ($last) {
+          {{ item.label }}
+        } @else {
+          <a [routerLink]="item.url">{{ item.label }}</a>
+        }
+      </li>
+    }
+  </ol>
+</nav>

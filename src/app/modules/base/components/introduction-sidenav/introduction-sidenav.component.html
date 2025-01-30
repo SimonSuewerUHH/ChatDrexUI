@@ -1,0 +1,37 @@
+<div class="sidenav">
+  <mat-list>
+    <a mat-list-item
+       routerLink="/project"
+       class="sidenav--list-link"
+       (click)="onNavigate()">
+      <mat-icon matListItemIcon>backup_table</mat-icon>
+      <div matListItemTitle>Projects</div>
+    </a>
+    <mat-divider></mat-divider>
+    <a mat-list-item
+       routerLink="home"
+       routerLinkActive="active"
+       class="sidenav--list-link"
+       (click)="onNavigate()">
+      <mat-icon matListItemIcon>article</mat-icon>
+      <div matListItemTitle>Introduction</div>
+    </a>
+    <a mat-list-item
+       routerLink="faq"
+       routerLinkActive="active"
+       class="sidenav--list-link"
+       (click)="onNavigate()">
+      <mat-icon matListItemIcon>quiz</mat-icon>
+      <div matListItemTitle>FAQ</div>
+    </a>
+    <a mat-list-item
+       routerLink="studies"
+       routerLinkActive="active"
+       class="sidenav--list-link"
+       (click)="onNavigate()">
+      <mat-icon matListItemIcon>school</mat-icon>
+      <div matListItemTitle>Studies</div>
+    </a>
+  </mat-list>
+
+</div>

@@ -1,0 +1,25 @@
+<h2 mat-dialog-title>
+  Chat Settings (TODO)
+</h2>
+
+<div mat-dialog-content>
+
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <mat-form-field>
+      <mat-label>Paper Filter Settings</mat-label>
+      <mat-select formControlName="paperFilterSelect" required>
+
+      </mat-select>
+      @if (form.get('paperFilterSelect')?.hasError('required')) {
+        <mat-error>Please choose an FilterType</mat-error>
+      }
+      <mat-hint>This setting is not saved and only valid in this session</mat-hint>
+    </mat-form-field>
+  </form>
+</div>
+
+<div mat-dialog-actions class="actions">
+  <button mat-button (click)="close()">Cancel</button>
+  <span class="spacer"></span>
+  <button mat-button color="primary" [disabled]="form.invalid" (click)="save()">Save</button>
+</div>

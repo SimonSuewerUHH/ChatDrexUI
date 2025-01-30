@@ -1,0 +1,15 @@
+<mat-drawer-container class="sidenav-container">
+  <mat-drawer
+    class="sidenav"
+    [mode]="isSmallScreen ? 'over' : 'side'"
+    [opened]="isOpen">
+    <app-introduction-sidenav [isMobile]="isSmallScreen"></app-introduction-sidenav>
+  </mat-drawer>
+
+  <mat-drawer-content
+    [ngClass]="isSmallScreen ? 'content-mobile' : 'content'"
+    [class.content--width-fallback]="!isOpen && !isSmallScreen"
+  >
+    <router-outlet/>
+  </mat-drawer-content>
+</mat-drawer-container>

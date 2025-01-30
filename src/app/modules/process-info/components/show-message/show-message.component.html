@@ -1,0 +1,25 @@
+@if (showMessage$ | async) {
+  <div class="sse-container">
+    <div class="sse-message">
+      @if (showLoading$ | async) {
+        <mat-spinner class="spinner"></mat-spinner>
+      }
+      <div class="message-text">
+        <p>{{ lastMessage$ | async }}</p>
+        <p>{{ error$ | async }}</p>
+      </div>
+      <button mat-icon-button class="close-btn" (click)="close()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+}
+@if (!(isConnected$ | async)) {
+  <div class="sse-container">
+    <div class="sse-message">
+      <div class="message-text">
+        <p>Not connected</p>
+      </div>
+    </div>
+  </div>
+}

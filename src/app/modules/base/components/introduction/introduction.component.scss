@@ -1,0 +1,17 @@
+
+.wrapper{
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+
+.start-wrapper{
+  margin-top: 20px;
+  margin-bottom: 80px;
+  width: 100%;
+  .start-btn{
+    width: 300px;
+    display: flex;
+    margin-left: auto !important;
+  }
+}

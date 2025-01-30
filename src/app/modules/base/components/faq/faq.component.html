@@ -1,0 +1,102 @@
+  <h2>Frequently Asked Questions (FAQ)</h2>
+
+    <mat-accordion>
+
+      <!-- Q1 -->
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>What is a systematic review?</mat-panel-title>
+        </mat-expansion-panel-header>
+        <p>
+          A systematic review is a structured, comprehensive approach to
+          identifying, evaluating, and synthesizing all relevant studies
+          on a particular research topic. It follows a transparent
+          methodology, often guided by frameworks like PRISMA, to minimize
+          bias and ensure reproducibility.
+        </p>
+      </mat-expansion-panel>
+
+      <!-- Q2 -->
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Why do we combine "title" and "abstract" into a single "Record"?
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <p>
+          Combining the title and abstract columns into a single record
+          ensures that the LLM has a more complete view of each article’s
+          essential information, streamlining both the screening and
+          embedding processes.
+        </p>
+      </mat-expansion-panel>
+
+      <!-- Q3 -->
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            What is the difference between “Screening 1” and “Screening 2”?
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <p>
+          <strong>Screening 1</strong> refers to the initial step of title
+          and abstract screening to quickly filter out irrelevant or
+          low-quality articles. <strong>Screening 2</strong> is the
+          subsequent full-text review stage where remaining studies are
+          evaluated in detail to confirm their inclusion or exclusion
+          in the review.
+        </p>
+      </mat-expansion-panel>
+
+      <!-- Q4 -->
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Why embed the documents with a vector database like Chroma?
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <p>
+          Using Chroma for vector embeddings allows us to efficiently
+          retrieve and filter relevant records for each screening step.
+          Its built-in filtering ensures precise document retrieval,
+          minimizing the risk of cross-contamination between articles
+          and preserving data integrity during automated screening.
+        </p>
+      </mat-expansion-panel>
+
+      <!-- Q5 -->
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            What are the three reviews (Physio, Neuro, DigiHealth) about?
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <p>
+          <strong>Review I (Physio):</strong> Focuses on economic
+          evaluations of musculoskeletal physiotherapy.
+          <br />
+          <strong>Review II (Neuro):</strong> Examines effectiveness of
+          pharmacological and gene-based treatments in hereditary peripheral
+          neuropathies.
+          <br />
+          <strong>Review III (DigiHealth):</strong> Assesses the
+          cost-effectiveness of AI applications within healthcare settings.
+        </p>
+      </mat-expansion-panel>
+
+      <!-- Q6 -->
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            How do you handle non-English or duplicate records?
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <p>
+          Non-English or duplicate records are excluded during the
+          preprocessing stage, ensuring that only unique and
+          English-language articles remain in the final dataset
+          for screening and analysis.
+        </p>
+      </mat-expansion-panel>
+
+    </mat-accordion>

@@ -1,0 +1,18 @@
+<div class="chat-window">
+  @if (connected$ | async) {
+    <div class="messages" #messagesContainer>
+      @for (message of (messages$ | async); track message.timestamp) {
+        @if (isSendingMessage(message)) {
+          <app-paper-chat-sending-bubble [message]="message"></app-paper-chat-sending-bubble>
+        } @else {
+          <app-paper-chat-receiving-bubble [message]="message"></app-paper-chat-receiving-bubble>
+        }
+      }
+    </div>
+    @if (threadId) {
+      <app-paper-chat-send [threadId]="threadId"></app-paper-chat-send>
+    }
+  } @else {
+    <p>Not connected</p>
+  }
+</div>

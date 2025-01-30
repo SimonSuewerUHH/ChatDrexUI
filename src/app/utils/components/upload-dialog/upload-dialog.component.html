@@ -1,0 +1,24 @@
+<h1 mat-dialog-title>Upload File</h1>
+<div mat-dialog-content>
+  <form [formGroup]="uploadForm">
+
+    <div
+      class="drop-zone"
+      (drop)="onDrop($event)"
+      (dragover)="onDragOver($event)"
+      (click)="triggerFileInput()"
+    >
+      <p>Drag and drop file here or click to select file</p>
+      <input #fileInput type="file" multiple (change)="onFileSelected($event)" hidden>
+    </div>
+    @if (uploadedFile) {
+      <p>Selected file: {{ uploadedFile.name }}</p>
+    }
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="onUpload()" [disabled]="!uploadedFile">
+    Upload
+  </button>
+</div>
