@@ -1,3 +1,4 @@
+import {MessageState} from './paper-chat';
 
 export enum ChatMessageType {
   HUMAN = 'human',
@@ -15,6 +16,7 @@ export interface MessageDTO {
   timestamp: number;
   messageId: string;
   threadId: string;
+  state?: MessageState
 }
 
 

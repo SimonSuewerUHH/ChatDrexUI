@@ -1,5 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { MessageDTO } from '../dto/message';
+import {RequestDTO} from '../dto/paper-chat';
 
 
 export const setThreadId = createAction(
@@ -25,7 +26,17 @@ export const sendMessage = createAction(
   props<{ threadId: string; message: string }>()
 );
 
+export const requestedMessage = createAction(
+  '[Chat] Sended Message',
+  props<{  requestedMessage: RequestDTO }>()
+);
+
 export const receiveMessage = createAction(
+  '[Chat] Receive Message',
+  props<{ message: MessageDTO }>()
+);
+
+export const receiveAPIMessage = createAction(
   '[Chat] Receive Message',
   props<{ message: MessageDTO }>()
 );

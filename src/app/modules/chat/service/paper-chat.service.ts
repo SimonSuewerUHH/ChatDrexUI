@@ -1,14 +1,17 @@
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {webSocket, WebSocketSubject} from 'rxjs/webSocket';
 import {v4 as uuidv4} from 'uuid';
 import {Observable, Subject} from 'rxjs';
 import {MessageType, RequestDTO, ResponseDTO} from '../dto/paper-chat';
 import {environment} from '../../../../environments/environment';
+import {Store} from '@ngrx/store';
+import {connectToWebsocket, requestedMessage} from './paper-chat.actions';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PaperChatWebSocketService {
+  private readonly store: Store = inject(Store);
   private socket$: WebSocketSubject<any> | null = null;
   private messageSubject = new Subject<ResponseDTO>();
   private clientId?: string;
@@ -40,6 +43,8 @@ export class PaperChatWebSocketService {
   }
 
   sendMessage(message: string, threadId: string): void {
+    debugger;
+
     if (this.socket$) {
       const token = "TODO"
       const request: RequestDTO = {
@@ -51,6 +56,7 @@ export class PaperChatWebSocketService {
         timestamp: Date.now()
       };
       this.socket$.next(request);
+      this.store.dispatch(requestedMessage({requestedMessage: request}));
     } else {
       console.error('WebSocket is not connected');
     }

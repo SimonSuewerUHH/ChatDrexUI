@@ -19,7 +19,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {PaperChatSettingDialogComponent} from '../paper-chat-setting-dialog/paper-chat-setting-dialog.component';
 import {ClickEventService} from '../../../../utils/services/click-event.service';
 import {ChatMessageType, MessageDTO} from '../../dto/message';
-import {selectConnected} from '../../service/paper-chat.selector';
+import {selectConnected, selectCurrentMessages, selectCurrentThreadId} from '../../service/paper-chat.selector';
 
 @Component({
   selector: 'app-paper-chat-window',
@@ -50,18 +50,18 @@ export class PaperChatWindowComponent implements OnInit, OnDestroy, AfterViewIni
 
   ngOnInit(): void {
 
-    this.connected$ = this.store.select(selectConnected);
 
-    /*this.store.select(selectSelectedProject).subscribe((project) => {
-      if (!project) {
+    this.store.select(selectCurrentThreadId()).subscribe((threadId) => {
+     debugger;
+      if (!threadId) {
         return;
       }
-      this.projectId = project?.id!;
-      this.store.dispatch(connectToProject({projectId: this.projectId}));
-      this.messages$ = this.store.select(selectMessagesForProject(this.projectId));
-      this.connected$ = this.store.select(selectConnectedForProject(this.projectId));
+      this.threadId = threadId;
+      //this.store.dispatch(connectToProject({projectId: this.projectId}));
+      this.messages$ = this.store.select(selectCurrentMessages);
+      this.connected$ = this.store.select(selectConnected);
       this.cdr.detectChanges();
-    }); */
+    });
     this.clickEventSubscription = this.clickEventService.clickSettingEvent$.subscribe(() => {
       this.openChatSettingsDialog();
       this.cdr.detectChanges();

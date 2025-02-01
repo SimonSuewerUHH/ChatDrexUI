@@ -40,7 +40,7 @@ export class ShowMessageComponent implements OnInit, OnDestroy {
   connectSSERef: EffectRef | undefined;
 
   ngOnInit(): void {
-    this.connectSSERef = this.store.dispatch(() => startProcessInfoSseStream());
+   // this.connectSSERef = this.store.dispatch(() => startProcessInfoSseStream());
     this.isConnected$ = this.store.select(selectConnected);
     this.error$ = this.store.select(selectError());
     this.showLoading$ = this.store.select(selectShowLoading());

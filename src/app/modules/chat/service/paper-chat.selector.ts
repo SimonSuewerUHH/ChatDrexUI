@@ -24,7 +24,7 @@ export const selectCurrentError = createSelector(
 );
 
 //Select current ClientId
-export const selectCurrentThreadId = createSelector(
+export const selectCurrentThreadId = () => createSelector(
   selectPaperChatFeature,
   (state: PaperChatState) => state.currentThreadId
 );

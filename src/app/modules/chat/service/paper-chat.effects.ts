@@ -6,8 +6,8 @@ import * as PaperChatActions from './paper-chat.actions';
 import {PaperChatWebSocketService} from './paper-chat.service';
 import {Store} from '@ngrx/store';
 import {selectClientId} from './paper-chat.selector';
-import {MessageType, ResponseDTO} from '../dto/paper-chat';
-import {connectToWebsocket} from './paper-chat.actions';
+import {MessageType, RequestDTO, ResponseDTO} from '../dto/paper-chat';
+import {ChatMessageType} from '../dto/message';
 
 @Injectable()
 export class PaperChatEffects {
@@ -28,24 +28,20 @@ export class PaperChatEffects {
           tap((data: ResponseDTO) => console.log('Received data:', data)),
           mergeMap((message) => message.messages),
           tap((data) => console.log('Received message:', data)),
-          map((message) => PaperChatActions.receiveMessage({message})),
+          mergeMap((message) => {
+            debugger;
+            switch (message.messageType) {
+              case ChatMessageType.API:
+                return of(PaperChatActions.receiveAPIMessage({message}));
+              default:
+                return of(PaperChatActions.receiveMessage({message}));
+            }
+          }),
           startWith(PaperChatActions.connectSuccess()),
           catchError((error) =>
             of(PaperChatActions.connectFailure({error}))
           )
         )
-      )
-    )
-  );
-
-  // Handle disconnection from the project
-  disconnectFromProject$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(PaperChatActions.disconnect),
-      tap(() => this.wsService.disconnect()),
-      map(() => PaperChatActions.disconnectSuccess()),
-      catchError(({error}) =>
-        of(PaperChatActions.disconnectFailure({error}))
       )
     )
   );
@@ -62,4 +58,18 @@ export class PaperChatEffects {
       ),
     {dispatch: false} // No further state update required for sending a message
   );
+
+  // Handle disconnection from the project
+  disconnectFromProject$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(PaperChatActions.disconnect),
+      tap(() => this.wsService.disconnect()),
+      map(() => PaperChatActions.disconnectSuccess()),
+      catchError(({error}) =>
+        of(PaperChatActions.disconnectFailure({error}))
+      )
+    )
+  );
+
+
 }

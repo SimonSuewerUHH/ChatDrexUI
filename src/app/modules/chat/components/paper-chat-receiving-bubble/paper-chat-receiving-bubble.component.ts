@@ -7,7 +7,7 @@ import {
   OnChanges,
   SimpleChanges
 } from '@angular/core';
-import {PaperChatWebsocketState} from '../../dto/paper-chat';
+import {MessageState} from '../../dto/paper-chat';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {NgOptimizedImage} from '@angular/common';
 import {MarkdownComponent, provideMarkdown} from 'ngx-markdown';
@@ -15,7 +15,7 @@ import {MessageDTO} from '../../dto/message';
 
 @Component({
   selector: 'app-paper-chat-receiving-bubble',
-  imports: [MatProgressBarModule, NgOptimizedImage], //MarkdownComponent
+  imports: [MatProgressBarModule, NgOptimizedImage, MarkdownComponent], //
   templateUrl: './paper-chat-receiving-bubble.component.html',
   styleUrl: './paper-chat-receiving-bubble.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,14 +31,18 @@ export class PaperChatReceivingBubbleComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes["message"]) {
-      if (changes["message"].currentValue.state === PaperChatWebsocketState.START) {
+      if (changes["message"].currentValue.state === MessageState.START) {
         this.useLoading = true;
       }
-      if (changes["message"].currentValue.state === PaperChatWebsocketState.END) {
+      if (changes["message"].currentValue.state === MessageState.END) {
         this.useLoading = false;
       }
       this.cdr.detectChanges();
     }
+  }
+
+  getMarkdown(): string {
+    return this.message()?.message as string;
   }
 
 }

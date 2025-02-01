@@ -1,4 +1,4 @@
-import {MessageDTO} from './message';
+import {ChatMessageType, MessageDTO, ResearchResultsDTO, SystemMessageDTO} from './message';
 
 
 export enum MessageType {
@@ -23,7 +23,7 @@ export interface ResponseDTO {
   messageType: MessageType;
 }
 
-export enum PaperChatWebsocketState {
+export enum MessageState {
   START = 'START',
   END = 'END',
   MESSAGE = 'MESSAGE'
