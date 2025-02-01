@@ -2,7 +2,7 @@
   @if (connected$ | async) {
     <div class="messages" #messagesContainer>
       @for (message of (messages$ | async); track message.timestamp) {
-        @if (isSendingMessage(message)) {
+        @if (message.isHuman) {
           <app-paper-chat-sending-bubble [message]="message"></app-paper-chat-sending-bubble>
         } @else {
           <app-paper-chat-receiving-bubble [message]="message"></app-paper-chat-receiving-bubble>

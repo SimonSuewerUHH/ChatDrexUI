@@ -31,7 +31,7 @@ export const requestedMessage = createAction(
   props<{  requestedMessage: RequestDTO }>()
 );
 
-export const receiveMessage = createAction(
+export const receiveAIMessage = createAction(
   '[Chat] Receive Message',
   props<{ message: MessageDTO }>()
 );

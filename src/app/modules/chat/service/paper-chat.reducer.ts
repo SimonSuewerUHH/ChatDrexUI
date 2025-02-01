@@ -2,15 +2,16 @@ import {createReducer, on} from '@ngrx/store';
 import * as PaperChatActions from './paper-chat.actions';
 import {cloneDeep} from 'lodash';
 import {v4 as uuidv4} from 'uuid';
-import {ChatMessageType, MessageDTO} from '../dto/message';
+import {ChatMessageType, ConversationPart, MessageDTO} from '../dto/message';
 import {MessageState, RequestDTO} from '../dto/paper-chat';
+import {receiveAIMessage} from './paper-chat.actions';
 
 export interface PaperChatState {
   currentThreadId: string;
   clientId: string;
   threadIds: string[];
   headlineByThread: { [threadId: string]: string };
-  messagedByThread: { [threadId: string]: MessageDTO[] };
+  messagesByThread: { [threadId: string]: ConversationPart[] };
   connected: boolean;
   error: any
 }
@@ -19,7 +20,7 @@ export const initialState: PaperChatState = {
   threadIds: [],
   clientId: uuidv4(),
   currentThreadId: uuidv4(),
-  messagedByThread: {},
+  messagesByThread: {},
   connected: false,
   error: null,
   headlineByThread: {},
@@ -40,70 +41,78 @@ export const paperChatReducer = createReducer(
     })),
 
     // Message Handling
-
     on(PaperChatActions.receiveAPIMessage, (state, {message}) => {
       const foundMessage: MessageDTO = cloneDeep(message);
-      const messagedByThread = cloneDeep(state.messagedByThread);
-      const existingMessages = messagedByThread[state.currentThreadId] ?? [];
+      const messagesByThread = cloneDeep(state.messagesByThread);
+      const existingMessages = messagesByThread[state.currentThreadId] ?? [];
       const messageText = (foundMessage.message as string).toUpperCase();
       const messageIndex = existingMessages.findIndex(msg => msg.messageId === foundMessage.messageId);
+
+      if (messageText === 'START') {
+        existingMessages.push({
+          message: "",
+          timestamp: foundMessage.timestamp,
+          messageId: foundMessage.messageId,
+          threadId: foundMessage.threadId,
+          state: MessageState.START,
+          tools: [],
+          errors: [],
+          decisions: [],
+          isHuman: false
+        })
+        return {
+          ...state,
+          messagesByThread: {
+            ...state.messagesByThread,
+            [state.currentThreadId]: existingMessages
+          }
+        }
+      }
 
       if (messageIndex === -1) {
         return state;
       }
       if (messageText === 'STOP') {
-        messagedByThread[state.currentThreadId][messageIndex].state = MessageState.END;
+        messagesByThread[state.currentThreadId][messageIndex].state = MessageState.END;
       }
       return {
         ...state,
-        messagedByThread: messagedByThread,
+        messagesByThread: messagesByThread,
       };
     }),
-    on(PaperChatActions.receiveMessage, (state, {message}) => {
-      debugger;
+    on(PaperChatActions.receiveAIMessage, (state, {message}) => {
       const foundMessage: MessageDTO = cloneDeep(message);
-      const messagedByThread = cloneDeep(state.messagedByThread);
-      const existingMessages = messagedByThread[state.currentThreadId] ?? [];
+      const messagesByThread = cloneDeep(state.messagesByThread);
+      const existingMessages = messagesByThread[state.currentThreadId] ?? [];
+      const messageIndex = existingMessages.findIndex(msg => msg.messageId === foundMessage.messageId);
 
-      if (typeof foundMessage.message !== 'string') {
-        foundMessage.state = MessageState.START;
-        existingMessages.push(foundMessage);
+      if (messageIndex === -1 || typeof foundMessage.message !== 'string') {
+        return state;
       } else {
-
-        const messageIndex = existingMessages.findIndex(msg => msg.messageId === foundMessage.messageId);
-        if (messageIndex === -1) {
-          foundMessage.state = MessageState.START;
-          existingMessages.push(foundMessage);
-        } else {
-          const currentMessage = existingMessages[messageIndex].message ?? "";
-          existingMessages[messageIndex] = {
-            ...foundMessage,
-            message: currentMessage + (foundMessage.message as string),
-          };
-
-        }
-
-        messagedByThread[state.currentThreadId] = existingMessages;
+        existingMessages[messageIndex].message += foundMessage.message as string;
+        messagesByThread[state.currentThreadId] = existingMessages;
       }
       return {
         ...state,
-        messagedByThread: messagedByThread,
+        messagesByThread: messagesByThread,
       };
     }),
     on(PaperChatActions.requestedMessage, (state, {requestedMessage}) => {
-      debugger;
       const foundMessage: RequestDTO = cloneDeep(requestedMessage);
       return {
         ...state,
-        messagedByThread: {
-          ...state.messagedByThread,
+        messagesByThread: {
+          ...state.messagesByThread,
           [state.currentThreadId]: [
-            ...(state.messagedByThread[state.currentThreadId] ?? []),
+            ...(state.messagesByThread[state.currentThreadId] ?? []),
             {
               ...foundMessage,
-              messageId: uuidv4(),
-              messageType: ChatMessageType.HUMAN,
               state: MessageState.END,
+              tools: [],
+              errors: [],
+              decisions: [],
+              isHuman: true,
+              messageId: uuidv4(),
               threadId: state.currentThreadId,
             }
           ]

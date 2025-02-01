@@ -43,8 +43,6 @@ export class PaperChatWebSocketService {
   }
 
   sendMessage(message: string, threadId: string): void {
-    debugger;
-
     if (this.socket$) {
       const token = "TODO"
       const request: RequestDTO = {

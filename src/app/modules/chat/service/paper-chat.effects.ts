@@ -34,7 +34,7 @@ export class PaperChatEffects {
               case ChatMessageType.API:
                 return of(PaperChatActions.receiveAPIMessage({message}));
               default:
-                return of(PaperChatActions.receiveMessage({message}));
+                return of(PaperChatActions.receiveAIMessage({message}));
             }
           }),
           startWith(PaperChatActions.connectSuccess()),

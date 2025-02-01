@@ -11,7 +11,7 @@ import {MessageState} from '../../dto/paper-chat';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {NgOptimizedImage} from '@angular/common';
 import {MarkdownComponent, provideMarkdown} from 'ngx-markdown';
-import {MessageDTO} from '../../dto/message';
+import {ConversationPart} from '../../dto/message';
 
 @Component({
   selector: 'app-paper-chat-receiving-bubble',
@@ -25,7 +25,7 @@ import {MessageDTO} from '../../dto/message';
 })
 export class PaperChatReceivingBubbleComponent implements OnChanges {
   private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef)
-  readonly message = input<MessageDTO>();
+  readonly message = input<ConversationPart>();
 
   useLoading: boolean = false;
 

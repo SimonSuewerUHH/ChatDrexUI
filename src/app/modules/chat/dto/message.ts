@@ -16,9 +16,21 @@ export interface MessageDTO {
   timestamp: number;
   messageId: string;
   threadId: string;
-  state?: MessageState
+
 }
 
+
+export interface ConversationPart{
+  message: string;
+  timestamp: number;
+  messageId: string;
+  threadId: string;
+  state?: MessageState
+  tools: ToolDTO[];
+  errors: string[];
+  decisions: string[];
+  isHuman: boolean;
+}
 
 export interface ToolDTO {
   name: string;
@@ -48,7 +60,7 @@ export interface ResearchResultsDTO {
 
 export class ConversationDetailDTO {
   messages: MessageDTO[];
-  loaded?: boolean;
+  state?: MessageState;
   timestamp: number;
   tools: ToolDTO[];
   errors: string[];
@@ -139,11 +151,6 @@ export class ConversationDTO {
     this.messages.get(messageId)!.errors.push(message.message as string);
   }
 
-  addLoading(message: MessageDTO, loaded = true) {
-    const messageId = this.checkStorage(message);
-    this.messages.get(messageId)!.loaded = loaded;
-  }
-
   hasMessages() {
     return this.messages.size > 0;
   }
@@ -160,10 +167,6 @@ export class ConversationDTO {
 
   getResponseMessages(messageId: string) {
     return this.messages.get(messageId)?.getResponseMessages();
-  }
-
-  getLoaded(messageId: string) {
-    return this.messages.get(messageId)?.loaded;
   }
 
   getErrors(messageId: string) {

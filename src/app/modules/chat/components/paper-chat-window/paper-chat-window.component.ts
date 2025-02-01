@@ -18,7 +18,7 @@ import {AsyncPipe} from '@angular/common';
 import {MatDialog} from '@angular/material/dialog';
 import {PaperChatSettingDialogComponent} from '../paper-chat-setting-dialog/paper-chat-setting-dialog.component';
 import {ClickEventService} from '../../../../utils/services/click-event.service';
-import {ChatMessageType, MessageDTO} from '../../dto/message';
+import {ChatMessageType, ConversationDetailDTO, ConversationPart, MessageDTO} from '../../dto/message';
 import {selectConnected, selectCurrentMessages, selectCurrentThreadId} from '../../service/paper-chat.selector';
 
 @Component({
@@ -41,7 +41,7 @@ export class PaperChatWindowComponent implements OnInit, OnDestroy, AfterViewIni
 
   @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
 
-  messages$: Observable<MessageDTO[]> = EMPTY
+  messages$: Observable<ConversationPart[]> = EMPTY
   connected$: Observable<boolean> = EMPTY;
   threadId?: string;
   private autoScrollEnabled = true;
@@ -85,10 +85,6 @@ export class PaperChatWindowComponent implements OnInit, OnDestroy, AfterViewIni
     if (this.clickEventSubscription) {
       this.clickEventSubscription.unsubscribe();
     }
-  }
-
-  isSendingMessage(message: MessageDTO): boolean {
-    return (message.messageType === ChatMessageType.HUMAN);
   }
 
   private monitorScrollEvents(): Subscription {

@@ -1,5 +1,5 @@
 import {Component, input} from '@angular/core';
-import {MessageDTO} from '../../dto/message';
+import {ConversationPart} from '../../dto/message';
 
 @Component({
   selector: 'app-paper-chat-sending-bubble',
@@ -8,6 +8,6 @@ import {MessageDTO} from '../../dto/message';
   styleUrl: './paper-chat-sending-bubble.component.scss'
 })
 export class PaperChatSendingBubbleComponent {
-  readonly message = input<MessageDTO>();
+  readonly message = input<ConversationPart>();
 
 }
