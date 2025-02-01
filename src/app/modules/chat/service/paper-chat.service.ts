@@ -2,10 +2,11 @@ import {inject, Injectable} from '@angular/core';
 import {webSocket, WebSocketSubject} from 'rxjs/webSocket';
 import {v4 as uuidv4} from 'uuid';
 import {Observable, Subject} from 'rxjs';
-import {MessageType, RequestDTO, ResponseDTO} from '../dto/paper-chat';
+import {RequestDTO, ResponseDTO} from '../dto/paper-chat';
 import {environment} from '../../../../environments/environment';
 import {Store} from '@ngrx/store';
-import {connectToWebsocket, requestedMessage} from './paper-chat.actions';
+import {requestedMessage} from './paper-chat.actions';
+import {MessageType} from '../dto/enums';
 
 @Injectable({
   providedIn: 'root',

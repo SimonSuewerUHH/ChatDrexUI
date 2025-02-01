@@ -1,0 +1,15 @@
+<mat-accordion>
+  <mat-expansion-panel class="tool-panel">
+    <mat-expansion-panel-header class="tool-panel--header">
+      <mat-panel-title>
+        @if (tool().started) {
+          <mat-icon>sync</mat-icon>
+        } @else {
+          <mat-icon>check_circle</mat-icon>
+        }
+        <span>{{ tool().input }}</span>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <ng-content select="[content]"></ng-content>
+  </mat-expansion-panel>
+</mat-accordion>

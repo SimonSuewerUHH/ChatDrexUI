@@ -1,7 +1,8 @@
 <div class="receive-wrapper">
   <img ngSrc="assets/logo.png" alt="logo" width="30" height="30" class="logo" [class.rotate]="useLoading"/>
   <div class="receive-bubble">
-      <markdown [data]="getMarkdown()">
+    <app-tools-panel [message]="message()"></app-tools-panel>
+    <markdown [data]="getMarkdown()">
     </markdown>
   </div>
 </div>

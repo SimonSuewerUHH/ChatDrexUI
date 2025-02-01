@@ -1,13 +1,6 @@
-import {ChatMessageType, MessageDTO, ResearchResultsDTO, SystemMessageDTO} from './message';
+import {MessageDTO} from './message';
+import {MessageType} from './enums';
 
-
-export enum MessageType {
-  SENDING = 'sending',
-  GET_ALL = 'get_all',
-  RECEIVING_SINGLE = 'receiving:single',
-  RECEIVING_SYSTEM = 'receiving:system',
-  RECEIVING_ALL = 'receiving:all',
-}
 
 export interface RequestDTO {
   token?: string;
@@ -21,10 +14,4 @@ export interface RequestDTO {
 export interface ResponseDTO {
   messages: MessageDTO[];
   messageType: MessageType;
-}
-
-export enum MessageState {
-  START = 'START',
-  END = 'END',
-  MESSAGE = 'MESSAGE'
 }

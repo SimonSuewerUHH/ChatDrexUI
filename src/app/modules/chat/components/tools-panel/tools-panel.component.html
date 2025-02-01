@@ -1,0 +1,36 @@
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title> ChatDrex Tools</mat-panel-title>
+  </mat-expansion-panel-header>
+
+  @if (message().tools.length > 0) {
+    @if (getResearchTools().length > 0) {
+      <app-panel-wrapper header="Research Tools">
+        <mat-icon icon>search</mat-icon>
+        <div content>
+          @for (tool of getResearchTools(); track tool.id) {
+            <app-tool-panel [tool]="tool">
+              <app-papers-list content [tool]="tool.content"></app-papers-list>
+            </app-tool-panel>
+          }
+        </div>
+      </app-panel-wrapper>
+    }
+    @if (getNonResearchTools().length > 0) {
+      <app-panel-wrapper header="Network Tools">
+        <mat-icon icon>hub</mat-icon>
+        <div content>
+          @for (tool of getNonResearchTools(); track tool.id) {
+            <app-tool-panel [tool]="tool">
+            </app-tool-panel>
+          }
+        </div>
+      </app-panel-wrapper>
+    }
+  }
+  <app-panel-wrapper header="Decisions">
+    <mat-icon icon>psychology</mat-icon>
+    <app-decisions-panel content [decisions]="decisions"
+    ></app-decisions-panel>
+  </app-panel-wrapper>
+</mat-expansion-panel>

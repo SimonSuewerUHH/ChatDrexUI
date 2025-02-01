@@ -7,15 +7,17 @@ import {
   OnChanges,
   SimpleChanges
 } from '@angular/core';
-import {MessageState} from '../../dto/paper-chat';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {NgOptimizedImage} from '@angular/common';
 import {MarkdownComponent, provideMarkdown} from 'ngx-markdown';
 import {ConversationPart} from '../../dto/message';
+import {PanelWrapperComponent} from '../panel-wrapper/panel-wrapper.component';
+import {ToolsPanelComponent} from '../tools-panel/tools-panel.component';
+import {MessageState} from '../../dto/enums';
 
 @Component({
   selector: 'app-paper-chat-receiving-bubble',
-  imports: [MatProgressBarModule, NgOptimizedImage, MarkdownComponent], //
+  imports: [MatProgressBarModule, NgOptimizedImage, MarkdownComponent, ToolsPanelComponent], //
   templateUrl: './paper-chat-receiving-bubble.component.html',
   styleUrl: './paper-chat-receiving-bubble.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,7 +27,7 @@ import {ConversationPart} from '../../dto/message';
 })
 export class PaperChatReceivingBubbleComponent implements OnChanges {
   private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef)
-  readonly message = input<ConversationPart>();
+  readonly message = input.required<ConversationPart>();
 
   useLoading: boolean = false;
 

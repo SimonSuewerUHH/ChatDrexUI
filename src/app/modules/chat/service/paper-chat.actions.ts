@@ -36,6 +36,12 @@ export const receiveAIMessage = createAction(
   props<{ message: MessageDTO }>()
 );
 
+export const receiveToolMessage = createAction(
+  '[Chat] Receive tool Message',
+  props<{ message: MessageDTO }>()
+);
+
+
 export const receiveAPIMessage = createAction(
   '[Chat] Receive Message',
   props<{ message: MessageDTO }>()

@@ -18,8 +18,8 @@ import {AsyncPipe} from '@angular/common';
 import {MatDialog} from '@angular/material/dialog';
 import {PaperChatSettingDialogComponent} from '../paper-chat-setting-dialog/paper-chat-setting-dialog.component';
 import {ClickEventService} from '../../../../utils/services/click-event.service';
-import {ChatMessageType, ConversationDetailDTO, ConversationPart, MessageDTO} from '../../dto/message';
 import {selectConnected, selectCurrentMessages, selectCurrentThreadId} from '../../service/paper-chat.selector';
+import {ConversationPart} from '../../dto/message';
 
 @Component({
   selector: 'app-paper-chat-window',
@@ -52,7 +52,6 @@ export class PaperChatWindowComponent implements OnInit, OnDestroy, AfterViewIni
 
 
     this.store.select(selectCurrentThreadId()).subscribe((threadId) => {
-     debugger;
       if (!threadId) {
         return;
       }

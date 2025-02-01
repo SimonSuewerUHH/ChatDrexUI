@@ -1,0 +1,7 @@
+@if (isPaper()) {
+  <div class="paper-list">
+    @for (paper of getPapers(); track paper.paper_id) {
+      <app-paper-card [paper]="paper"></app-paper-card>
+    }
+  </div>
+}

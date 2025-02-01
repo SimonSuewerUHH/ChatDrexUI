@@ -1,0 +1,21 @@
+  <mat-card appearance="outlined">
+    <mat-card-header>
+      <mat-card-title> {{ paper().title }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="info">
+        <mat-icon>menu_book</mat-icon>
+        <span>{{ paper().journal }} - {{ paper().published_year }} </span>
+      </div>
+      @if (showAuthor()) {
+        <div class="info">
+          <mat-icon>group</mat-icon>
+          <span>{{ paper().authors }}</span>
+        </div>
+      }
+      @if (showAbstract()) {
+        <p>{{ paper().abstract }}</p>
+      }
+    </mat-card-content>
+  </mat-card>
+

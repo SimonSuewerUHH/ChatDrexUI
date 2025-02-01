@@ -6,8 +6,8 @@ import * as PaperChatActions from './paper-chat.actions';
 import {PaperChatWebSocketService} from './paper-chat.service';
 import {Store} from '@ngrx/store';
 import {selectClientId} from './paper-chat.selector';
-import {MessageType, RequestDTO, ResponseDTO} from '../dto/paper-chat';
-import {ChatMessageType} from '../dto/message';
+import {ChatMessageType} from '../dto/enums';
+import {ResponseDTO} from '../dto/paper-chat';
 
 @Injectable()
 export class PaperChatEffects {
@@ -29,10 +29,11 @@ export class PaperChatEffects {
           mergeMap((message) => message.messages),
           tap((data) => console.log('Received message:', data)),
           mergeMap((message) => {
-            debugger;
             switch (message.messageType) {
               case ChatMessageType.API:
                 return of(PaperChatActions.receiveAPIMessage({message}));
+              case ChatMessageType.AI_TOOL:
+                return of(PaperChatActions.receiveToolMessage({message}));
               default:
                 return of(PaperChatActions.receiveAIMessage({message}));
             }

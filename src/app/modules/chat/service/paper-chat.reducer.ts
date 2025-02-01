@@ -2,9 +2,9 @@ import {createReducer, on} from '@ngrx/store';
 import * as PaperChatActions from './paper-chat.actions';
 import {cloneDeep} from 'lodash';
 import {v4 as uuidv4} from 'uuid';
-import {ChatMessageType, ConversationPart, MessageDTO} from '../dto/message';
-import {MessageState, RequestDTO} from '../dto/paper-chat';
-import {receiveAIMessage} from './paper-chat.actions';
+import {ConversationPart, MessageDTO, ToolSourceDTO, ToolSourceInputDTO} from '../dto/message';
+import {RequestDTO} from '../dto/paper-chat';
+import {MessageState, Tools} from '../dto/enums';
 
 export interface PaperChatState {
   currentThreadId: string;
@@ -88,10 +88,57 @@ export const paperChatReducer = createReducer(
 
       if (messageIndex === -1 || typeof foundMessage.message !== 'string') {
         return state;
-      } else {
-        existingMessages[messageIndex].message += foundMessage.message as string;
-        messagesByThread[state.currentThreadId] = existingMessages;
       }
+
+      existingMessages[messageIndex].message += foundMessage.message as string;
+      messagesByThread[state.currentThreadId] = existingMessages;
+
+      return {
+        ...state,
+        messagesByThread: messagesByThread,
+      };
+    }),
+    on(PaperChatActions.receiveToolMessage, (state, {message}) => {
+      const foundMessage: MessageDTO = cloneDeep(message);
+      const messagesByThread = cloneDeep(state.messagesByThread);
+      const existingMessages = messagesByThread[state.currentThreadId] ?? [];
+      const messageIndex = existingMessages.findIndex(msg => msg.messageId === foundMessage.messageId);
+
+      if (messageIndex === -1 || typeof foundMessage.message !== 'string') {
+        return state;
+      }
+
+      let toolName = message.message as string;
+      const oldTool = existingMessages[messageIndex].tools.at(-1);
+
+      if (toolName.toLowerCase().startsWith("start")) {
+        toolName = toolName.replace("START", "");
+        existingMessages[messageIndex].tools.push({
+          started: true,
+          id: uuidv4(),
+          input: null,
+          name: toolName
+        });
+      }
+
+      if (oldTool && oldTool.started) {
+        if (toolName.toLowerCase().startsWith("stop")) {
+          oldTool.started = false;
+        } else if (toolName.toLowerCase().startsWith("content")) {
+          oldTool.content = toolName.replace("CONTENT", "");
+          if (oldTool.name === Tools.SEMANTIC_SCHOLAR) {
+            oldTool.content = JSON.parse(oldTool.content) as ToolSourceDTO[];
+          }
+          oldTool.started = false;
+        } else if (toolName.toLowerCase().startsWith("input")) {
+          oldTool.input = toolName.replace("INPUT", "");
+          if (oldTool.name === Tools.SEMANTIC_SCHOLAR) {
+            oldTool.input = (JSON.parse(oldTool.input) as ToolSourceInputDTO).query;
+          }
+        }
+      }
+      messagesByThread[state.currentThreadId] = existingMessages;
+
       return {
         ...state,
         messagesByThread: messagesByThread,
