@@ -4,7 +4,7 @@ import {cloneDeep} from 'lodash';
 import {v4 as uuidv4} from 'uuid';
 import {ConversationPart, MessageDTO, ToolSourceDTO, ToolSourceInputDTO} from '../dto/message';
 import {RequestDTO} from '../dto/paper-chat';
-import {MessageState, Tools} from '../dto/enums';
+import {ChatMessageType, MessageState, Tools} from '../dto/enums';
 
 export interface PaperChatState {
   currentThreadId: string;
@@ -58,7 +58,8 @@ export const paperChatReducer = createReducer(
           tools: [],
           errors: [],
           decisions: [],
-          isHuman: false
+          isHuman: false,
+          sources: []
         })
         return {
           ...state,
@@ -86,7 +87,7 @@ export const paperChatReducer = createReducer(
       const existingMessages = messagesByThread[state.currentThreadId] ?? [];
       const messageIndex = existingMessages.findIndex(msg => msg.messageId === foundMessage.messageId);
 
-      if (messageIndex === -1 || typeof foundMessage.message !== 'string') {
+      if (messageIndex === -1 || typeof foundMessage.message !== 'string' || foundMessage.messageType !== ChatMessageType.AI) {
         return state;
       }
 
@@ -128,6 +129,7 @@ export const paperChatReducer = createReducer(
           oldTool.content = toolName.replace("CONTENT", "");
           if (oldTool.name === Tools.SEMANTIC_SCHOLAR) {
             oldTool.content = JSON.parse(oldTool.content) as ToolSourceDTO[];
+            existingMessages[messageIndex].sources = [...existingMessages[messageIndex].sources, ...oldTool.content];
           }
           oldTool.started = false;
         } else if (toolName.toLowerCase().startsWith("input")) {
@@ -158,6 +160,7 @@ export const paperChatReducer = createReducer(
               tools: [],
               errors: [],
               decisions: [],
+              sources: [],
               isHuman: true,
               messageId: uuidv4(),
               threadId: state.currentThreadId,

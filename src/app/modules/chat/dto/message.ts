@@ -18,6 +18,7 @@ export interface ConversationPart {
   threadId: string;
   state?: MessageState
   tools: ToolDTO[];
+  sources: ToolSourceDTO[];
   errors: string[];
   decisions: string[];
   isHuman: boolean;

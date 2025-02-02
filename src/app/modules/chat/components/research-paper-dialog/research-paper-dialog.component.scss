@@ -1,0 +1,7 @@
+mat-dialog-content {
+  height: calc(100% - 57px);
+  max-height: unset;
+  padding: 0 !important;
+
+  overflow: scroll;
+}

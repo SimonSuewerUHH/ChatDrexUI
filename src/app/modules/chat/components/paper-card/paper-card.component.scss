@@ -10,3 +10,12 @@
 mat-card-title{
   font-size: 16px;
 }
+
+.content {
+  display: flex;
+  gap: 15px;
+
+  .abstract-text {
+    width: 50%;
+  }
+}

@@ -9,21 +9,17 @@ import {
 } from '@angular/core';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {NgOptimizedImage} from '@angular/common';
-import {MarkdownComponent, provideMarkdown} from 'ngx-markdown';
-import {ConversationPart} from '../../dto/message';
-import {PanelWrapperComponent} from '../panel-wrapper/panel-wrapper.component';
+import {ConversationPart, ToolSourceDTO} from '../../dto/message';
 import {ToolsPanelComponent} from '../tools-panel/tools-panel.component';
 import {MessageState} from '../../dto/enums';
+import {CustomMarkdownComponent} from '../markdown/markdown.component';
 
 @Component({
   selector: 'app-paper-chat-receiving-bubble',
-  imports: [MatProgressBarModule, NgOptimizedImage, MarkdownComponent, ToolsPanelComponent], //
+  imports: [MatProgressBarModule, NgOptimizedImage,  ToolsPanelComponent, CustomMarkdownComponent],
   templateUrl: './paper-chat-receiving-bubble.component.html',
   styleUrl: './paper-chat-receiving-bubble.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    provideMarkdown(),
-  ],
 })
 export class PaperChatReceivingBubbleComponent implements OnChanges {
   private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef)
@@ -45,6 +41,10 @@ export class PaperChatReceivingBubbleComponent implements OnChanges {
 
   getMarkdown(): string {
     return this.message()?.message as string;
+  }
+
+  getSource(): ToolSourceDTO[] {
+    return this.message().sources
   }
 
 }
