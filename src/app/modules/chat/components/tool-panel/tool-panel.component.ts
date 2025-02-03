@@ -12,5 +12,5 @@ import {MatIconModule} from '@angular/material/icon';
 })
 export class ToolPanelComponent {
   readonly tool = input.required<ToolDTO>();
-
+  readonly hideToggle = input<boolean>(false);
 }

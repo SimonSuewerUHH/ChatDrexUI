@@ -36,7 +36,8 @@ export class PaperChatSendComponent {
     {label: 'Ask about possibilietes', value: '/chat'},
     {label: 'Ask current Research question', value: '/research'},
     {label: 'Use the Diamond alogrithm', value: '/diamond'},
-    {label: 'Use the Digest alogrithm', value: '/digest'},
+    {label: 'Use the Digest Sub alogrithm', value: '/digest_sub'},
+    {label: 'Use the Digest Set alogrithm', value: '/digest_set'},
     {label: 'Use the Trustrank alogrithm', value: '/trustrank'},
     {label: 'Ask directly the Nextdrex BD', value: '/netdrex'},
   ];

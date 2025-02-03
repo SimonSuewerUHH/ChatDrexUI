@@ -61,4 +61,23 @@ export class PaperChatReceivingBubbleComponent implements OnChanges {
     return undefined;
   }
 
+  getRemoteHTML(): string| undefined {
+    const urls = this.message().systemMessages
+      .filter((m) => {
+        return typeof m.message === 'object' && m.message !== null && 'url' in m.message;
+      })
+      .map((m) => (m.message as SystemMessageDTO).url)
+      .map((url) => {
+        const baseUrl =  'http://localhost:8000';
+        return `${baseUrl}/load/${url!.replace(/^generations\//, '')}`;
+      });
+
+    if (urls.length > 0) {
+      return urls[0];
+    }
+    return undefined;
+
+  }
+
+
 }

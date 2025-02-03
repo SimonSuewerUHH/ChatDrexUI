@@ -1,4 +1,4 @@
-<mat-accordion>
+<mat-accordion [hideToggle]="hideToggle">
   <mat-expansion-panel class="tool-panel">
     <mat-expansion-panel-header class="tool-panel--header">
       <mat-panel-title>
@@ -7,7 +7,9 @@
         } @else {
           <mat-icon>check_circle</mat-icon>
         }
-        <span>{{ tool().input }}</span>
+        <ng-content select="[header]">
+          <span>{{ tool().input }}</span>
+        </ng-content>
       </mat-panel-title>
     </mat-expansion-panel-header>
     <ng-content select="[content]"></ng-content>
