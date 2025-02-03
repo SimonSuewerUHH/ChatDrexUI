@@ -2,6 +2,9 @@
   <img ngSrc="assets/logo.png" alt="logo" width="30" height="30" class="logo" [class.rotate]="useLoading"/>
   <div class="receive-bubble">
     <app-tools-panel [message]="message()"></app-tools-panel>
+    @if (getDrugstOneNetwork()) {
+      <app-drugst-one-network [network]="getDrugstOneNetwork()!"></app-drugst-one-network>
+    }
     <app-sourced-markdown [markdown]="getMarkdown()"
     [sources]="getSource()"
     ></app-sourced-markdown>

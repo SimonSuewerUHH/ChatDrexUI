@@ -1,4 +1,28 @@
-mat-icon{
+mat-icon {
   color: black;
 }
 
+.sender-wrapper {
+  display: flex;
+  align-items: center;
+
+  .mat-form-field {
+    flex: 1;
+  }
+}
+
+mat-option {
+  min-height: 30px;
+  height: 30px;
+}
+
+::ng-deep .mdc-list-item__primary-text {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+
+  .label{
+    font-size: 12px;
+    color: #888;
+  }
+}

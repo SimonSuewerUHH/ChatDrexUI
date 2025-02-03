@@ -28,9 +28,11 @@
       </app-panel-wrapper>
     }
   }
-  <app-panel-wrapper header="Decisions">
-    <mat-icon icon>psychology</mat-icon>
-    <app-decisions-panel content [decisions]="decisions"
-    ></app-decisions-panel>
-  </app-panel-wrapper>
+  @if (getDecisions().length > 0) {
+    <app-panel-wrapper header="Decisions">
+      <mat-icon icon>psychology</mat-icon>
+      <app-decisions-panel content [decisions]="getDecisions()"
+      ></app-decisions-panel>
+    </app-panel-wrapper>
+  }
 </mat-expansion-panel>

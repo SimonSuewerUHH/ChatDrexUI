@@ -1,13 +1,14 @@
 import {inject, Injectable} from '@angular/core';
 import {Actions, ofType, createEffect} from '@ngrx/effects';
-import {of, startWith, withLatestFrom} from 'rxjs';
+import {concatMap, from, of, startWith, withLatestFrom} from 'rxjs';
 import {catchError, filter, map, mergeMap, tap} from 'rxjs/operators';
 import * as PaperChatActions from './paper-chat.actions';
 import {PaperChatWebSocketService} from './paper-chat.service';
-import {Store} from '@ngrx/store';
+import {Action, Store} from '@ngrx/store';
 import {selectClientId} from './paper-chat.selector';
 import {ChatMessageType} from '../dto/enums';
 import {ResponseDTO} from '../dto/paper-chat';
+import {receiveReasoningMessage} from './paper-chat.actions';
 
 @Injectable()
 export class PaperChatEffects {
@@ -25,19 +26,7 @@ export class PaperChatEffects {
           /*filter((data: ResponseDTO) =>
             [MessageType.RECEIVING_SINGLE, MessageType.RECEIVING_ALL, MessageType.RECEIVING_SYSTEM].includes(data.messageType)
           ),*/
-          tap((data: ResponseDTO) => console.log('Received data:', data)),
-          mergeMap((message) => message.messages),
-          tap((data) => console.log('Received message:', data)),
-          mergeMap((message) => {
-            switch (message.messageType) {
-              case ChatMessageType.API:
-                return of(PaperChatActions.receiveAPIMessage({message}));
-              case ChatMessageType.AI_TOOL:
-                return of(PaperChatActions.receiveToolMessage({message}));
-              default:
-                return of(PaperChatActions.receiveAIMessage({message}));
-            }
-          }),
+          concatMap((response) => this.processMessages(response.messages)),
           startWith(PaperChatActions.connectSuccess()),
           catchError((error) =>
             of(PaperChatActions.connectFailure({error}))
@@ -72,5 +61,26 @@ export class PaperChatEffects {
     )
   );
 
-
+  private processMessages(messages: ResponseDTO["messages"]) {
+    return from(messages).pipe(
+      map((message) => {
+        const actionMap: any = {
+          [ChatMessageType.API]: PaperChatActions.receiveAPIMessage,
+          [ChatMessageType.AI_TOOL]: PaperChatActions.receiveToolMessage,
+          [ChatMessageType.REASONING]: PaperChatActions.receiveReasoningMessage,
+          [ChatMessageType.SYSTEM]: PaperChatActions.receiveSystemMessage,
+          [ChatMessageType.AI]: PaperChatActions.receiveAIMessage,
+        }
+        const actionCreator = actionMap[message.messageType];
+        if (actionCreator) {
+          console.log(`${message.messageType} message received:`, message);
+          return actionCreator({message});
+        } else {
+          console.warn("Unexpected messageType received:", message.messageType, message);
+          return null;
+        }
+      }),
+      filter((action): action is Action => !!action)
+    );
+  }
 }

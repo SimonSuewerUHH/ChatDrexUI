@@ -2,6 +2,7 @@ export enum ChatMessageType {
   HUMAN = 'human',
   AI = 'ai',
   AI_TOOL = 'aiTool',
+  REASONING = 'reasoning',
   SYSTEM = 'system',
   AI_RESEARCH = 'research',
   API = 'api',

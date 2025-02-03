@@ -18,8 +18,10 @@ import {PapersListComponent} from '../papers-list/papers-list.component';
 export class ToolsPanelComponent {
   readonly message = input.required<ConversationPart>();
 
-  decisions: string[] = ['Decision 1', 'Decision 2', 'Decision 3'];
 
+  getDecisions(): string[] {
+    return this.message().decisions;
+  }
 
   getResearchTools(): ToolDTO[] {
     return this.message().tools.filter(this.isResearch);
@@ -29,7 +31,7 @@ export class ToolsPanelComponent {
     return this.message().tools.filter(tool => !this.isResearch(tool));
   }
 
-  private isResearch(tool:ToolDTO): boolean {
+  private isResearch(tool: ToolDTO): boolean {
     return tool.name === Tools.SEMANTIC_SCHOLAR;
   }
 }

@@ -1,9 +1,28 @@
 <form (ngSubmit)="send()" class="sender-wrapper">
   <mat-form-field class="full-width">
-    <input matInput [(ngModel)]="message" name="message" placeholder="Type your message" required>
+    <input
+      matInput
+      [(ngModel)]="message"
+      name="message"
+      placeholder="Ask ChatDrex for a question or type '/' for commands"
+      required
+      (keyup)="onKeyUp($event)"
+      [matAutocomplete]="auto">
     <button mat-icon-button matSuffix type="submit">
       <mat-icon matSuffix>send</mat-icon>
     </button>
 
   </mat-form-field>
+
+  <mat-autocomplete
+    #auto="matAutocomplete"
+    [displayWith]="displayOption"
+  >
+    @for (option of filteredOptions; track option.value) {
+      <mat-option [value]="option">
+        <span> {{ option.value }}</span>
+        <span class="label"> {{ option.label }}</span>
+      </mat-option>
+    }
+  </mat-autocomplete>
 </form>

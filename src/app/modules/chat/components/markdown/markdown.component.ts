@@ -65,7 +65,6 @@ export class CustomMarkdownComponent implements OnInit, OnChanges {
   }
 
   onLinkClick(event: MouseEvent) {
-    debugger;
     const target = event.target as HTMLElement;
     if (target.classList.contains('ref-link')) {
       event.preventDefault();

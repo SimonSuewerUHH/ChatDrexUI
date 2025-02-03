@@ -9,14 +9,16 @@ import {
 } from '@angular/core';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {NgOptimizedImage} from '@angular/common';
-import {ConversationPart, ToolSourceDTO} from '../../dto/message';
+import {ConversationPart, SystemMessageDTO, ToolSourceDTO} from '../../dto/message';
 import {ToolsPanelComponent} from '../tools-panel/tools-panel.component';
 import {MessageState} from '../../dto/enums';
 import {CustomMarkdownComponent} from '../markdown/markdown.component';
+import {DrugstOneNetworkComponent} from '../drugst-one-network/drugst-one-network.component';
+import {DrugstOneGraph} from '../../dto/network';
 
 @Component({
   selector: 'app-paper-chat-receiving-bubble',
-  imports: [MatProgressBarModule, NgOptimizedImage,  ToolsPanelComponent, CustomMarkdownComponent],
+  imports: [MatProgressBarModule, NgOptimizedImage, ToolsPanelComponent, CustomMarkdownComponent, DrugstOneNetworkComponent],
   templateUrl: './paper-chat-receiving-bubble.component.html',
   styleUrl: './paper-chat-receiving-bubble.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -45,6 +47,18 @@ export class PaperChatReceivingBubbleComponent implements OnChanges {
 
   getSource(): ToolSourceDTO[] {
     return this.message().sources
+  }
+
+  getDrugstOneNetwork(): DrugstOneGraph | undefined {
+    const graphs = this.message().systemMessages
+      .filter((m) => {
+        return typeof m.message === 'object' && m.message !== null && 'drugstOneNetwork' in m.message;
+      })
+      .map((m) => (m.message as SystemMessageDTO).drugstOneNetwork)
+    if (graphs.length > 0) {
+      return graphs[0];
+    }
+    return undefined;
   }
 
 }

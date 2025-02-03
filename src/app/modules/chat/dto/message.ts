@@ -1,4 +1,5 @@
 import {ChatMessageType, MessageState} from './enums';
+import {DrugstOneGraph} from './network';
 
 
 export interface MessageDTO {
@@ -22,6 +23,7 @@ export interface ConversationPart {
   errors: string[];
   decisions: string[];
   isHuman: boolean;
+  systemMessages: MessageDTO[];
 }
 
 export interface ToolDTO {
@@ -47,7 +49,7 @@ export interface ToolSourceInputDTO {
 }
 
 export interface SystemMessageDTO {
-  //drugstOneNetwork?: DrugstOneGraph;
+  drugstOneNetwork?: DrugstOneGraph;
   url?: string;
 }
 

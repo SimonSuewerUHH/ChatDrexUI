@@ -6,10 +6,19 @@ import {MatIconModule} from '@angular/material/icon';
 import {Store} from '@ngrx/store';
 import {sendMessage} from '../../service/paper-chat.actions';
 import {MatButtonModule} from '@angular/material/button';
+import {MatAutocompleteModule, MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
+import {MatOptionModule} from '@angular/material/core';
+
+interface Option {
+  label: string;
+  value: string;
+}
 
 @Component({
   selector: 'app-paper-chat-send',
   imports: [
+    MatAutocompleteModule,
+    MatOptionModule,
     FormsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -22,6 +31,32 @@ export class PaperChatSendComponent {
   readonly threadId = input.required<string>();
   private readonly store: Store = inject(Store);
   message: string = '';
+
+  options: Option[] = [
+    {label: 'Ask about possibilietes', value: '/chat'},
+    {label: 'Ask current Research question', value: '/research'},
+    {label: 'Use the Diamond alogrithm', value: '/diamond'},
+    {label: 'Use the Digest alogrithm', value: '/digest'},
+    {label: 'Use the Trustrank alogrithm', value: '/trustrank'},
+    {label: 'Ask directly the Nextdrex BD', value: '/netdrex'},
+  ];
+  filteredOptions: Option[] = [];
+  selectedCommand?: string;
+
+  onKeyUp(event: KeyboardEvent): void {
+    const input = (event.target as HTMLInputElement).value;
+    if (input.startsWith('/')) {
+      this.filteredOptions = this.options.filter(option =>
+        option.value.startsWith(input)
+      );
+    } else {
+      this.filteredOptions = [];
+    }
+  }
+
+  displayOption(option: any): string {
+    return option?.value || '';
+  }
 
   send(): void {
     if (this.message) {
