@@ -32,27 +32,27 @@ export const requestedMessage = createAction(
 );
 
 export const receiveAIMessage = createAction(
-  '[Chat] Receive Message',
+  '[Chat] Receive AI Message',
   props<{ message: MessageDTO }>()
 );
 
 export const receiveSystemMessage = createAction(
-  '[Chat] Receive Message',
+  '[Chat] Receive System Message',
   props<{ message: MessageDTO }>()
 );
 
 export const receiveToolMessage = createAction(
-  '[Chat] Receive tool Message',
+  '[Chat] Receive Tool Message',
   props<{ message: MessageDTO }>()
 );
 export const receiveReasoningMessage = createAction(
-  '[Chat] Receive tool Message',
+  '[Chat] Receive Reasoning Message',
   props<{ message: MessageDTO }>()
 );
 
 
 export const receiveAPIMessage = createAction(
-  '[Chat] Receive Message',
+  '[Chat] Receive API Message',
   props<{ message: MessageDTO }>()
 );
 

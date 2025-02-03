@@ -7,7 +7,10 @@ export const selectPaperChatFeature = createFeatureSelector<PaperChatState>('pap
 // Select Messages by ClientId
 export const selectCurrentMessages = createSelector(
   selectPaperChatFeature,
-  (state: PaperChatState) => state.messagesByThread[state.currentThreadId] || []
+  (state: PaperChatState) => {
+    const messageIds = state.messageOrderByThread[state.currentThreadId] || [];
+    return messageIds.map(id => state.messages[id]);
+  }
 );
 
 // Select Connected Status by ClientId

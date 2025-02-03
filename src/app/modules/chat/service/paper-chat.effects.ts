@@ -23,10 +23,25 @@ export class PaperChatEffects {
       withLatestFrom(this.store.select(selectClientId)),
       mergeMap(([{}, clientId]) =>
         this.wsService.connect(clientId).pipe(
-          /*filter((data: ResponseDTO) =>
-            [MessageType.RECEIVING_SINGLE, MessageType.RECEIVING_ALL, MessageType.RECEIVING_SYSTEM].includes(data.messageType)
-          ),*/
-          concatMap((response) => this.processMessages(response.messages)),
+          mergeMap(response => from(response.messages)),
+          map((message) => {
+            const actionMap: any = {
+              [ChatMessageType.API]: PaperChatActions.receiveAPIMessage,
+              [ChatMessageType.AI_TOOL]: PaperChatActions.receiveToolMessage,
+              [ChatMessageType.REASONING]: PaperChatActions.receiveReasoningMessage,
+              [ChatMessageType.SYSTEM]: PaperChatActions.receiveSystemMessage,
+              [ChatMessageType.AI]: PaperChatActions.receiveAIMessage,
+            }
+            const actionCreator = actionMap[message.messageType];
+            if (actionCreator) {
+              console.log(`${message.messageType} message received:`, message);
+              return actionCreator({message});
+            } else {
+              console.warn("Unexpected messageType received:", message.messageType, message);
+              return null;
+            }
+          }),
+          filter((action): action is Action => !!action),
           startWith(PaperChatActions.connectSuccess()),
           catchError((error) =>
             of(PaperChatActions.connectFailure({error}))
@@ -60,27 +75,4 @@ export class PaperChatEffects {
       )
     )
   );
-
-  private processMessages(messages: ResponseDTO["messages"]) {
-    return from(messages).pipe(
-      map((message) => {
-        const actionMap: any = {
-          [ChatMessageType.API]: PaperChatActions.receiveAPIMessage,
-          [ChatMessageType.AI_TOOL]: PaperChatActions.receiveToolMessage,
-          [ChatMessageType.REASONING]: PaperChatActions.receiveReasoningMessage,
-          [ChatMessageType.SYSTEM]: PaperChatActions.receiveSystemMessage,
-          [ChatMessageType.AI]: PaperChatActions.receiveAIMessage,
-        }
-        const actionCreator = actionMap[message.messageType];
-        if (actionCreator) {
-          console.log(`${message.messageType} message received:`, message);
-          return actionCreator({message});
-        } else {
-          console.warn("Unexpected messageType received:", message.messageType, message);
-          return null;
-        }
-      }),
-      filter((action): action is Action => !!action)
-    );
-  }
 }
