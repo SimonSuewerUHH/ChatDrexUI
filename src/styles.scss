@@ -1,37 +1,29 @@
-@use '@angular/material/index' as mat;
+@use "@angular/material" as mat;
 @use 'breakpoints' as bp;
 
 @include mat.core();
 
-$mb-frontend-primary: mat.m2-define-palette(mat.$m2-indigo-palette, 800);
-$mb-frontend-accent: mat.m2-define-palette(mat.$m2-pink-palette, 800);
-$mb-frontend-warn: mat.m2-define-palette(mat.$m2-red-palette);
-
-$primary-color: #000068;
-$secondary-color: #4690BF;
-$warn-color: #EAAFAD;
-$toolbar-color: #D7E3FF;
-
-$dAIbetes-theme: mat.m2-define-light-theme(
-    (
-      color: (
-        primary: $mb-frontend-primary,
-        accent: $mb-frontend-accent,
-        warn: $mb-frontend-warn,
-      ),
-      typography: (
-        brand-family: 'Open Sans',
-        bold-weight: 900
-      ),
-      density: (
-        scale: -1,
-      )
-    )
-);
-
 :root {
-  @include mat.all-component-themes($dAIbetes-theme);
+  @include mat.theme(
+      (
+        color: mat.$azure-palette,
+        typography: Roboto,
+      )
+  );
 }
+
+.dark-mode {
+  @include mat.theme(
+      (
+        color: (
+          primary: mat.$azure-palette,
+          theme-type: dark,
+        ),
+      ),
+    $overrides: ("background": #24292e)
+  );
+}
+
 
 html,
 body {
@@ -47,7 +39,7 @@ body {
   margin: 10px;
 }
 
-.full-width{
+.full-width {
   width: 100%;
 }
 

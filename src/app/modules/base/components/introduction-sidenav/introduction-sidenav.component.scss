@@ -1,34 +1,15 @@
-.disabled {
-  cursor: default;
-  pointer-events: none;
-  color: grey;
+@use '@angular/material' as mat;
 
-  &:hover {
-    color: grey;
-  }
-
-  ::ng-deep {
-
-    .mdc-list-item__content {
-      pointer-events: none;
-    }
-
-    mat-icon {
-      color: grey;
-      pointer-events: none;
-    }
-
-    .mat-mdc-list-item-title {
-      color: grey;
-      pointer-events: none;
-    }
-  }
+mat-divider {
+  @include mat.divider-overrides((
+    color: var(--mat-sys-surface-container-highest),
+  ));
 }
 
 .sidenav {
+  height: 100%;
   width: 100%;
-  background-color: #f6f8fa;
-  border-right: 1px solid #ddd;
+  background-color: var(--mat-sys-surface-container-lowest);
 
   &-header {
     display: flex;
@@ -63,13 +44,14 @@
       }
 
       &:hover {
-        background-color: #d6e4ff;
+        background-color: var(--mat-sys-secondary-container);
+        color: var(--mat-sys-on-secondary-container);
       }
 
       &.active {
-        background-color: #7ba8fd;
+        background-color: var(--mat-sys-secondary);
+        color: var(--mat-sys-on-secondary) !important;
         font-weight: bold;
-        color: #0056b3;
 
         .settings-btn {
           display: block;
