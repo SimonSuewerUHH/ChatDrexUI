@@ -2,7 +2,7 @@ import {ApplicationConfig, ErrorHandler, isDevMode, provideZoneChangeDetection} 
 import {provideRouter, Router, withComponentInputBinding} from '@angular/router';
 import {routes} from './app.routes';
 import {provideAnimationsAsync} from '@angular/platform-browser/animations/async';
-import {provideState, provideStore} from '@ngrx/store';
+import {ActionReducerMap, MetaReducer, provideState, provideStore} from '@ngrx/store';
 import {provideEffects} from '@ngrx/effects';
 import {HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 import {LoadingInterceptor} from './utils/interceptors/loading.interceptor';
@@ -13,11 +13,13 @@ import {PaperChatEffects} from './modules/chat/service/paper-chat.effects';
 import {paperChatReducer} from './modules/chat/service/paper-chat.reducer';
 import {GlobalErrorHandler} from './utils/interceptors/error.handler';
 import {provideStoreDevtools} from '@ngrx/store-devtools';
+import {hydrationMetaReducer} from './utils/services/hydration.reducer';
+
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({eventCoalescing: true}),
-    { provide: ErrorHandler, useClass: GlobalErrorHandler },
+    {provide: ErrorHandler, useClass: GlobalErrorHandler},
     provideRouter(routes, withComponentInputBinding()),
     provideAnimationsAsync(),
     provideHttpClient(withInterceptorsFromDi()),
@@ -31,7 +33,12 @@ export const appConfig: ApplicationConfig = {
       useClass: ErrorInterceptor,
       multi: true,
     },
-    provideStore(),
+    provideStore(
+      {
+        paperChat: paperChatReducer,
+        processInfo: processInfoReducer
+      } as ActionReducerMap<any, any>,
+      {metaReducers: [hydrationMetaReducer] as MetaReducer[]}),
     provideStoreDevtools({
       maxAge: 25, // Retains last 25 states
       logOnly: !isDevMode(), // Restrict extension to log-only mode
@@ -40,12 +47,6 @@ export const appConfig: ApplicationConfig = {
       traceLimit: 75, // maximum stack trace frames to be stored (in case trace option was provided as true)
       connectInZone: true // If set to true, the connection is established within the Angular zone
     }),
-    provideState(
-      {name: 'processInfo', reducer: processInfoReducer}
-    ),
-    provideState(
-      {name: 'paperChat', reducer: paperChatReducer}
-    ),
     provideEffects([
       ProcessInfoEffects,
       PaperChatEffects
