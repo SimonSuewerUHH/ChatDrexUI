@@ -38,3 +38,15 @@ export const selectClientId = createSelector(
   (state: PaperChatState) => state.clientId
 );
 
+
+export const getAllHeadlines = createSelector(
+  selectPaperChatFeature,
+  (state: PaperChatState) => state.headlineByThread
+);
+export const getAllThreadIds = createSelector(
+  selectPaperChatFeature,
+  (state: PaperChatState) => state.threadIds
+);
+
+
+

@@ -6,10 +6,11 @@ import {ShowMessageComponent} from './modules/process-info/components/show-messa
 import {SidenavBtnComponent} from './utils/components/sidenav-btn/sidenav-btn.component';
 import {Store} from '@ngrx/store';
 import {connectToWebsocket} from './modules/chat/service/paper-chat.actions';
+import {NewchatBtnComponent} from './utils/components/newchat-btn/newchat-btn.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, MatToolbarModule, NgOptimizedImage, ShowMessageComponent, SidenavBtnComponent, RouterLink],
+  imports: [RouterOutlet, MatToolbarModule, NgOptimizedImage, ShowMessageComponent, SidenavBtnComponent, RouterLink, NewchatBtnComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

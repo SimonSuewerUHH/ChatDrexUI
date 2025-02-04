@@ -3,13 +3,13 @@ import {
   ChangeDetectionStrategy, ChangeDetectorRef,
   Component,
   ElementRef,
-  inject,
+  inject, Input,
   OnDestroy,
   OnInit,
   ViewChild
 } from '@angular/core';
 import {Store} from '@ngrx/store';
-import { disconnect} from '../../service/paper-chat.actions';
+import {connectToChat, disconnect} from '../../service/paper-chat.actions';
 import {PaperChatSendingBubbleComponent} from '../paper-chat-sending-bubble/paper-chat-sending-bubble.component';
 import {PaperChatReceivingBubbleComponent} from '../paper-chat-receiving-bubble/paper-chat-receiving-bubble.component';
 import {PaperChatSendComponent} from '../paper-chat-send/paper-chat-send.component';
@@ -39,18 +39,20 @@ export class PaperChatWindowComponent implements OnInit, OnDestroy, AfterViewIni
   private readonly dialog: MatDialog = inject(MatDialog);
   private readonly clickEventService: ClickEventService = inject(ClickEventService);
 
+  @Input("threadId") threadId?: string;
   @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
 
   messages$: Observable<ConversationPart[]> = EMPTY
   connected$: Observable<boolean> = EMPTY;
-  threadId?: string;
   private autoScrollEnabled = true;
   private scrollEventSubscription!: Subscription;
   private clickEventSubscription?: Subscription;
 
   ngOnInit(): void {
 
-
+    if(this.threadId){
+      this.store.dispatch(connectToChat({threadId: this.threadId}));
+    }
     this.store.select(selectCurrentThreadId()).subscribe((threadId) => {
       if (!threadId) {
         return;

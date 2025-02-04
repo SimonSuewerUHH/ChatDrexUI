@@ -1,20 +1,22 @@
 import {inject, Injectable} from '@angular/core';
 import {Actions, ofType, createEffect} from '@ngrx/effects';
-import {concatMap, from, of, startWith, withLatestFrom} from 'rxjs';
+import {concatMap, delay, from, of, startWith, withLatestFrom} from 'rxjs';
 import {catchError, filter, map, mergeMap, tap} from 'rxjs/operators';
 import * as PaperChatActions from './paper-chat.actions';
 import {PaperChatWebSocketService} from './paper-chat.service';
 import {Action, Store} from '@ngrx/store';
-import {selectClientId} from './paper-chat.selector';
+import {getAllThreadIds, selectClientId} from './paper-chat.selector';
 import {ChatMessageType} from '../dto/enums';
-import {ResponseDTO} from '../dto/paper-chat';
-import {receiveReasoningMessage} from './paper-chat.actions';
+import {v4 as uuidv4} from 'uuid';
+import {Router} from '@angular/router';
+import {newChat} from './paper-chat.actions';
 
 @Injectable()
 export class PaperChatEffects {
   private readonly store: Store = inject(Store);
   private readonly wsService: PaperChatWebSocketService = inject(PaperChatWebSocketService);
   private readonly actions$: Actions = inject(Actions);
+  private readonly router: Router = inject(Router);
 
   // Handle connection to the project
   connectToProject$ = createEffect(() =>
@@ -46,6 +48,11 @@ export class PaperChatEffects {
           catchError((error) =>
             of(PaperChatActions.connectFailure({error}))
           )
+        ).pipe(
+          catchError((error) => {
+            console.error("WebSocket connection failed. Retrying in 5 seconds...", error);
+            return of(PaperChatActions.connectToWebsocket()).pipe(delay(3000));
+          })
         )
       )
     )
@@ -75,4 +82,51 @@ export class PaperChatEffects {
       )
     )
   );
+
+
+  connectToNewChat$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(PaperChatActions.newChat),
+      mergeMap(({threadId, message}) => {
+          threadId = threadId || uuidv4();
+          return of(PaperChatActions.connectToChatSuccess({threadId}), PaperChatActions.sendMessage({threadId, message}))
+        }
+      ),
+      catchError(() =>
+        of(PaperChatActions.connectToChatFailure())
+      )
+    )
+  );
+
+  connectToChat$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(PaperChatActions.connectToChat),
+      withLatestFrom(this.store.select(getAllThreadIds)),
+      mergeMap(([{threadId}, threadIds]) =>
+        threadIds.includes(threadId)
+          ? of(PaperChatActions.connectToChatSuccess({threadId}))
+          : of(PaperChatActions.connectToChatFailure())
+      ),
+      catchError(() =>
+        of(PaperChatActions.connectToChatFailure())
+      )
+    )
+  );
+
+  connectToChatSuccess$ = createEffect(() =>
+      this.actions$.pipe(
+        ofType(PaperChatActions.connectToChatSuccess),
+        tap(({threadId}) => this.router.navigate(['/chat/' + threadId]))
+      ),
+    {dispatch: false}
+  );
+
+  connectToChatFailure$ = createEffect(() =>
+      this.actions$.pipe(
+        ofType(PaperChatActions.connectToChatFailure),
+        tap(() => this.router.navigate(['/chat/new']))
+      ),
+    {dispatch: false}
+  );
+
 }

@@ -1,4 +1,4 @@
-import {Component, inject, input} from '@angular/core';
+import {Component, inject, input, output} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
@@ -28,7 +28,10 @@ interface Option {
   styleUrl: './paper-chat-send.component.scss'
 })
 export class PaperChatSendComponent {
-  readonly threadId = input.required<string>();
+  readonly threadId = input<string>();
+  readonly sendDirectly = input<boolean>(true);
+  newMessage = output<string>();
+
   private readonly store: Store = inject(Store);
   message: string = '';
 
@@ -61,9 +64,13 @@ export class PaperChatSendComponent {
 
   send(): void {
     if (this.message) {
-      this.store.dispatch(
-        sendMessage({threadId: this.threadId(), message: this.message})
-      );
+      if(this.sendDirectly() && this.threadId()){
+        this.store.dispatch(
+          sendMessage({threadId: this.threadId()!, message: this.message})
+        );
+      }else{
+        this.newMessage.emit(this.message);
+      }
       this.message = '';
     }
   }

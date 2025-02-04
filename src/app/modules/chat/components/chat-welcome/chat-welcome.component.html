@@ -1,13 +1,10 @@
 <div class="container">
   <h1>How can i help you?</h1>
 
-  <mat-form-field appearance="fill" class="full-width">
-    <mat-label>Ask ChatDrexUI</mat-label>
-    <input matInput />
-    <button mat-icon-button matSuffix>
-      <mat-icon>send</mat-icon>
-    </button>
-  </mat-form-field>
+  <app-paper-chat-send
+    [sendDirectly]="false"
+    (newMessage)="onSend($event)"
+  ></app-paper-chat-send>
 
   <div class="action-buttons">
     <button mat-stroked-button color="primary">

@@ -1,0 +1,23 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { ChatWrapperComponent } from './chat-wrapper.component';
+
+describe('ChatWrapperComponent', () => {
+  let component: ChatWrapperComponent;
+  let fixture: ComponentFixture<ChatWrapperComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [ChatWrapperComponent]
+    })
+    .compileComponents();
+
+    fixture = TestBed.createComponent(ChatWrapperComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

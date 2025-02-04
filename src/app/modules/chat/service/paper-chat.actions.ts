@@ -3,9 +3,22 @@ import { MessageDTO } from '../dto/message';
 import {RequestDTO} from '../dto/paper-chat';
 
 
-export const setThreadId = createAction(
+export const newChat = createAction(
   '[Chat] Create new Conversation with setThreadId',
-  props<{ threadId?: string }>()
+  props<{ threadId?: string, message: string }>()
+);
+
+export const connectToChat = createAction(
+  '[Chat] Switch to a Conversation with threadId',
+  props<{ threadId: string }>()
+);
+
+export const connectToChatSuccess = createAction(
+  '[Chat] Success Switch to a Conversation with threadId',
+  props<{ threadId: string }>()
+);
+export const connectToChatFailure = createAction(
+  '[Chat] Failed switch to a Conversation with threadId'
 );
 
 export const connectToWebsocket = createAction(

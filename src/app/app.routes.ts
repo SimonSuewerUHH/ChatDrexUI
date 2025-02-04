@@ -5,10 +5,8 @@ import {
   IntroductionWrapperComponent
 } from './modules/base/components/introduction-wrapper/introduction-wrapper.component';
 import {FaqComponent} from './modules/base/components/faq/faq.component';
-import {
-  IntroductionStudiesComponent
-} from './modules/base/components/introduction-studies/introduction-studies.component';
 import {ChatWelcomeComponent} from './modules/chat/components/chat-welcome/chat-welcome.component';
+import {ChatWrapperComponent} from './modules/chat/components/chat-wrapper/chat-wrapper.component';
 
 export const routes: Routes = [
   {
@@ -32,22 +30,30 @@ export const routes: Routes = [
         path: 'faq',
         component: FaqComponent,
       },
-      {
-        path: 'studies',
-        component: IntroductionStudiesComponent,
-      },
     ],
   },
   {
     path: 'chat',
-    component: PaperChatWindowComponent,
-    data: {breadcrumb: 'Chat'},
-  },
-  {
-    path: 'chats',
-    component: ChatWelcomeComponent,
-    data: {breadcrumb: 'Chat'},
-  },
+    component: ChatWrapperComponent,
+    children: [
+      {
+        path: '',
+        component: PaperChatWindowComponent,
+        data: {breadcrumb: 'Chat'},
+      },
+      {
+        path: 'new',
+        component: ChatWelcomeComponent,
+        data: {breadcrumb: 'Chat'},
+        pathMatch: 'full',
+      },
+      {
+        path: ':threadId',
+        component: PaperChatWindowComponent,
+        data: {breadcrumb: 'Chat'},
+      },
+    ]
+  }
 
 
 ];

@@ -5,7 +5,7 @@ import {v4 as uuidv4} from 'uuid';
 import {ConversationPart, MessageDTO, ToolDTO, ToolSourceDTO, ToolSourceInputDTO} from '../dto/message';
 import {RequestDTO} from '../dto/paper-chat';
 import {ChatMessageType, MessageState, Tools} from '../dto/enums';
-import {receiveSystemMessage} from './paper-chat.actions';
+import {connectToChatSuccess, receiveSystemMessage} from './paper-chat.actions';
 
 export interface PaperChatState {
   currentThreadId: string;
@@ -190,10 +190,18 @@ export const paperChatReducer = createReducer(
     };
   }),
   on(PaperChatActions.requestedMessage, (state, {requestedMessage}) => {
-    const foundMessage: RequestDTO = cloneDeep(requestedMessage);
+
     const messageId = uuidv4();
+    let headlineByThread = state.headlineByThread;
+    if (state.messageOrderByThread[state.currentThreadId] === undefined) {
+      headlineByThread = {
+        ...headlineByThread,
+        [state.currentThreadId]: requestedMessage.message
+      };
+    }
     return {
       ...state,
+      headlineByThread: headlineByThread,
       messageOrderByThread: {
         ...state.messageOrderByThread,
         [state.currentThreadId]: [...(state.messageOrderByThread[state.currentThreadId] ?? []), messageId]
@@ -201,7 +209,7 @@ export const paperChatReducer = createReducer(
       messages: {
         ...state.messages,
         [messageId]: {
-          ...foundMessage,
+          ...requestedMessage,
           state: MessageState.END,
           tools: [],
           errors: [],
@@ -218,16 +226,15 @@ export const paperChatReducer = createReducer(
 // Disconnection Handling
   on(PaperChatActions.disconnectSuccess, (state, {}) => ({
     ...state,
-    messages: {},
-    connected: false
+      connected: false
   })),
   on(PaperChatActions.disconnectFailure, (state, {error}) => ({
     ...state,
     errorByClientId: error
   })),
-  on(PaperChatActions.setThreadId, (state, {threadId}) => ({
+  on(PaperChatActions.connectToChatSuccess, (state, {threadId}) => ({
     ...state,
-    currentThreadId: threadId ?? uuidv4(),
-    threadIds: threadId && !state.threadIds.includes(threadId) ? [...state.threadIds, threadId] : state.threadIds,
+    currentThreadId: threadId,
+    threadIds: !state.threadIds.includes(threadId) ? [...state.threadIds, threadId] : state.threadIds,
   })),
 );

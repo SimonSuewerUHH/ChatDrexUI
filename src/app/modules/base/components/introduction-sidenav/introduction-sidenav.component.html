@@ -1,15 +1,7 @@
 <div class="sidenav">
   <mat-list>
     <a mat-list-item
-       routerLink="/project"
-       class="sidenav--list-link"
-       (click)="onNavigate()">
-      <mat-icon matListItemIcon>backup_table</mat-icon>
-      <div matListItemTitle>Projects</div>
-    </a>
-    <mat-divider></mat-divider>
-    <a mat-list-item
-       routerLink="home"
+       routerLink="/introduction/home"
        routerLinkActive="active"
        class="sidenav--list-link"
        (click)="onNavigate()">
@@ -17,21 +9,25 @@
       <div matListItemTitle>Introduction</div>
     </a>
     <a mat-list-item
-       routerLink="faq"
+       routerLink="/introduction/faq"
        routerLinkActive="active"
        class="sidenav--list-link"
        (click)="onNavigate()">
       <mat-icon matListItemIcon>quiz</mat-icon>
       <div matListItemTitle>FAQ</div>
     </a>
-    <a mat-list-item
-       routerLink="studies"
-       routerLinkActive="active"
-       class="sidenav--list-link"
-       (click)="onNavigate()">
-      <mat-icon matListItemIcon>school</mat-icon>
-      <div matListItemTitle>Studies</div>
-    </a>
+    <mat-divider></mat-divider>
+    @if (headlines$ | async; as headlines) {
+      @for (headline of Object.entries(headlines); track headline[0]) {
+        <a mat-list-item
+           routerLink="/chat/{{ headline[0] }}"
+           class="sidenav--list-link"
+           (click)="onNavigate()">
+          <div matListItemTitle>{{ headline[1] }}</div>
+        </a>
+      }
+    }
+
   </mat-list>
 
 </div>

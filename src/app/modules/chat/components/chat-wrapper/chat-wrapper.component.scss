@@ -1,0 +1,40 @@
+.sidenav-container {
+  height: calc(100vh - 65px);
+  display: flex;
+}
+
+
+.sidenav {
+  width: 240px;
+  background-color: #f6f8fa;
+  border-right: 1px solid #ddd;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  background-color: #24292f;
+  color: white;
+
+  button {
+    color: white;
+  }
+}
+
+.sidenav{
+  width: 350px;
+}
+.content {
+  width: calc(100vw - 450px);
+  padding: 16px;
+
+  &-mobile{
+    width: 100vw;
+    padding: 10px;
+
+  }
+  &--width-fallback{
+    margin: 0 auto !important;
+  }
+}

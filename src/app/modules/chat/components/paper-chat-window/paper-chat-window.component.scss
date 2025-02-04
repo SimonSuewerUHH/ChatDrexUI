@@ -1,5 +1,5 @@
 .chat-window {
-  height: calc(100% - 64px);
+  height: calc(100% - 10px);
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -26,6 +26,7 @@ app-paper-chat-sending-bubble {
 
 app-paper-chat-receiving-bubble {
   align-self: flex-start;
+  width: 100%;
 }
 
 
