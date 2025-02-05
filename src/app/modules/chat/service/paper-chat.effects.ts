@@ -33,6 +33,7 @@ export class PaperChatEffects {
               [ChatMessageType.REASONING]: PaperChatActions.receiveReasoningMessage,
               [ChatMessageType.SYSTEM]: PaperChatActions.receiveSystemMessage,
               [ChatMessageType.AI]: PaperChatActions.receiveAIMessage,
+              [ChatMessageType.ERROR]: PaperChatActions.receiveErrorMessage,
             }
             const actionCreator = actionMap[message.messageType];
             if (actionCreator) {

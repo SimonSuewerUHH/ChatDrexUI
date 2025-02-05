@@ -95,7 +95,7 @@ export const toolTips: ToolTip[] = [
     tip: 'Ask drug repurposing knowladge graph (NeDRex)',
     explanation: 'Ask drug repurposing knowladge graph (NeDRex)',
     hints: [
-      'What are the key genes involved in Parkinson\'s disease?',
+      ' what is CF and what has CFTR to do with it?',
       'What are the key genes involved in Parkinson\'s disease?',
       'What are the key genes involved in Parkinson\'s disease?',
       'What are the key genes involved in Parkinson\'s disease?'

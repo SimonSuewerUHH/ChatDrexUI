@@ -16,18 +16,22 @@ import {CustomMarkdownComponent} from '../markdown/markdown.component';
 import {DrugstOneNetworkComponent} from '../drugst-one-network/drugst-one-network.component';
 import {DrugstOneGraph} from '../../dto/network';
 import {environment} from '../../../../../environments/environment';
+import {MatIconButton} from '@angular/material/button';
+import {MatIcon} from '@angular/material/icon';
+import {MatDialog} from '@angular/material/dialog';
+import {ErrorListDialogComponent} from '../error-list-dialog/error-list-dialog.component';
 
 @Component({
   selector: 'app-paper-chat-receiving-bubble',
-  imports: [MatProgressBarModule, NgOptimizedImage, ToolsPanelComponent, CustomMarkdownComponent, DrugstOneNetworkComponent],
+  imports: [MatProgressBarModule, NgOptimizedImage, ToolsPanelComponent, CustomMarkdownComponent, DrugstOneNetworkComponent, MatIconButton, MatIcon],
   templateUrl: './paper-chat-receiving-bubble.component.html',
   styleUrl: './paper-chat-receiving-bubble.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaperChatReceivingBubbleComponent implements OnChanges {
+  private readonly dialog: MatDialog = inject(MatDialog);
   private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef)
   readonly message = input.required<ConversationPart>();
-
   useLoading: boolean = false;
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -48,6 +52,12 @@ export class PaperChatReceivingBubbleComponent implements OnChanges {
 
   getSource(): ToolSourceDTO[] {
     return this.message().sources
+  }
+
+  openError(){
+    this.dialog.open(ErrorListDialogComponent, {
+      data: this.message()
+    });
   }
 
   getDrugstOneNetwork(): DrugstOneGraph | undefined {

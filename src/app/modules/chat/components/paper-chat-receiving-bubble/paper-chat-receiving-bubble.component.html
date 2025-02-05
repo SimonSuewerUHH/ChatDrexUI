@@ -2,6 +2,11 @@
   <img ngSrc="assets/logo.png" alt="logo" width="30" height="30" class="logo" [class.rotate]="useLoading"/>
   <div class="receive-bubble">
     <app-tools-panel [message]="message()"></app-tools-panel>
+    @if (message().errors.length > 0) {
+      <button mat-icon-button class="bug-btn" (click)="openError()">
+        <mat-icon>bug_report</mat-icon>
+      </button>
+    }
     @if (getDrugstOneNetwork()) {
       <app-drugst-one-network [network]="getDrugstOneNetwork()!"></app-drugst-one-network>
     }
@@ -9,7 +14,7 @@
       <iframe [src]="getRemoteHTML()"></iframe>
     }
     <app-sourced-markdown [markdown]="getMarkdown()"
-    [sources]="getSource()"
+                          [sources]="getSource()"
     ></app-sourced-markdown>
   </div>
 </div>

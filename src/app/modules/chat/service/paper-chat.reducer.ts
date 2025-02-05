@@ -3,9 +3,7 @@ import * as PaperChatActions from './paper-chat.actions';
 import {cloneDeep} from 'lodash';
 import {v4 as uuidv4} from 'uuid';
 import {ConversationPart, MessageDTO, ToolDTO, ToolSourceDTO, ToolSourceInputDTO} from '../dto/message';
-import {RequestDTO} from '../dto/paper-chat';
 import {ChatMessageType, MessageState, Tools} from '../dto/enums';
-import {connectToChatSuccess, deleteHistory, receiveSystemMessage} from './paper-chat.actions';
 
 export interface PaperChatState {
   currentThreadId: string;
@@ -122,6 +120,21 @@ export const paperChatReducer = createReducer(
         [message.messageId]: {
           ...state.messages[message.messageId],
           systemMessages: [...state.messages[message.messageId].systemMessages, message]
+        }
+      },
+    };
+  }),
+  on(PaperChatActions.receiveErrorMessage, (state, {message}) => {
+    if (!(message.messageId in state.messages) || typeof message.message !== 'string' || message.messageType !== ChatMessageType.ERROR) {
+      return state;
+    }
+    return {
+      ...state,
+      messages: {
+        ...state.messages,
+        [message.messageId]: {
+          ...state.messages[message.messageId],
+          errors: [...state.messages[message.messageId].errors, message.message]
         }
       },
     };

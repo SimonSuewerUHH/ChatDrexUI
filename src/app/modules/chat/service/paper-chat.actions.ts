@@ -53,6 +53,12 @@ export const receiveAIMessage = createAction(
   props<{ message: MessageDTO }>()
 );
 
+export const receiveErrorMessage = createAction(
+  '[Chat] Receive Error Message',
+  props<{ message: MessageDTO }>()
+);
+
+
 export const receiveSystemMessage = createAction(
   '[Chat] Receive System Message',
   props<{ message: MessageDTO }>()
