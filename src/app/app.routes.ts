@@ -7,6 +7,7 @@ import {
 import {FaqComponent} from './modules/base/components/faq/faq.component';
 import {ChatWelcomeComponent} from './modules/chat/components/chat-welcome/chat-welcome.component';
 import {ChatWrapperComponent} from './modules/chat/components/chat-wrapper/chat-wrapper.component';
+import {IntroductionToolsComponent} from './modules/base/components/introduction-tools/introduction-tools.component';
 
 export const routes: Routes = [
   {
@@ -30,6 +31,10 @@ export const routes: Routes = [
         path: 'faq',
         component: FaqComponent,
       },
+      {
+        path: 'tools',
+        component: IntroductionToolsComponent,
+      }
     ],
   },
   {

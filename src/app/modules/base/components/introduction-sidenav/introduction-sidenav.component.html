@@ -16,6 +16,14 @@
       <mat-icon matListItemIcon>quiz</mat-icon>
       <div matListItemTitle>FAQ</div>
     </a>
+    <a mat-list-item
+       routerLink="/introduction/tools"
+       routerLinkActive="active"
+       class="sidenav--list-link"
+       (click)="onNavigate()">
+      <mat-icon matListItemIcon>construction</mat-icon>
+      <div matListItemTitle>Tools</div>
+    </a>
     <mat-divider></mat-divider>
     @if (headlines$ | async; as headlines) {
       @for (headline of Object.entries(headlines); track headline[0]) {
