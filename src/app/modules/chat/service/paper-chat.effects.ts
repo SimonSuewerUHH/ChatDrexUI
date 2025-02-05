@@ -121,6 +121,14 @@ export class PaperChatEffects {
     {dispatch: false}
   );
 
+  deleteHistory$ = createEffect(() =>
+      this.actions$.pipe(
+        ofType(PaperChatActions.deleteHistory),
+        tap(() => this.router.navigate(['/introduction/home']))
+      ),
+    {dispatch: false}
+  );
+
   connectToChatFailure$ = createEffect(() =>
       this.actions$.pipe(
         ofType(PaperChatActions.connectToChatFailure),

@@ -5,7 +5,7 @@ import {v4 as uuidv4} from 'uuid';
 import {ConversationPart, MessageDTO, ToolDTO, ToolSourceDTO, ToolSourceInputDTO} from '../dto/message';
 import {RequestDTO} from '../dto/paper-chat';
 import {ChatMessageType, MessageState, Tools} from '../dto/enums';
-import {connectToChatSuccess, receiveSystemMessage} from './paper-chat.actions';
+import {connectToChatSuccess, deleteHistory, receiveSystemMessage} from './paper-chat.actions';
 
 export interface PaperChatState {
   currentThreadId: string;
@@ -33,6 +33,9 @@ export const initialState: PaperChatState = {
 
 export const paperChatReducer = createReducer(
   initialState,
+  on(PaperChatActions.deleteHistory, (state, {}) => ({
+    ...initialState
+  })),
   // Connection Handling
   on(PaperChatActions.connectSuccess, (state, {}) => ({
     ...state,

@@ -56,6 +56,8 @@ export class PaperChatReceivingBubbleComponent implements OnChanges {
         return typeof m.message === 'object' && m.message !== null && 'drugstOneNetwork' in m.message;
       })
       .map((m) => (m.message as SystemMessageDTO).drugstOneNetwork)
+      .filter(network => !!network)
+
     if (graphs.length > 0) {
       return graphs[0];
     }
@@ -68,6 +70,7 @@ export class PaperChatReceivingBubbleComponent implements OnChanges {
         return typeof m.message === 'object' && m.message !== null && 'url' in m.message;
       })
       .map((m) => (m.message as SystemMessageDTO).url)
+      .filter(url => !!url)
       .map((url) => {
         return `${environment.apiBaseUrl}/load/${url!.replace(/^generations\//, '')}`;
       });

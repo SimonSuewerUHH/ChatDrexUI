@@ -3,6 +3,10 @@ import { MessageDTO } from '../dto/message';
 import {RequestDTO} from '../dto/paper-chat';
 
 
+export const deleteHistory = createAction(
+  '[Chat] deleteHistory'
+);
+
 export const newChat = createAction(
   '[Chat] Create new Conversation with setThreadId',
   props<{ threadId?: string, message: string }>()

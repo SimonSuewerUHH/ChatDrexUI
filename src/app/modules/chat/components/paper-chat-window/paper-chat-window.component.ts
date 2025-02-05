@@ -107,7 +107,7 @@ export class PaperChatWindowComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   private scrollToBottom(): void {
-    if (!this.autoScrollEnabled) {
+    if (!this.autoScrollEnabled || !this.messagesContainer) {
       return;
     }
     this.messagesContainer.nativeElement.scrollTop = this.messagesContainer.nativeElement.scrollHeight;

@@ -6,6 +6,13 @@ mat-divider {
   ));
 }
 
+.delete-history-btn{
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  color: var(--mat-sys-on-surface) !important;
+}
+
 .sidenav {
   height: 100%;
   width: 100%;

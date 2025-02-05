@@ -10,6 +10,7 @@ import {RouterLink, RouterLinkActive} from "@angular/router";
 import {ClickEventService} from '../../../../utils/services/click-event.service';
 import {Store} from '@ngrx/store';
 import {getAllHeadlines} from '../../../chat/service/paper-chat.selector';
+import {deleteHistory} from '../../../chat/service/paper-chat.actions';
 
 @Component({
   selector: 'app-introduction-sidenav',
@@ -36,6 +37,10 @@ export class IntroductionSidenavComponent {
     if(this.isMobile()) {
       this.clickEventService.emitClickSideNavEvent();
     }
+  }
+
+  fireDeleteHistory(){
+  this.store.dispatch(deleteHistory());
   }
 
   protected readonly Object = Object;
