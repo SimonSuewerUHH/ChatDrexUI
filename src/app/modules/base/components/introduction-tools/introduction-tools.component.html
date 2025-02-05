@@ -1,0 +1,82 @@
+<h2>ChatDRex: Multi-Agent Tool Overview</h2>
+
+<ul>
+  <li>
+    <strong>Start Node: Intelligent Orchestrator</strong><br/>
+    Acts as the system's central hub, analyzing user input and directing it to the appropriate agent.
+    By leveraging <strong>LLMs</strong>, it ensures that each query is processed by the most relevant agent, enhancing
+    task specialization and optimizing system performance.
+  </li>
+  <li>
+    <strong>LLM Node: Conversational Engine</strong><br/>
+    Handles general inquiries, explanations, and discussions related to tool outputs.
+    It operates independently of external tools, ensuring robust and insightful responses while acting as a fallback
+    mechanism for unhandled queries.
+  </li>
+  <li>
+    <strong>DIGEST Node: Functional Enrichment Analysis</strong><br/>
+    Facilitates gene set analysis by interfacing with <strong>DIGEST</strong>,
+    enabling users to explore biological networks such as <strong>Gene Ontology (GO)</strong> and <strong>KEGG</strong>.
+    Presents results both textually and graphically for intuitive interpretation.
+  </li>
+  <li>
+    <strong>Network Node: Biological Network Exploration</strong><br/>
+    Manages queries related to gene interactions and network-based analyses using several specialized tools:
+    <ul>
+      <li>
+        <strong>NeDRexDB</strong>: Generates <strong>Cypher</strong> queries to extract data from the
+        <strong>NeDRex</strong> database.
+      </li>
+      <li>
+        <strong>DIAMOnD</strong>: Identifies disease-associated gene clusters by expanding biological networks around
+        known seed genes.
+      </li>
+      <li>
+        <strong>TrustRank</strong>: Evaluates gene association reliability by propagating trust scores within the
+        network.
+      </li>
+    </ul>
+  </li>
+  <li>
+    <strong>Research Node: Literature Mining</strong><br/>
+    Uses <strong>Semantic Scholar</strong> to retrieve relevant scientific literature.
+    An <strong>LLM-driven task decomposition</strong> method splits queries into multiple refined searches, improving
+    result accuracy and relevance.
+  </li>
+  <li>
+    <strong>Generate Node: Structured Response Synthesis</strong><br/>
+    Compiles information from processing agents into structured, <strong>Markdown-formatted</strong> responses.
+    Ensures academic accuracy by <strong>citing sources</strong> and adhering to scientific reporting standards.
+  </li>
+  <li>
+    <strong>Grading Node: Validation & Quality Control</strong><br/>
+    Implements a two-step process to mitigate <strong>LLM hallucinations</strong>:
+    <ul>
+      <li>
+        <strong>Hallucination Chain</strong>: Cross-checks generated content against validated sources to eliminate
+        inaccuracies.
+      </li>
+      <li>
+        <strong>Grading Chain</strong>: Assesses response relevance, clarity, and correctness, iteratively refining
+        outputs for high-quality results.
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>
+  ChatDRex’s multi-agent approach ensures precise, transparent, and <strong>bias-mitigated</strong> biomedical insights.
+  By integrating validated data sources and state-of-the-art computational methods, it provides a conversational
+  platform tailored for
+  <strong>network-based drug repurposing</strong> and advanced biomedical research.
+</p>
+
+<div class="start-wrapper">
+  <a
+    mat-fab extended
+    routerLink="/chat/new"
+    class="start-btn">
+    <mat-icon>backup_table</mat-icon>
+    <div>Start with your own ChatDrex experience</div>
+  </a>
+</div>
