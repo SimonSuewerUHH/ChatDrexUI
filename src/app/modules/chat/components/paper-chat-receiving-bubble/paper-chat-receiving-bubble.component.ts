@@ -15,6 +15,7 @@ import {MessageState} from '../../dto/enums';
 import {CustomMarkdownComponent} from '../markdown/markdown.component';
 import {DrugstOneNetworkComponent} from '../drugst-one-network/drugst-one-network.component';
 import {DrugstOneGraph} from '../../dto/network';
+import {environment} from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-paper-chat-receiving-bubble',
@@ -68,8 +69,7 @@ export class PaperChatReceivingBubbleComponent implements OnChanges {
       })
       .map((m) => (m.message as SystemMessageDTO).url)
       .map((url) => {
-        const baseUrl =  'http://localhost:8000';
-        return `${baseUrl}/load/${url!.replace(/^generations\//, '')}`;
+        return `${environment.apiBaseUrl}/load/${url!.replace(/^generations\//, '')}`;
       });
 
     if (urls.length > 0) {

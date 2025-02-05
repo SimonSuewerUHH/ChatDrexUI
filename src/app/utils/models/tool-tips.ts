@@ -91,7 +91,7 @@ export const toolTips: ToolTip[] = [
     icon: 'account_tree',
     name: 'Netdrex',
     tip: 'Ask drug repurposing knowladge graph (Netdrex)',
-    explanation: 'sk drug repurposing knowladge graph (Netdrex)',
+    explanation: 'Ask drug repurposing knowladge graph (Netdrex)',
     hints: [
       'What are the key genes involved in Parkinson\'s disease?',
       'What are the key genes involved in Parkinson\'s disease?',
