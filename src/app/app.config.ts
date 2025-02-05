@@ -7,8 +7,6 @@ import {provideEffects} from '@ngrx/effects';
 import {HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 import {LoadingInterceptor} from './utils/interceptors/loading.interceptor';
 import {ErrorInterceptor} from './utils/interceptors/error.interceptor';
-import {ProcessInfoEffects} from './modules/process-info/services/process-info.effects';
-import {processInfoReducer} from './modules/process-info/services/process-info.reducer';
 import {PaperChatEffects} from './modules/chat/service/paper-chat.effects';
 import {paperChatReducer} from './modules/chat/service/paper-chat.reducer';
 import {GlobalErrorHandler} from './utils/interceptors/error.handler';
@@ -35,8 +33,7 @@ export const appConfig: ApplicationConfig = {
     },
     provideStore(
       {
-        paperChat: paperChatReducer,
-        processInfo: processInfoReducer
+        paperChat: paperChatReducer
       } as ActionReducerMap<any, any>,
       {metaReducers: [hydrationMetaReducer] as MetaReducer[]}),
     provideStoreDevtools({
@@ -48,7 +45,6 @@ export const appConfig: ApplicationConfig = {
       connectInZone: true // If set to true, the connection is established within the Angular zone
     }),
     provideEffects([
-      ProcessInfoEffects,
       PaperChatEffects
     ]),
   ]

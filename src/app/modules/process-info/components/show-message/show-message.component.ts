@@ -1,16 +1,6 @@
 import {Component, EffectRef, inject, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {
-  hideLoadingProcessInfoSseStream,
-  startProcessInfoSseStream
-} from '../../services/process-info.actions';
-import {
-  selectIsConnected,
-  selectError,
-  selectShowLoading,
-  selectProcessLastInfo, selectShowMessage
-} from '../../services/process-info.selectors';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
@@ -42,19 +32,11 @@ export class ShowMessageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
    // this.connectSSERef = this.store.dispatch(() => startProcessInfoSseStream());
     this.isConnected$ = this.store.select(selectConnected);
-    this.error$ = this.store.select(selectError());
-    this.showLoading$ = this.store.select(selectShowLoading());
-    this.showMessage$ = this.store.select(selectShowMessage());
-    this.lastMessage$ = this.store.select(selectProcessLastInfo());
   }
 
   ngOnDestroy() {
     if (this.connectSSERef) {
       this.connectSSERef.destroy();
     }
-  }
-
-  close() {
-    this.store.dispatch(() => hideLoadingProcessInfoSseStream());
   }
 }
