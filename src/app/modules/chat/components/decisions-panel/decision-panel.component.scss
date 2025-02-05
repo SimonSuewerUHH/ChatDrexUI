@@ -1,6 +1,14 @@
-mat-list-item{
-  height: 30px !important;
-  mat-icon{
+mat-list-item {
+  height: initial !important;
+
+  mat-icon {
     margin-inline-end: 10px;
+    color: var(--mat-sys-on-surface);
+    align-self: start !important;
   }
+  ::ng-deep .mat-mdc-list-item-title {
+    word-wrap: break-word !important;
+    white-space: pre-wrap !important;
+  }
+
 }

@@ -3,15 +3,34 @@
 
   <app-paper-chat-send
     [sendDirectly]="false"
+    [startMessage]="startMessage"
     (newMessage)="onSend($event)"
   ></app-paper-chat-send>
 
-  <div class="action-buttons">
-    <button mat-stroked-button color="primary">
-      <mat-icon>edit</mat-icon> Hilf mir beim Schreiben</button>
-    <button mat-stroked-button color="primary">
-      <mat-icon>quiz</mat-icon> Erstelle eine Zusammenfassung</button>
-    <button mat-stroked-button color="primary">
-      <mat-icon>send</mat-icon> Erstelle einen Plan</button>
-  </div>
+  @if (!selectedTool) {
+
+
+    <div class="action-buttons">
+      @for (tip of tools; track tip.command) {
+        <button mat-stroked-button color="primary" (click)="selectTool(tip)">
+          <mat-icon>{{ tip.icon }}</mat-icon>
+          {{ tip.tip }}
+        </button>
+      }
+    </div>
+  } @else {
+
+
+    <div class="action-hint">
+      <button mat-icon-button color="primary" class="close-hint-btn" (click)="unselectTool()">
+        <mat-icon>close</mat-icon>
+      </button>
+      <mat-list role="list">
+        @for (hint of selectedTool.hints; track hint) {
+          <mat-list-item role="listitem" class="hint" (click)="selectHint(hint)">{{hint}}</mat-list-item>
+        }
+      </mat-list>
+    </div>
+  }
+
 </div>

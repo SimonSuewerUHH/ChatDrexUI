@@ -1,7 +1,8 @@
 .container {
   padding: 2rem;
   border-radius: 6px;
-  max-width: 800px;
+  width: 800px;
+  max-width: 90%;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -20,4 +21,18 @@ h1 {
 .action-buttons {
   display: flex;
   gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.close-hint-btn{
+  position: absolute;
+  right: 30px;
+  z-index: 99;
+}
+
+.hint{
+  &:hover {
+    background-color: var(--mat-sys-secondary-container);
+    color: var(--mat-sys-on-secondary-container);
+  }
 }

@@ -1,4 +1,13 @@
-import {Component, inject, input, output} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component, effect,
+  inject,
+  input,
+  OnChanges, OnInit,
+  output,
+  SimpleChanges
+} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
@@ -8,6 +17,8 @@ import {sendMessage} from '../../service/paper-chat.actions';
 import {MatButtonModule} from '@angular/material/button';
 import {MatAutocompleteModule, MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
 import {MatOptionModule} from '@angular/material/core';
+import {toolTips} from '../../../../utils/models/tool-tips';
+import {CommonModule} from '@angular/common';
 
 interface Option {
   label: string;
@@ -17,6 +28,7 @@ interface Option {
 @Component({
   selector: 'app-paper-chat-send',
   imports: [
+    CommonModule,
     MatAutocompleteModule,
     MatOptionModule,
     FormsModule,
@@ -25,30 +37,36 @@ interface Option {
     MatButtonModule,
     MatIconModule],
   templateUrl: './paper-chat-send.component.html',
-  styleUrl: './paper-chat-send.component.scss'
+  styleUrl: './paper-chat-send.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PaperChatSendComponent {
+export class PaperChatSendComponent implements OnInit{
+  private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
   readonly threadId = input<string>();
   readonly sendDirectly = input<boolean>(true);
+  readonly startMessage = input<string>('');
+  readonly deactivated = input<boolean>(false);
   newMessage = output<string>();
 
   private readonly store: Store = inject(Store);
   message: string = '';
 
-  options: Option[] = [
-    {label: 'Ask about possibilietes', value: '/chat'},
-    {label: 'Ask current Research question', value: '/research'},
-    {label: 'Use the Diamond alogrithm', value: '/diamond'},
-    {label: 'Use the Digest Sub alogrithm', value: '/digest_sub'},
-    {label: 'Use the Digest Set alogrithm', value: '/digest_set'},
-    {label: 'Use the Trustrank alogrithm', value: '/trustrank'},
-    {label: 'Ask directly the Nextdrex BD', value: '/netdrex'},
-  ];
+  options: Option[] = [];
   filteredOptions: Option[] = [];
-  selectedCommand?: string;
+
+  ngOnInit() {
+    this.message = this.startMessage() || '';
+    this.options = toolTips.map(tip => ({label: tip.explanation, value: tip.command}));
+  }
+
+  setStartMessage = effect(() => {
+    this.message = this.startMessage() || '';
+  });
+
 
   onKeyUp(event: KeyboardEvent): void {
     const input = (event.target as HTMLInputElement).value;
+    this.message = input;
     if (input.startsWith('/')) {
       this.filteredOptions = this.options.filter(option =>
         option.value.startsWith(input)
@@ -56,6 +74,7 @@ export class PaperChatSendComponent {
     } else {
       this.filteredOptions = [];
     }
+    this.cdr.detectChanges();
   }
 
   displayOption(option: any): string {
@@ -73,5 +92,6 @@ export class PaperChatSendComponent {
       }
       this.message = '';
     }
+    this.cdr.detectChanges();
   }
 }

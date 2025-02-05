@@ -6,6 +6,10 @@ import {MatButtonModule} from '@angular/material/button';
 import {Store} from '@ngrx/store';
 import {PaperChatSendComponent} from '../paper-chat-send/paper-chat-send.component';
 import {newChat} from '../../service/paper-chat.actions';
+import {ToolTip, toolTips} from '../../../../utils/models/tool-tips';
+import {ToolDTO} from '../../dto/message';
+import {MatListModule} from '@angular/material/list';
+
 
 @Component({
   selector: 'app-chat-welcome',
@@ -14,7 +18,8 @@ import {newChat} from '../../service/paper-chat.actions';
     MatInputModule,
     MatIconModule,
     MatButtonModule,
-    PaperChatSendComponent
+    PaperChatSendComponent,
+    MatListModule
   ],
   templateUrl: './chat-welcome.component.html',
   styleUrl: './chat-welcome.component.scss'
@@ -22,7 +27,26 @@ import {newChat} from '../../service/paper-chat.actions';
 export class ChatWelcomeComponent {
   private readonly store: Store = inject(Store);
 
+  tools: ToolTip[] = toolTips;
+
+  selectedTool?: ToolTip;
+  startMessage = '';
+
   onSend(newMessage: string) {
     this.store.dispatch(newChat({message: newMessage}));
+  }
+
+
+  selectTool(tool: ToolTip) {
+    this.selectedTool = tool;
+    this.startMessage = tool.command;
+  }
+
+  selectHint(hint: string) {
+    this.startMessage = this.selectedTool!.command + " " + hint;
+  }
+
+  unselectTool() {
+    this.selectedTool = undefined;
   }
 }

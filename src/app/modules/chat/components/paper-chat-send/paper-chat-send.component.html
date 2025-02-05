@@ -2,10 +2,11 @@
   <mat-form-field class="full-width">
     <input
       matInput
-      [(ngModel)]="message"
+      [value]="message"
       name="message"
       placeholder="Ask ChatDrex for a question or type '/' for commands"
       required
+      [disabled]="deactivated()"
       (keyup)="onKeyUp($event)"
       [matAutocomplete]="auto">
     <button mat-icon-button matSuffix type="submit">
