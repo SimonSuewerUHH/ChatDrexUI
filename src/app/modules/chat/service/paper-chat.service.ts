@@ -18,6 +18,8 @@ export class PaperChatWebSocketService {
   private clientId?: string;
 
   connect(clientId: string): Observable<ResponseDTO> {
+    console.log('Connecting to WebSocket...');
+    debugger;
     if (!clientId) {
       clientId = uuidv4();
     }
@@ -37,6 +39,7 @@ export class PaperChatWebSocketService {
       },
       complete: () => {
         console.log('WebSocket connection closed');
+        this.reconnect(clientId);
       },
     });
 

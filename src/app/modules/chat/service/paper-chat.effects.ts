@@ -1,6 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import {Actions, ofType, createEffect} from '@ngrx/effects';
-import {concatMap, delay, from, of, startWith, withLatestFrom} from 'rxjs';
+import {concatMap, delay, from, of, startWith, switchMap, withLatestFrom} from 'rxjs';
 import {catchError, filter, map, mergeMap, tap} from 'rxjs/operators';
 import * as PaperChatActions from './paper-chat.actions';
 import {PaperChatWebSocketService} from './paper-chat.service';
@@ -48,11 +48,6 @@ export class PaperChatEffects {
           catchError((error) =>
             of(PaperChatActions.connectFailure({error}))
           )
-        ).pipe(
-          catchError((error) => {
-            console.error("WebSocket connection failed. Retrying in 5 seconds...", error);
-            return of(PaperChatActions.connectToWebsocket()).pipe(delay(3000));
-          })
         )
       )
     )
@@ -132,9 +127,17 @@ export class PaperChatEffects {
   connectToChatFailure$ = createEffect(() =>
       this.actions$.pipe(
         ofType(PaperChatActions.connectToChatFailure),
-        tap(() => this.router.navigate(['/chat/new']))
+        tap(() => this.router.navigate(['/chat/new'])),
       ),
     {dispatch: false}
   );
 
+  connectToFailure$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(PaperChatActions.connectFailure),
+      tap(() => console.error("Failed to connect to chat")),
+      tap(() => this.router.navigate(['/chat/new'])),
+      switchMap(() => of(PaperChatActions.connectToWebsocket()).pipe(delay(3000)))
+    )
+  );
 }
