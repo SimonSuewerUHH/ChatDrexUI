@@ -1,0 +1,9 @@
+mat-list-item {
+  height: initial !important;
+
+  ::ng-deep .mdc-list-item__primary-text {
+    word-wrap: break-word !important;
+    white-space: pre-wrap !important;
+  }
+
+}
