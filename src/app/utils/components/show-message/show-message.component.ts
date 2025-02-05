@@ -5,7 +5,7 @@ import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {AsyncPipe} from '@angular/common';
-import {selectConnected} from '../../../chat/service/paper-chat.selector';
+import {selectConnected, selectCurrentError} from '../../../modules/chat/service/paper-chat.selector';
 
 @Component({
   selector: 'app-show-message',
@@ -23,15 +23,12 @@ export class ShowMessageComponent implements OnInit, OnDestroy {
 
   public isConnected$!: Observable<boolean>;
   public error$!: Observable<string | null>;
-  public showLoading$!: Observable<boolean>;
-  public showMessage$!: Observable<boolean>;
-  public lastMessage$!: Observable<string | null>;
 
   connectSSERef: EffectRef | undefined;
 
   ngOnInit(): void {
-   // this.connectSSERef = this.store.dispatch(() => startProcessInfoSseStream());
     this.isConnected$ = this.store.select(selectConnected);
+    this.error$ = this.store.select(selectCurrentError);
   }
 
   ngOnDestroy() {

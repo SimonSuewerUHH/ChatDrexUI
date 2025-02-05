@@ -1,11 +1,7 @@
-@if (showMessage$ | async) {
+@if (error$ | async) {
   <div class="sse-container">
     <div class="sse-message">
-      @if (showLoading$ | async) {
-        <mat-spinner class="spinner"></mat-spinner>
-      }
       <div class="message-text">
-        <p>{{ lastMessage$ | async }}</p>
         <p>{{ error$ | async }}</p>
       </div>
     </div>
