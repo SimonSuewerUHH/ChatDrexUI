@@ -54,8 +54,9 @@ export const toolTips: ToolTip[] = [
     tip: 'Analyzes gene subnetworks for enrichment',
     explanation: 'Analyzes gene subnetworks for enrichment, providing a plot and GO/KEGG term descriptions',
     hints: [
-      'What is the Digest Sub algorithm?',
-      'How does the Digest Sub algorithm work?',
+      'Can you perform ORA on the genes A2M, ABCA7, ACE, ADAM10 and APP?',
+      'What biological processes, molecular functions, and pathways are enriched in the network formed by the genes APOE, SORL1, BACE1, CLU, \n' +
+      'TREM2, BIN1, MAPT, GRN, ABCA7, CD33, and CR1?',
       'What is the Digest Sub algorithm?',
       'How does the Digest Sub algorithm work?'
     ]
@@ -67,8 +68,9 @@ export const toolTips: ToolTip[] = [
     tip: 'Performs gene set Representation Analysis',
     explanation: 'Performs Over Representation Analysis on a gene set, returning a plot and GO/KEGG term descriptions.',
     hints: [
-      'What is the Digest Set algorithm?',
-      'How does the Digest Set algorithm work?',
+      'Can you perform ORA on the genes A2M, ABCA7, ACE, ADAM10 and APP?',
+      'What biological processes, molecular functions, and pathways are enriched in the network formed by the genes APOE, SORL1, BACE1, CLU, \n' +
+      'TREM2, BIN1, MAPT, GRN, ABCA7, CD33, and CR1?',
       'What is the Digest Set algorithm?',
       'How does the Digest Set algorithm work?'
     ]
@@ -89,9 +91,9 @@ export const toolTips: ToolTip[] = [
   {
     command: '/netdrex',
     icon: 'account_tree',
-    name: 'Netdrex',
-    tip: 'Ask drug repurposing knowladge graph (Netdrex)',
-    explanation: 'Ask drug repurposing knowladge graph (Netdrex)',
+    name: 'NeDRex',
+    tip: 'Ask drug repurposing knowladge graph (NeDRex)',
+    explanation: 'Ask drug repurposing knowladge graph (NeDRex)',
     hints: [
       'What are the key genes involved in Parkinson\'s disease?',
       'What are the key genes involved in Parkinson\'s disease?',
