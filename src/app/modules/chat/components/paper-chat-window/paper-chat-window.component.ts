@@ -38,7 +38,6 @@ export class PaperChatWindowComponent implements OnInit, OnDestroy, AfterViewIni
   private readonly store: Store = inject(Store);
   private readonly dialog: MatDialog = inject(MatDialog);
   private readonly clickEventService: ClickEventService = inject(ClickEventService);
-
   @Input("threadId") threadId?: string;
   @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
 

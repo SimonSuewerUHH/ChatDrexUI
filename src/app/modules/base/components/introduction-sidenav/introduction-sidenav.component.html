@@ -28,7 +28,7 @@
     @if (headlines$ | async; as headlines) {
       @for (headline of Object.entries(headlines); track headline[0]) {
         <a mat-list-item
-           routerLink="/chat/{{ headline[0] }}"
+           [routerLink]="['/chat', headline[0]]"
            class="sidenav--list-link"
            (click)="onNavigate()">
           <div matListItemTitle>{{ headline[1] }}</div>
