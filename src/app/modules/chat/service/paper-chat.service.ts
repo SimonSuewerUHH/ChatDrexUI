@@ -19,7 +19,6 @@ export class PaperChatWebSocketService {
 
   connect(clientId: string): Observable<ResponseDTO> {
     console.log('Connecting to WebSocket...');
-    debugger;
     if (!clientId) {
       clientId = uuidv4();
     }

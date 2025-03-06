@@ -11,7 +11,7 @@
       <app-drugst-one-network [network]="getDrugstOneNetwork()!"></app-drugst-one-network>
     }
     @if (getRemoteHTML()) {
-      <iframe [src]="getRemoteHTML()"></iframe>
+      <iframe class="remote-html" [src]="getSanitizedRemoteHTML()"></iframe>
     }
     <app-sourced-markdown [markdown]="getMarkdown()"
                           [sources]="getSource()"

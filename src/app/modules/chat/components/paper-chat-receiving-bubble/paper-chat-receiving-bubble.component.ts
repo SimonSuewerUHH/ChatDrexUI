@@ -20,6 +20,7 @@ import {MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {MatDialog} from '@angular/material/dialog';
 import {ErrorListDialogComponent} from '../error-list-dialog/error-list-dialog.component';
+import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-paper-chat-receiving-bubble',
@@ -31,8 +32,10 @@ import {ErrorListDialogComponent} from '../error-list-dialog/error-list-dialog.c
 export class PaperChatReceivingBubbleComponent implements OnChanges {
   private readonly dialog: MatDialog = inject(MatDialog);
   private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef)
+  private readonly sanitizer: DomSanitizer = inject(DomSanitizer);
   readonly message = input.required<ConversationPart>();
   useLoading: boolean = false;
+
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes["message"]) {
@@ -54,7 +57,7 @@ export class PaperChatReceivingBubbleComponent implements OnChanges {
     return this.message().sources
   }
 
-  openError(){
+  openError() {
     this.dialog.open(ErrorListDialogComponent, {
       data: this.message()
     });
@@ -74,7 +77,7 @@ export class PaperChatReceivingBubbleComponent implements OnChanges {
     return undefined;
   }
 
-  getRemoteHTML(): string| undefined {
+  getRemoteHTML(): string | undefined {
     const urls = this.message().systemMessages
       .filter((m) => {
         return typeof m.message === 'object' && m.message !== null && 'url' in m.message;
@@ -90,6 +93,14 @@ export class PaperChatReceivingBubbleComponent implements OnChanges {
     }
     return undefined;
 
+  }
+
+  getSanitizedRemoteHTML(): SafeResourceUrl | undefined {
+    const url = this.getRemoteHTML();
+    if (!url) {
+      return undefined
+    }
+    return this.sanitizer.bypassSecurityTrustResourceUrl(url!);
   }
 
 
