@@ -20,6 +20,7 @@ import {PaperChatSettingDialogComponent} from '../paper-chat-setting-dialog/pape
 import {ClickEventService} from '../../../../utils/services/click-event.service';
 import {selectConnected, selectCurrentMessages, selectCurrentThreadId} from '../../service/paper-chat.selector';
 import {ConversationPart} from '../../dto/message';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-paper-chat-window',
@@ -38,35 +39,43 @@ export class PaperChatWindowComponent implements OnInit, OnDestroy, AfterViewIni
   private readonly store: Store = inject(Store);
   private readonly dialog: MatDialog = inject(MatDialog);
   private readonly clickEventService: ClickEventService = inject(ClickEventService);
-  @Input("threadId") threadId?: string;
+  private readonly route: ActivatedRoute = inject(ActivatedRoute);
+
   @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
 
   messages$: Observable<ConversationPart[]> = EMPTY
   connected$: Observable<boolean> = EMPTY;
+
+  threadId?: string;
+
   private autoScrollEnabled = true;
   private scrollEventSubscription!: Subscription;
   private clickEventSubscription?: Subscription;
 
   ngOnInit(): void {
 
-    if(this.threadId){
-      this.store.dispatch(connectToChat({threadId: this.threadId}));
-    }
-    this.store.select(selectCurrentThreadId()).subscribe((threadId) => {
-      if (!threadId) {
-        return;
+    this.route.params.subscribe(
+      params => {
+        this.threadId = params['threadId'];
+        if (this.threadId) {
+          this.store.dispatch(connectToChat({threadId: this.threadId}));
+        }
+        this.store.select(selectCurrentThreadId()).subscribe((threadId) => {
+          if (!threadId) {
+            return;
+          }
+          this.threadId = threadId;
+          //this.store.dispatch(connectToProject({projectId: this.projectId}));
+          this.messages$ = this.store.select(selectCurrentMessages);
+          this.connected$ = this.store.select(selectConnected);
+          this.cdr.detectChanges();
+        });
+        this.clickEventSubscription = this.clickEventService.clickSettingEvent$.subscribe(() => {
+          this.openChatSettingsDialog();
+          this.cdr.detectChanges();
+        });
       }
-      this.threadId = threadId;
-      //this.store.dispatch(connectToProject({projectId: this.projectId}));
-      this.messages$ = this.store.select(selectCurrentMessages);
-      this.connected$ = this.store.select(selectConnected);
-      this.cdr.detectChanges();
-    });
-    this.clickEventSubscription = this.clickEventService.clickSettingEvent$.subscribe(() => {
-      this.openChatSettingsDialog();
-      this.cdr.detectChanges();
-    });
-
+    );
   }
 
   ngAfterViewInit() {
@@ -88,7 +97,7 @@ export class PaperChatWindowComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   private monitorScrollEvents(): Subscription {
-    if(!this.messagesContainer) {
+    if (!this.messagesContainer) {
       console.error('messagesContainer is not defined');
       return new Subscription();
     }
