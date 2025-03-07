@@ -12,7 +12,7 @@ export class DrugstOneNetworkComponent implements OnInit {
   readonly network = input.required<DrugstOneGraph>();
 
   networkType: string = 'default';
-  identifier: string = 'uniprot';
+  identifier: string = 'entrez';
   formattedNetwork: any = {nodes: [], edges: []};
 
   groups = {
@@ -57,7 +57,72 @@ export class DrugstOneNetworkComponent implements OnInit {
         },
         shape: 'circle',
         type: 'default node type'
-      }
+      }, 
+      seednode: {
+        groupName: 'Seed Nodes',
+        color: {
+          border: '#f12525',
+          background: '#f12525',
+          highlight: {
+            border: '#f12525',
+            background: '#f12525'
+          }
+        },
+        shape: 'triangle',
+        type: 'default seed node type'
+      }, 
+      diamondnode: {
+        groupName: 'Diamond Nodes',
+        color: {
+          border: '#f1bb25',
+          background: '#f1bb25',
+          highlight: {
+            border: '#f1bb25',
+            background: '#f1bb25'
+          }
+        },
+        shape: 'diamond',
+        type: 'default diamond node type'
+      }, 
+      founddrug: {
+        groupName: 'Drug Nodes',
+        color: {
+          border: '#f125b0',
+          background: '#f125b0',
+          highlight: {
+            border: '#f125b0',
+            background: '#f125b0'
+          }
+        },
+        shape: 'triangle',
+        type: 'default drug node type'
+      }, 
+      gene: {
+        groupName: 'Gene Nodes',
+        color: {
+          border: '#1a9c48',
+          background: '#1a9c48',
+          highlight: {
+            border: '#1a9c48',
+            background: '#1a9c48'
+          }
+        },
+        shape: 'circle',
+        type: 'default gene node type'
+      }, 
+      disorder: {
+        groupName: 'Disorder Nodes',
+        color: {
+          border: '#1a459c',
+          background: '#1a459c',
+          highlight: {
+            border: '#1a459c',
+            background: '#1a459c'
+          }
+        },
+        shape: 'triangle',
+        type: 'default gene node type'
+      }, 
     },
     edgeGroups: {
       default: {
@@ -81,14 +146,17 @@ export class DrugstOneNetworkComponent implements OnInit {
   };
 
   ngOnInit() {
-
+    debugger;
     this.networkType = this.network().network.networkType || 'default';
     this.identifier = this.getIdentifier(this.networkType);
+    this.config.identifier = this.identifier;
+    debugger;
     this.formattedNetwork = {
       nodes: this.network().network.nodes || [],
       edges: this.network().network.edges || []
     };
   }
+  
 
   private getIdentifier(networkType: string): string {
     switch (networkType) {
