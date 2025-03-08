@@ -146,11 +146,10 @@ export class DrugstOneNetworkComponent implements OnInit {
   };
 
   ngOnInit() {
-    debugger;
     this.networkType = this.network().network.networkType || 'default';
     this.identifier = this.getIdentifier(this.networkType);
     this.config.identifier = this.identifier;
-    debugger;
+
     this.formattedNetwork = {
       nodes: this.network().network.nodes || [],
       edges: this.network().network.edges || []
