@@ -19,6 +19,7 @@ export class DrugstOneNetworkComponent implements OnInit {
     nodeGroups: {
       default: {
         groupName: 'Default Node Group',
+        borderWidth: 3,
         color: {
           border: '#FFFF00',
           background: '#FFFF00',
@@ -42,7 +43,6 @@ export class DrugstOneNetworkComponent implements OnInit {
           boldital: false,
           mono: false
         },
-        borderWidth: 1,
         borderWidthSelected: 2
       },
       foundnode: {
@@ -59,66 +59,71 @@ export class DrugstOneNetworkComponent implements OnInit {
         type: 'default node type'
       }, 
       seednode: {
-        groupName: 'Seed Nodes',
+        groupName: 'Seeds',
+        borderWidth: 3,
         color: {
-          border: '#f12525',
-          background: '#f12525',
+          border: '#978117',
+          background: '#E4C326',
           highlight: {
-            border: '#f12525',
-            background: '#f12525'
+            border: '#978117',
+            background: '#E4C326'
           }
         },
-        shape: 'triangle',
+        shape: 'star',
         type: 'default seed node type'
       }, 
       diamondnode: {
         groupName: 'Diamond Nodes',
+        borderWidth: 3,
         color: {
-          border: '#f1bb25',
-          background: '#f1bb25',
+          border: '#13367A',
+          background: '#3F78C1',
           highlight: {
-            border: '#f1bb25',
-            background: '#f1bb25'
+            border: '#13367A',
+            background: '#3F78C1'
           }
         },
         shape: 'diamond',
         type: 'default diamond node type'
       }, 
       founddrug: {
-        groupName: 'Drug Nodes',
+        groupName: 'Drugs',
+        borderWidth: 3,
         color: {
-          border: '#f125b0',
-          background: '#f125b0',
+          border: '#9c195d',
+          background: '#F12590',
           highlight: {
-            border: '#f125b0',
-            background: '#f125b0'
+            border: '#9c195d',
+            background: '#F12590'
           }
         },
-        shape: 'triangle',
+        shape: 'diamond',
         type: 'default drug node type'
-      }, 
+      },
       gene: {
-        groupName: 'Gene Nodes',
+        groupName: 'Genes',
+        borderWidth: 3,
         color: {
-          border: '#1a9c48',
-          background: '#1a9c48',
+          border: '#356920',
+          background: '#7EC16A',
           highlight: {
-            border: '#1a9c48',
-            background: '#1a9c48'
+            border: '#356920',
+            background: '#7EC16A'
           }
         },
         shape: 'circle',
         type: 'default gene node type'
       }, 
       disorder: {
-        groupName: 'Disorder Nodes',
+        groupName: 'Disorders',
+        borderWidth: 3,
         color: {
-          border: '#1a459c',
-          background: '#1a459c',
+          border: '#d18b19',
+          background: '#f1a223',
           highlight: {
-            border: '#1a459c',
-            background: '#1a459c'
-          }
+            border: '#d18b19',
+            background: '#f1a223'
+          }         
         },
         shape: 'triangle',
         type: 'default gene node type'
@@ -134,16 +139,63 @@ export class DrugstOneNetworkComponent implements OnInit {
   };
 
   config = {
-    title: 'Drugst.One',
-    showSidebar: 'left',
-    showLegendNodes: false,
-    showLegendEdges: false,
+    title: "Drugst.One",
+    backendUrl: "",
+    legendUrl:  "assets/drugstone_legend.png",
+    legendClass: "legend",
+    legendPos: "left",
+    taskTargetName: "Drug target search",
+    taskDrugName: "Drug search",
+    showSidebar: "left",
+    showLegendNodes: true,
+    showLegendEdges: true,
     showOverview: true,
     showQuery: true,
+    showItemSelector: true,
+    showSimpleAnalysis: true,
+    showAdvAnalysis: true,
+    showAdvAnalysisContent: ["drug-search", "drug-target-search", "enrichment-gprofiler", "enrichment-digest", "search-ndex"],
+    showSelection: true,
+    showTasks: true,
+    showViews: true,
+    showNetworkMenu: "right",
+    showLegend: true,
+    expandNetworkMenu: true,
+    showNetworkMenuButtonExpression: true,
+    showNetworkMenuButtonScreenshot: true,
+    showNetworkMenuButtonExportGraphml: true,
+    showNetworkMenuButtonAdjacentDrugs: true,
+    activateNetworkMenuButtonAdjacentDrugs: false,
+    showNetworkMenuButtonCenter: true,
+    showNetworkMenuButtonAnimation: true,
+    activateNetworkMenuButtonAdjacentDisorders: false,
+    showNetworkMenuButtonAdjacentDisordersProteins: true,
+    activateNetworkMenuButtonAdjacentDisorderDrugs: false,
+    showNetworkMenuButtonAdjacentDisordersDrugs: true,
+    showConnectGenes: true,
+    networkMenuButtonAdjacentDrugsLabel: "Drugs",
+    networkMenuButtonAdjacentDisordersProteinsLabel: "Disorders (protein)",
+    networkMenuButtonAdjacentDisordersDrugsLabel: "Disorders (drug)",
+    networkMenuButtonAnimationLabel: "Animation",
     identifier: this.identifier,
+    selfReferences: false,
+    customEdges: {default: true, selectable: true},
+    interactionDrugProtein: "NeDRex",
+    interactionProteinProtein: "NeDRex",
+    indicationDrugDisorder: "NeDRex",
+    associatedProteinDisorder: "NeDRex",
+    autofillEdges: true,
+    physicsOn: false,
+    physicsInitial: true,
     nodeShadow: true,
-    edgeShadow: true
+    edgeShadow: true,
+    licensedDatasets: false,
+    algorithms: {
+      drug: ["trustrank", "closeness", "degree", "proximity"],
+      "drug-target": ["trustrank", "multisteiner", "keypathwayminer", "degree", "closeness", "betweenness"]
+    }
   };
+
 
   ngOnInit() {
     this.networkType = this.network().network.networkType || 'default';
