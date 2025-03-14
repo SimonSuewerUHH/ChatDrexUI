@@ -1,4 +1,6 @@
 <div
   [innerHTML]="parsedMarkdown"
   (click)="onLinkClick($event)"
+  (mouseover)="onLinkHover($event)"
+  (mouseout)="onLinkHoverLeave($event)"
 ></div>

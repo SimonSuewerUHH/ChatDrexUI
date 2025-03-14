@@ -4,4 +4,34 @@ mat-dialog-content {
   padding: 0 !important;
 
   overflow: scroll;
+
+
+  mat-card {
+    width: 300px;
+    max-width: 100%;
+  }
+
+  .info {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 8px;
+  }
+
+  mat-card-title {
+    font-size: 16px;
+    color: var(--mat-sys-on-surface);
+  }
+
+  .content {
+    display: flex;
+    gap: 15px;
+
+    .abstract-text {
+      width: 50%;
+    }
+  }
+
 }

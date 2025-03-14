@@ -1,17 +1,24 @@
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component, inject,
+  Component,
+  inject,
   input,
   OnChanges,
+  OnDestroy,
   OnInit,
-  SimpleChanges
+  signal,
+  SimpleChanges,
+  ViewContainerRef
 } from '@angular/core';
 import {marked} from 'marked';
 import {ToolSourceDTO} from '../../dto/message';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {MatDialog} from '@angular/material/dialog';
 import {ResearchPaperDialogComponent} from '../research-paper-dialog/research-paper-dialog.component';
+import {Overlay, OverlayRef} from '@angular/cdk/overlay';
+import {ComponentPortal} from '@angular/cdk/portal';
+import {PaperOverlayComponent} from '../paper-overlay/paper-overlay.component';
 
 @Component({
   selector: 'app-sourced-markdown',
@@ -20,10 +27,13 @@ import {ResearchPaperDialogComponent} from '../research-paper-dialog/research-pa
   styleUrl: './markdown.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CustomMarkdownComponent implements OnInit, OnChanges {
+export class CustomMarkdownComponent implements OnInit, OnChanges, OnDestroy {
   private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
   private readonly sanitizer: DomSanitizer = inject(DomSanitizer);
   private readonly dialog: MatDialog = inject(MatDialog);
+  private readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
+  private readonly overlay: Overlay = inject(Overlay);
+
 
   readonly markdown = input.required<string>();
   readonly sources = input.required<ToolSourceDTO[]>();
@@ -33,6 +43,7 @@ export class CustomMarkdownComponent implements OnInit, OnChanges {
   private linkCounter = 1;
 
   parsedMarkdown: SafeHtml = '';
+  private tooltipOverlayRef: OverlayRef | null = null;
 
   ngOnInit(): void {
     this.linkCounter = this.linkCountStartNumber();
@@ -47,6 +58,12 @@ export class CustomMarkdownComponent implements OnInit, OnChanges {
     if (changes['markdown']) {
       this.parsedMarkdown = this.sanitizer.bypassSecurityTrustHtml(marked.parse(this.markdown()) as string);
       this.cdr.detectChanges();
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.tooltipOverlayRef) {
+      this.tooltipOverlayRef.dispose();
     }
   }
 
@@ -77,6 +94,40 @@ export class CustomMarkdownComponent implements OnInit, OnChanges {
           });
         }
       }
+    }
+  }
+
+  onLinkHover(event: MouseEvent): void {
+    const refLink = (event.target as HTMLElement).closest('.ref-link');
+    if (refLink) {
+      const refId = refLink.getAttribute('data-ref');
+      if (refId) {
+        const paper = this.getPaper(refId);
+        if (paper) {
+          this.tooltipOverlayRef = this.overlay.create({
+            positionStrategy: this.overlay.position()
+              .flexibleConnectedTo(refLink)
+              .withPositions([{
+                originX: 'center',
+                originY: 'bottom',
+                overlayX: 'center',
+                overlayY: 'top'
+              }]),
+            scrollStrategy: this.overlay.scrollStrategies.reposition(),
+            hasBackdrop: false,
+          });
+          const tooltipPortal = new ComponentPortal(PaperOverlayComponent, this.viewContainerRef);
+          const tooltipRef = this.tooltipOverlayRef.attach(tooltipPortal);
+          tooltipRef.instance.paper = signal(paper);
+        }
+      }
+    }
+  }
+
+  onLinkHoverLeave(event: MouseEvent): void {
+    if (this.tooltipOverlayRef) {
+      this.tooltipOverlayRef.dispose();
+      this.tooltipOverlayRef = null;
     }
   }
 

@@ -1,8 +1,21 @@
 <mat-dialog-content>
 
-  <app-paper-card [paper]="data"
-                  [showAuthor]="true"
-                  [showAbstract]="true"
-                  [allowOpenDialog]="false"
-  ></app-paper-card>
+  <mat-card appearance="outlined">
+    <mat-card-header>
+      <mat-card-title> {{ data.title }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="info">
+        <mat-icon>menu_book</mat-icon>
+        <span>{{ data.journal }} - {{ data.published_year }} </span>
+      </div>
+      <div class="info">
+        <mat-icon>group</mat-icon>
+        <span>{{ data.authors }}</span>
+      </div>
+      <p>{{ data.abstract }}</p>
+    </mat-card-content>
+  </mat-card>
+
+
 </mat-dialog-content>
