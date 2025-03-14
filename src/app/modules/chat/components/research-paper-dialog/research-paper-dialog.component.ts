@@ -9,7 +9,6 @@ import {MatIcon} from '@angular/material/icon';
   selector: 'app-research-paper-dialog',
   imports: [
     MatDialogContent,
-    PaperCardComponent,
     MatCard,
     MatCardContent,
     MatCardHeader,
