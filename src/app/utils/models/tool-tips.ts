@@ -13,7 +13,7 @@ export const toolTips: ToolTip[] = [
     icon: 'chat',
     name: 'Chat',
     tip: 'Chat with the AI',
-    explanation: 'Ask about possibilietes',
+    explanation: 'Ask about possibilities',
     hints: [
       'What can I do?',
       'What are my options?',
@@ -39,7 +39,7 @@ export const toolTips: ToolTip[] = [
     icon: 'construction',
     name: 'Diamond',
     tip: 'Use Diamond',
-    explanation: 'Use the Diamond alogrithm',
+    explanation: 'Use the Diamond algorithm',
     hints: [
       'NLRP3, TYK2, TNFSF14, VDR genes as input',
       'NLRP3, TYK2, TNFSF14, VDR',
@@ -51,8 +51,8 @@ export const toolTips: ToolTip[] = [
     command: '/digest_sub',
     icon: 'construction',
     name: 'Digest Sub',
-    tip: 'Analyzes gene subnetworks for enrichment',
-    explanation: 'Analyzes gene subnetworks for enrichment, providing a plot and GO/KEGG term descriptions',
+    tip: 'Analyze gene subnetworks for enrichment',
+    explanation: 'Analyze gene subnetworks for enrichment, providing a plot and GO/KEGG term descriptions',
     hints: [
       'Can you perform ORA on the genes A2M, ABCA7, ACE, ADAM10 and APP?',
       'What biological processes, molecular functions, and pathways are enriched in the network formed by the genes APOE, SORL1, BACE1, CLU, \n' +
@@ -65,8 +65,8 @@ export const toolTips: ToolTip[] = [
     command: '/digest_set',
     icon: 'construction',
     name: 'Digest Set',
-    tip: 'Performs gene set Representation Analysis',
-    explanation: 'Performs Over Representation Analysis on a gene set, returning a plot and GO/KEGG term descriptions.',
+    tip: 'Perform gene set Representation Analysis',
+    explanation: 'Perform Over Representation Analysis on a gene set, returning a plot and GO/KEGG term descriptions.',
     hints: [
       'Can you perform ORA on the genes A2M, ABCA7, ACE, ADAM10 and APP?',
       'What biological processes, molecular functions, and pathways are enriched in the network formed by the genes APOE, SORL1, BACE1, CLU, \n' +
@@ -95,7 +95,7 @@ export const toolTips: ToolTip[] = [
     tip: 'Ask drug repurposing knowladge graph (NeDRex)',
     explanation: 'Ask drug repurposing knowladge graph (NeDRex)',
     hints: [
-      ' what is CF and what has CFTR to do with it?',
+      ' What is CF and what has CFTR to do with it?',
       'What are the key genes involved in Parkinson\'s disease?',
       'What are the key genes involved in Parkinson\'s disease?',
       'What are the key genes involved in Parkinson\'s disease?'
