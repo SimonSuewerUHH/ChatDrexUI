@@ -58,6 +58,7 @@ export class CustomMarkdownComponent implements OnInit, OnChanges, OnDestroy {
     if (changes['markdown']) {
       this.parsedMarkdown = this.sanitizer.bypassSecurityTrustHtml(marked.parse(this.markdown()) as string);
       this.cdr.detectChanges();
+      this.onLinkHoverLeave(); 
     }
   }
 
@@ -124,7 +125,7 @@ export class CustomMarkdownComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  onLinkHoverLeave(event: MouseEvent): void {
+  onLinkHoverLeave(): void {
     if (this.tooltipOverlayRef) {
       this.tooltipOverlayRef.dispose();
       this.tooltipOverlayRef = null;
