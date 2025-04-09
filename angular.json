@@ -61,6 +61,27 @@
               ],
               "outputHashing": "all"
             },
+            "staging": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.staging.ts"
+                }
+              ]
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kB",
+                  "maximumError": "3MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
+                }
+              ],
+              "outputHashing": "all"
+            },
             "development": {
               "optimization": false,
               "extractLicenses": false,
@@ -80,6 +101,9 @@
           "configurations": {
             "production": {
               "buildTarget": "chatdrexUi:build:production"
+            },
+            "staging": {
+              "buildTarget": "chatdrexUi:build:staging"
             },
             "development": {
               "buildTarget": "chatdrexUi:build:development"
