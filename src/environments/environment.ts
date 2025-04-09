@@ -1,5 +1,5 @@
 export const environment = {
-  apiBaseUrl: 'https://prototypes.cosy.bio/chatdrex-api',
-  wsBaseUrl: 'wss://prototypes.cosy.bio/chatdrex-api/ws',
+  apiBaseUrl: 'https://apps.cosy.bio/chatdrex-api',
+  wsBaseUrl: 'wss://apps.cosy.bio/chatdrex-api/ws',
 };
 
