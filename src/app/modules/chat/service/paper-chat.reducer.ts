@@ -242,7 +242,8 @@ export const paperChatReducer = createReducer(
 // Disconnection Handling
   on(PaperChatActions.disconnectSuccess, (state, {}) => ({
     ...state,
-      connected: false
+    connected: false,
+    error: null
   })),
   on(PaperChatActions.disconnectFailure, (state, {error}) => ({
     ...state,

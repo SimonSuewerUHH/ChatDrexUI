@@ -10,7 +10,13 @@ export const hydrationMetaReducer = (
       const storageValue = localStorage.getItem("state");
       if (storageValue) {
         try {
-          return JSON.parse(storageValue);
+          const parsedState = JSON.parse(storageValue);
+          // Reset connection state on app initialization to prevent stale connections
+          return {
+            ...parsedState,
+            connected: false,
+            error: null
+          };
         } catch {
           localStorage.removeItem("state");
         }

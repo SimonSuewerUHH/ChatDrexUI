@@ -25,9 +25,12 @@ export class PaperChatWebSocketService {
     }
     this.clientId = clientId;
 
+    // Clean up existing connection
     if (this.socket$) {
       this.disconnect();
     }
+    
+    // Create new message subject for this connection
     this.messageSubject = new Subject<ResponseDTO>();
     this.socket$ = webSocket(wsUrl);
 
@@ -69,11 +72,15 @@ export class PaperChatWebSocketService {
   }
 
   disconnect(): void {
+    console.log('Disconnecting WebSocket...');
     if (this.socket$) {
       this.socket$.complete();
       this.socket$ = null;
     }
-    this.messageSubject.complete();
+    if (this.messageSubject && !this.messageSubject.closed) {
+      this.messageSubject.complete();
+    }
+    this.clientId = undefined;
   }
 
   reconnect(projectId: string): void {
