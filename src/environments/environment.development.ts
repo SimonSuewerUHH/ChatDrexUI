@@ -1,6 +1,6 @@
 export const environment = {
-  apiBaseUrl: 'http://localhost:8000',  // Local development port
-  wsBaseUrl: 'ws://localhost:8000/ws',   // WebSocket endpoint
+  apiBaseUrl: 'http://localhost:8080',  // Local development port
+  wsBaseUrl: 'ws://localhost:8080/ws',   // WebSocket endpoint
 };
 
 //apiBaseUrl: 'https://apps.cosy.bio/chatdrex-api',
