@@ -22,19 +22,6 @@ export const toolTips: ToolTip[] = [
     ]
   },
   {
-    command: '/research',
-    icon: 'science',
-    name: 'Research',
-    tip: 'Use remote academic research',
-    explanation: 'Ask current Research question against academic papers',
-    hints: [
-      'What is cancer?',
-      'What is diabetes?',
-      'What is the latest found genes?',
-      'What is the latest drug on cancer?'
-    ]
-  },
-  {
     command: '/diamond',
     icon: 'construction',
     name: 'Diamond',
