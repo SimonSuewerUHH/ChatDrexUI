@@ -3,7 +3,7 @@ import {DrugstOneGraph} from './network';
 
 
 export interface MessageDTO {
-  message: string | SystemMessageDTO | ResearchResultsDTO;
+  message: string | SystemMessageDTO | ResearchResultsDTO | ToolDTO;
   messageType: ChatMessageType;
   timestamp: number;
   messageId: string;
@@ -30,7 +30,8 @@ export interface ToolDTO {
   id: string; // randum uuid
   name: string;
   started: boolean;
-  content?: string | ToolSourceDTO[]; // HERE WE CAN DEFINE CLEAR STRUCTURE FOR TOOL CONTENT LIKE PAPER; BUT WE NEED TO STORE
+  content?: string[];
+  structuredContent?: ToolSourceDTO[];
   input: any;
 }
 
