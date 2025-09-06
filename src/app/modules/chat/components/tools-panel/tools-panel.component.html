@@ -23,6 +23,7 @@
           @for (tool of getNonResearchTools(); track tool.id) {
             <app-tool-panel [tool]="tool">
               <span header>{{ tool.name }}</span>
+              <p content> {{ tool.content }} </p>
             </app-tool-panel>
           }
         </div>

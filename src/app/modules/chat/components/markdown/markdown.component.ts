@@ -135,7 +135,7 @@ export class CustomMarkdownComponent implements OnInit, OnChanges, OnDestroy {
     if (!paperId) {
       return undefined;
     }
-    return this.sources().find(source => source.paper_id === paperId);
+    return this.sources().find(source => source.paperId === paperId);
   }
 
 

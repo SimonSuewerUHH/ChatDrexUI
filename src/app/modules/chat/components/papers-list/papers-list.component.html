@@ -1,6 +1,6 @@
 @if (isPaper()) {
   <div class="paper-list">
-    @for (paper of getPapers(); track paper.paper_id) {
+    @for (paper of getPapers(); track paper.paperId) {
       <app-paper-card [paper]="paper"></app-paper-card>
     }
   </div>

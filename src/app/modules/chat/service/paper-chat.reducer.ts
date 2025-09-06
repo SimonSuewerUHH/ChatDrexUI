@@ -2,7 +2,7 @@ import {createReducer, on} from '@ngrx/store';
 import * as PaperChatActions from './paper-chat.actions';
 import {cloneDeep} from 'lodash';
 import {v4 as uuidv4} from 'uuid';
-import {ConversationPart, MessageDTO, ToolDTO, ToolSourceDTO, ToolSourceInputDTO} from '../dto/message';
+import {ConversationPart, ToolDTO, ToolSourceDTO, ToolSourceInputDTO} from '../dto/message';
 import {ChatMessageType, MessageState, Tools} from '../dto/enums';
 
 export interface PaperChatState {
@@ -143,7 +143,6 @@ export const paperChatReducer = createReducer(
     if (!(message.messageId in state.messages) || typeof message.message !== 'string' || message.messageType !== ChatMessageType.AI_TOOL) {
       return state;
     }
-
     let toolName = message.message as string;
 
     let oldTool = cloneDeep(state.messages[message.messageId].tools.at(-1));
@@ -163,10 +162,20 @@ export const paperChatReducer = createReducer(
       if (toolName.toLowerCase().startsWith("stop")) {
         oldTool.started = false;
       } else if (toolName.toLowerCase().startsWith("content")) {
-        oldTool.content = toolName.replace("CONTENT", "");
+        debugger;
+        const newContent = toolName.replace("CONTENT", "");
+        if (oldTool.content) {
+          oldTool.content += "\n\n" + newContent;
+        } else {
+          oldTool.content = newContent;
+        }
         if (oldTool.name === Tools.SEMANTIC_SCHOLAR) {
-          oldTool.content = JSON.parse(oldTool.content) as ToolSourceDTO[];
-          sources = [...sources, ...oldTool.content];
+          try {
+            oldTool.content = JSON.parse(newContent) as ToolSourceDTO[];
+            sources = [...sources, ...oldTool.content];
+          } catch (e) {
+            //IGNORE
+          }
         }
         oldTool.started = false;
       } else if (toolName.toLowerCase().startsWith("input")) {
@@ -242,7 +251,7 @@ export const paperChatReducer = createReducer(
 // Disconnection Handling
   on(PaperChatActions.disconnectSuccess, (state, {}) => ({
     ...state,
-      connected: false
+    connected: false
   })),
   on(PaperChatActions.disconnectFailure, (state, {error}) => ({
     ...state,

@@ -35,10 +35,10 @@ export interface ToolDTO {
 }
 
 export interface ToolSourceDTO {
-  paper_id: string;
+  paperId: string;
   doi: string;
   title: string;
-  published_year: number;
+  publishedYear: number;
   authors: string;
   journal: string;
   abstract: string | null;
