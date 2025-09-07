@@ -21,10 +21,12 @@ import {MatIcon} from '@angular/material/icon';
 import {MatDialog} from '@angular/material/dialog';
 import {ErrorListDialogComponent} from '../error-list-dialog/error-list-dialog.component';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
+import {DigestPlotDTO} from '../../dto/digest';
+import {DigestPlotComponent} from '../digest-plot/digest-plot.component';
 
 @Component({
   selector: 'app-paper-chat-receiving-bubble',
-  imports: [MatProgressBarModule, NgOptimizedImage, ToolsPanelComponent, CustomMarkdownComponent, DrugstOneNetworkComponent, MatIconButton, MatIcon],
+  imports: [MatProgressBarModule, NgOptimizedImage, ToolsPanelComponent, CustomMarkdownComponent, DrugstOneNetworkComponent, MatIconButton, MatIcon, DigestPlotComponent],
   templateUrl: './paper-chat-receiving-bubble.component.html',
   styleUrl: './paper-chat-receiving-bubble.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -79,6 +81,19 @@ export class PaperChatReceivingBubbleComponent implements OnChanges {
     }
     return undefined;
   }
+
+  getDigestPlotData(): DigestPlotDTO | undefined {
+    const plots = this.message().tools
+      .filter(tool => tool.name === Tools.DIGEST && tool.structuredContent && tool.structuredContent.length > 0)
+      .flatMap(tool => tool.structuredContent as DigestPlotDTO[])
+      .filter(plot => !!plot);
+
+    if (plots.length > 0) {
+      return plots[0];
+    }
+    return undefined;
+  }
+
 
   getRemoteHTML(): string | undefined {
     const urls = this.message().systemMessages

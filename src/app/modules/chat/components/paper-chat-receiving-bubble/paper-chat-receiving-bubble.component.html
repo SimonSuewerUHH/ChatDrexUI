@@ -10,6 +10,9 @@
     @if (getDrugstOneNetwork()) {
       <app-drugst-one-network [network]="getDrugstOneNetwork()!"></app-drugst-one-network>
     }
+    @if(getDigestPlotData()){
+      <app-digest-plot [data]="getDigestPlotData()!"></app-digest-plot>
+    }
     @if (getRemoteHTML()) {
       <iframe class="remote-html" [src]="getSanitizedRemoteHTML()"></iframe>
     }
