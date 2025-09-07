@@ -1,5 +1,5 @@
 import {ChatMessageType, MessageState} from './enums';
-import {DrugstOneGraph} from './network';
+import {DrugstOneGraph, DrugstOneNetwork} from './network';
 
 
 export interface MessageDTO {
@@ -31,7 +31,7 @@ export interface ToolDTO {
   name: string;
   started: boolean;
   content?: string[];
-  structuredContent?: ToolSourceDTO[];
+  structuredContent?: ToolSourceDTO[] | DrugstOneNetwork[];
   input: any;
 }
 

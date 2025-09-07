@@ -11,10 +11,10 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {NgOptimizedImage} from '@angular/common';
 import {ConversationPart, SystemMessageDTO, ToolSourceDTO} from '../../dto/message';
 import {ToolsPanelComponent} from '../tools-panel/tools-panel.component';
-import {MessageState} from '../../dto/enums';
+import {MessageState, Tools} from '../../dto/enums';
 import {CustomMarkdownComponent} from '../markdown/markdown.component';
 import {DrugstOneNetworkComponent} from '../drugst-one-network/drugst-one-network.component';
-import {DrugstOneGraph} from '../../dto/network';
+import {DrugstOneGraph, DrugstOneNetwork} from '../../dto/network';
 import {environment} from '../../../../../environments/environment';
 import {MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
@@ -64,12 +64,15 @@ export class PaperChatReceivingBubbleComponent implements OnChanges {
   }
 
   getDrugstOneNetwork(): DrugstOneGraph | undefined {
-    const graphs = this.message().systemMessages
-      .filter((m) => {
-        return typeof m.message === 'object' && m.message !== null && 'drugstOneNetwork' in m.message;
-      })
-      .map((m) => (m.message as SystemMessageDTO).drugstOneNetwork)
+    const graphs = this.message().tools
+      .filter(tool => tool.name === Tools.NETDREX_TOOL && tool.structuredContent && tool.structuredContent.length > 0)
+      .flatMap(tool => tool.structuredContent as DrugstOneNetwork[])
       .filter(network => !!network)
+      .map(n => {
+        return {
+          network: n
+        } as DrugstOneGraph
+      });
 
     if (graphs.length > 0) {
       return graphs[0];
