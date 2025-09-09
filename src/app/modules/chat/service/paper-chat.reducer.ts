@@ -142,7 +142,6 @@ export const paperChatReducer = createReducer(
     if (!(message.messageId in state.messages) || message.messageType !== ChatMessageType.AI_TOOL) {
       return state;
     }
-    debugger;
     const toolDto = message.message as ToolDTO;
     const currentTools = state.messages[message.messageId].tools ? state.messages[message.messageId].tools : [];
 
@@ -151,19 +150,13 @@ export const paperChatReducer = createReducer(
       ? currentTools.map((t, i) => (i === idx ? {...t, ...toolDto} : t))
       : [...currentTools, toolDto];
 
-    let sources: ToolSourceDTO[] = [];
-    if (toolDto.name === Tools.SEMANTIC_SCHOLAR) {
-      sources = toolDto.structuredContent as ToolSourceDTO[];
-    }
-
     return {
       ...state,
       messages: {
         ...state.messages,
         [message.messageId]: {
           ...state.messages[message.messageId],
-          tools: tools,
-          sources: sources
+          tools: tools
         }
       },
     };

@@ -56,7 +56,19 @@ export class PaperChatReceivingBubbleComponent implements OnChanges {
   }
 
   getSource(): ToolSourceDTO[] {
-    return this.message().sources
+    return this.message().tools
+      .filter(tool => tool.name === Tools.RESEARCH && tool.structuredContent && tool.structuredContent.length > 0)
+      .flatMap(tool => {
+        const content = tool.structuredContent as any[];
+        if (content.length == 0) {
+          return [];
+        }
+        if (Array.isArray(content[0])) {
+          return (content as ToolSourceDTO[][]).flat();
+        }
+        return content as ToolSourceDTO[];
+      })
+      .filter(source => !!source)
   }
 
   openError() {

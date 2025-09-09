@@ -6,7 +6,6 @@ import {DecisionPanelComponent} from '../decisions-panel/decision-panel.componen
 import {ConversationPart, ToolDTO, ToolSourceDTO} from '../../dto/message';
 import {ToolPanelComponent} from '../tool-panel/tool-panel.component';
 import {Tools} from '../../dto/enums';
-import {PaperCardComponent} from '../paper-card/paper-card.component';
 import {PapersListComponent} from '../papers-list/papers-list.component';
 
 @Component({
@@ -28,7 +27,14 @@ export class ToolsPanelComponent {
   }
 
   getResearchToolOutput(tool: ToolDTO): ToolSourceDTO[] {
-    return tool.structuredContent as ToolSourceDTO[]
+    const content = tool.structuredContent as any[];
+    if (content.length == 0) {
+      return [];
+    }
+    if (Array.isArray(content[0])) {
+      return (content as ToolSourceDTO[][]).flat();
+    }
+    return content as ToolSourceDTO[];
   }
 
   getNonResearchTools(): ToolDTO[] {
@@ -36,6 +42,6 @@ export class ToolsPanelComponent {
   }
 
   private isResearch(tool: ToolDTO): boolean {
-    return tool.name === Tools.SEMANTIC_SCHOLAR;
+    return tool.name === Tools.RESEARCH;
   }
 }

@@ -8,7 +8,7 @@ import {ResearchPaperDialogComponent} from '../research-paper-dialog/research-pa
 
 @Component({
   selector: 'app-paper-card',
-  imports: [MatCardModule, MatIconModule],
+  imports: [MatCardModule, MatIconModule, JsonPipe],
   templateUrl: './paper-card.component.html',
   styleUrl: './paper-card.component.scss'
 })
@@ -25,7 +25,9 @@ export class PaperCardComponent {
   openDialog(): void {
     if (this.allowOpenDialog()) {
       this.dialog.open(ResearchPaperDialogComponent, {
-        data: this.paper
+        data: this.paper(),
+        width: '80vw',
+        maxWidth: '100vw'
       });
     }
   }

@@ -47,16 +47,13 @@ export class CustomMarkdownComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit(): void {
     this.linkCounter = this.linkCountStartNumber();
-    marked.use({
-      hooks: {
-        postprocess: (markdown: string) => this.postProcessMarkdown(markdown)
-      }
-    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['markdown']) {
-      this.parsedMarkdown = this.sanitizer.bypassSecurityTrustHtml(marked.parse(this.markdown()) as string);
+      const markdown = marked.parse(this.markdown()) as string;
+      const post = this.postProcessMarkdown(markdown);
+      this.parsedMarkdown = this.sanitizer.bypassSecurityTrustHtml(post);
       this.cdr.detectChanges();
     }
   }
@@ -68,7 +65,7 @@ export class CustomMarkdownComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private postProcessMarkdown(markdown: string): string {
-    return markdown.replace(/\[[^\]]{0,40}\]/g, (match) => {
+    let replaced = markdown.replace(/\[[^\]]{0,40}\]/g, (match) => {
       const clearMatch = match.replace(/[\[\]]/g, '');
       if (!this.getPaper(clearMatch)) {
         return match;
@@ -77,8 +74,12 @@ export class CustomMarkdownComponent implements OnInit, OnChanges, OnDestroy {
         this.idMap[clearMatch] = this.linkCounter++;
       }
       const displayNumber = this.idMap[clearMatch];
-      return `[<a href="#" data-ref="${clearMatch}" class="ref-link">${displayNumber}</a>]`;
+      return `<a href="#" data-ref="${clearMatch}" class="ref-link">${displayNumber}</a>`;
     });
+    replaced = replaced.replace(/\[NeDRex\]/g, (_match) => {
+      return "<span class='badge'>NeDRex</span>"
+    });
+    return replaced;
   }
 
   onLinkClick(event: MouseEvent) {

@@ -11,7 +11,6 @@ export enum ChatMessageType {
 
 
 export enum Tools {
-  SEMANTIC_SCHOLAR = 'SEMANTIC_SCHOLAR', //TODO CHANGE
   RESEARCH = 'RESEARCH',
   UNIPROD = 'UNIPROD',
   MYGENE = 'MYGENE',
