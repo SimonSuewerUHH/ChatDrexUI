@@ -18,22 +18,30 @@ export class PaperChatWebSocketService {
   private clientId?: string;
 
   connect(clientId: string): Observable<ResponseDTO> {
-    console.log('Connecting to WebSocket...');
+    const wsUrl = `${environment.wsBaseUrl}/${clientId}`;
+    console.log('Connecting to WebSocket:', wsUrl);
     if (!clientId) {
       clientId = uuidv4();
     }
     this.clientId = clientId;
 
+    // Clean up existing connection
     if (this.socket$) {
       this.disconnect();
     }
+    
+    // Create new message subject for this connection
     this.messageSubject = new Subject<ResponseDTO>();
-    this.socket$ = webSocket(`${environment.wsBaseUrl}/${this.clientId}`);
+    this.socket$ = webSocket(wsUrl);
 
     this.socket$.subscribe({
-      next: (message: any) => this.messageSubject.next(message),
+      next: (message: any) => {
+        console.log('WebSocket message received:', message);
+        this.messageSubject.next(message);
+      },
       error: (error) => {
         console.error('WebSocket error:', error);
+        console.error('WebSocket URL was:', wsUrl);
         this.reconnect(clientId);
       },
       complete: () => {
@@ -47,15 +55,15 @@ export class PaperChatWebSocketService {
 
   sendMessage(message: string, threadId: string): void {
     if (this.socket$) {
-      const token = "TODO"
       const request: RequestDTO = {
-        token: token,
         threadId: threadId,
         messageId: uuidv4(),
         message: message,
         messageType: MessageType.SENDING,
-        timestamp: Date.now()
+        timestamp: Math.floor(Date.now() / 1000),
+        llmModel: 'gemini-pro'
       };
+      console.log('Sending message:', request);
       this.socket$.next(request);
       this.store.dispatch(requestedMessage({requestedMessage: request}));
     } else {
@@ -64,11 +72,15 @@ export class PaperChatWebSocketService {
   }
 
   disconnect(): void {
+    console.log('Disconnecting WebSocket...');
     if (this.socket$) {
       this.socket$.complete();
       this.socket$ = null;
     }
-    this.messageSubject.complete();
+    if (this.messageSubject && !this.messageSubject.closed) {
+      this.messageSubject.complete();
+    }
+    this.clientId = undefined;
   }
 
   reconnect(projectId: string): void {

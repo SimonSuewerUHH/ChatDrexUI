@@ -7,7 +7,7 @@
     </div>
   </div>
 }
-@if (!(isConnected$ | async)) {
+@if (showConnectionBanner$ | async) {
   <div class="sse-container">
     <div class="sse-message">
       <div class="message-text">

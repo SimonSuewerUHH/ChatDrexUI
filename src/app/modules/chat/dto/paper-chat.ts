@@ -9,6 +9,7 @@ export interface RequestDTO {
   message: string;
   messageType: MessageType;
   timestamp: number;
+  llmModel?: string;
 }
 
 export interface ResponseDTO {
