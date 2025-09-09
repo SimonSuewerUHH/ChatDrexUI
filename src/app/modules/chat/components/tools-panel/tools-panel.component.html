@@ -10,7 +10,7 @@
         <div content>
           @for (tool of getResearchTools(); track tool.id) {
             <app-tool-panel [tool]="tool">
-              <app-papers-list content [tool]="tool.structuredContent"></app-papers-list>
+              <app-papers-list content [tool]="getResearchToolOutput(tool)"></app-papers-list>
             </app-tool-panel>
           }
         </div>
@@ -25,7 +25,7 @@
               <span header>{{ tool.name }}</span>
               <div content>
                 @for (content of tool.content; track $index) {
-                  <p>{{ content }}</p>
+                  <p [innerHTML]="content"></p>
                 }
               </div>
             </app-tool-panel>

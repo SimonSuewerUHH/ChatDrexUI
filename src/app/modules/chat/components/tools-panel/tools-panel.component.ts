@@ -3,7 +3,7 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import {PanelWrapperComponent} from '../panel-wrapper/panel-wrapper.component';
 import {MatIconModule} from '@angular/material/icon';
 import {DecisionPanelComponent} from '../decisions-panel/decision-panel.component';
-import {ConversationPart, ToolDTO} from '../../dto/message';
+import {ConversationPart, ToolDTO, ToolSourceDTO} from '../../dto/message';
 import {ToolPanelComponent} from '../tool-panel/tool-panel.component';
 import {Tools} from '../../dto/enums';
 import {PaperCardComponent} from '../paper-card/paper-card.component';
@@ -25,6 +25,10 @@ export class ToolsPanelComponent {
 
   getResearchTools(): ToolDTO[] {
     return this.message().tools.filter(this.isResearch);
+  }
+
+  getResearchToolOutput(tool: ToolDTO): ToolSourceDTO[] {
+    return tool.structuredContent as ToolSourceDTO[]
   }
 
   getNonResearchTools(): ToolDTO[] {
