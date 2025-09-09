@@ -1,0 +1,108 @@
+<mat-dialog-content>
+  <div class="panel">
+    @if (loading()) {
+      <div class="muted">Loading…</div>
+    }
+
+    @if (error()) {
+      <div class="error">{{ error() }}</div>
+    }
+
+    @if (info(); as d) {
+      <h2>{{ d.displayName || d.primaryDomainId || 'Result' }}</h2>
+      @if (d.type) {
+        <p class="muted">Type: {{ d.type }}</p>
+      }
+      @if (d.description) {
+        <p>{{ d.description }}</p>
+      }
+
+      <table class="kv">
+        @if (d.primaryDomainId) {
+          <tr>
+            <th>Primary Domain ID</th>
+            <td>{{ d.primaryDomainId }}</td>
+          </tr>
+        }
+        @if (d.casNumber) {
+          <tr>
+            <th>CAS</th>
+            <td>{{ d.casNumber }}</td>
+          </tr>
+        }
+        @if (d.indication) {
+          <tr>
+            <th>Indication</th>
+            <td>{{ d.indication }}</td>
+          </tr>
+        }
+        @if (d.created) {
+          <tr>
+            <th>Created</th>
+            <td>
+              <span>{{ d.created | date }}</span>
+            </td>
+          </tr>
+        }
+        @if (d.updated) {
+          <tr>
+            <th>Updated</th>
+            <td>
+              <span>{{ d.updated | date }}</span>
+            </td>
+          </tr>
+        }
+        @if (d.dataSources?.length) {
+          <tr>
+            <th>Data Sources</th>
+            <td>
+              @for (s of d.dataSources; track s) {
+                <span class="badge">{{ s }}</span>
+              }
+            </td>
+          </tr>
+        }
+        @if (d.domainIds?.length) {
+          <tr>
+            <th>Domain IDs</th>
+            <td>
+              @for (id of d.domainIds; track id) {
+                <span class="badge gray">{{ id }}</span>
+              }
+            </td>
+          </tr>
+        }
+        @if (d.drugGroups?.length) {
+          <tr>
+            <th>Drug Groups</th>
+            <td>
+              @for (g of d.drugGroups; track g) {
+                <span class="badge">{{ g }}</span>
+              }
+            </td>
+          </tr>
+        }
+        @if (d.drugCategories?.length) {
+          <tr>
+            <th>Drug Categories</th>
+            <td>
+              @for (c of d.drugCategories; track c) {
+                <span class="badge">{{ c }}</span>
+              }
+            </td>
+          </tr>
+        }
+        @if (d.synonyms?.length) {
+          <tr>
+            <th>Synonyms</th>
+            <td class="synonyms">
+              @for (syn of d.synonyms; track syn) {
+                <span class="chip">{{ syn }}</span>
+              }
+            </td>
+          </tr>
+        }
+      </table>
+    }
+  </div>
+</mat-dialog-content>

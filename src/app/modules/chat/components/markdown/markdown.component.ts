@@ -19,6 +19,7 @@ import {ResearchPaperDialogComponent} from '../research-paper-dialog/research-pa
 import {Overlay, OverlayRef} from '@angular/cdk/overlay';
 import {ComponentPortal} from '@angular/cdk/portal';
 import {PaperOverlayComponent} from '../paper-overlay/paper-overlay.component';
+import {NedrexInfoDialogComponent} from '../nedrex-info-dialog/nedrex-info-dialog.component';
 
 @Component({
   selector: 'app-sourced-markdown',
@@ -79,6 +80,11 @@ export class CustomMarkdownComponent implements OnInit, OnChanges, OnDestroy {
     replaced = replaced.replace(/\[NeDRex\]/g, (_match) => {
       return "<span class='badge'>NeDRex</span>"
     });
+    replaced = replaced.replace(/(drugbank\.[^\]\s]+|uniprot\.[^\]\s]+|entrez\.[^\]\s]+)/g, (_m, id: string) => {
+      const cleanedId = id.replace(/<.*$/, '');
+      debugger;
+      return `<a href="#" class="entity-link" data-id="${cleanedId}">${cleanedId}</a>`;
+    });
     return replaced;
   }
 
@@ -95,6 +101,18 @@ export class CustomMarkdownComponent implements OnInit, OnChanges, OnDestroy {
           });
         }
       }
+    }
+    if (target.classList.contains('entity-link')) {
+      event.preventDefault();
+      const id = target.getAttribute('data-id');
+      debugger;
+      if (id) {
+        this.dialog.open(NedrexInfoDialogComponent, {
+          data: id,
+          width: '720px'
+        });
+      }
+      return;
     }
   }
 
@@ -138,6 +156,5 @@ export class CustomMarkdownComponent implements OnInit, OnChanges, OnDestroy {
     }
     return this.sources().find(source => source.paperId === paperId);
   }
-
 
 }
