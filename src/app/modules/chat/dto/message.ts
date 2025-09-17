@@ -1,9 +1,10 @@
 import {ChatMessageType, MessageState} from './enums';
-import {DrugstOneGraph} from './network';
+import {DrugstOneGraph, DrugstOneNetwork} from './network';
+import {DigestPlotDTO} from './digest';
 
 
 export interface MessageDTO {
-  message: string | SystemMessageDTO | ResearchResultsDTO;
+  message: string | ResearchResultsDTO | ToolDTO;
   messageType: ChatMessageType;
   timestamp: number;
   messageId: string;
@@ -30,15 +31,16 @@ export interface ToolDTO {
   id: string; // randum uuid
   name: string;
   started: boolean;
-  content?: string | ToolSourceDTO[]; // HERE WE CAN DEFINE CLEAR STRUCTURE FOR TOOL CONTENT LIKE PAPER; BUT WE NEED TO STORE
+  content?: string[];
+  structuredContent?: ToolSourceDTO[] | DrugstOneNetwork[] | DigestPlotDTO[];
   input: any;
 }
 
 export interface ToolSourceDTO {
-  paper_id: string;
+  paperId: string;
   doi: string;
   title: string;
-  published_year: number;
+  publishedYear: number;
   authors: string;
   journal: string;
   abstract: string | null;

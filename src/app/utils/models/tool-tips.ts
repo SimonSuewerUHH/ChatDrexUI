@@ -22,24 +22,11 @@ export const toolTips: ToolTip[] = [
     ]
   },
   {
-    command: '/research',
-    icon: 'science',
-    name: 'Research',
-    tip: 'Use remote academic research',
-    explanation: 'Ask current Research question against academic papers',
-    hints: [
-      'What is cancer?',
-      'What is diabetes?',
-      'What is the latest found genes?',
-      'What is the latest drug on cancer?'
-    ]
-  },
-  {
     command: '/diamond',
     icon: 'construction',
-    name: 'Diamond',
-    tip: 'Use Diamond',
-    explanation: 'Use the Diamond alogrithm',
+    name: 'DIAMOnD',
+    tip: 'Use DIAMOnD',
+    explanation: 'Use the DIAMOnD alogrithm',
     hints: [
       'NLRP3, TYK2, TNFSF14, VDR genes as input',
       'NLRP3, TYK2, TNFSF14, VDR',

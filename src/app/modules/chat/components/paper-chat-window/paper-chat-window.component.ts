@@ -84,10 +84,7 @@ export class PaperChatWindowComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   ngOnDestroy(): void {
-    if (!this.threadId) {
-      throw new Error("projectId is required");
-    }
-    this.store.dispatch(disconnect());
+    // Clean up subscriptions - WebSocket disconnection is handled by app component
     if (this.scrollEventSubscription) {
       this.scrollEventSubscription.unsubscribe();
     }

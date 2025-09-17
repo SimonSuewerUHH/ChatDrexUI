@@ -1,8 +1,7 @@
 import {createReducer, on} from '@ngrx/store';
 import * as PaperChatActions from './paper-chat.actions';
-import {cloneDeep} from 'lodash';
 import {v4 as uuidv4} from 'uuid';
-import {ConversationPart, MessageDTO, ToolDTO, ToolSourceDTO, ToolSourceInputDTO} from '../dto/message';
+import {ConversationPart, ToolDTO, ToolSourceDTO} from '../dto/message';
 import {ChatMessageType, MessageState, Tools} from '../dto/enums';
 
 export interface PaperChatState {
@@ -140,52 +139,24 @@ export const paperChatReducer = createReducer(
     };
   }),
   on(PaperChatActions.receiveToolMessage, (state, {message}) => {
-    if (!(message.messageId in state.messages) || typeof message.message !== 'string' || message.messageType !== ChatMessageType.AI_TOOL) {
+    if (!(message.messageId in state.messages) || message.messageType !== ChatMessageType.AI_TOOL) {
       return state;
     }
+    const toolDto = message.message as ToolDTO;
+    const currentTools = state.messages[message.messageId].tools ? state.messages[message.messageId].tools : [];
 
-    let toolName = message.message as string;
+    const idx = currentTools.findIndex(t => t.id === toolDto.id);
+    const tools = idx >= 0
+      ? currentTools.map((t, i) => (i === idx ? {...t, ...toolDto} : t))
+      : [...currentTools, toolDto];
 
-    let oldTool = cloneDeep(state.messages[message.messageId].tools.at(-1));
-
-    if (toolName.toLowerCase().startsWith("start")) {
-      toolName = toolName.replace("START", "");
-      oldTool = {
-        started: true,
-        id: uuidv4(),
-        input: null,
-        name: toolName,
-      };
-    }
-
-    let sources = state.messages[message.messageId].sources;
-    if (oldTool && oldTool.started) {
-      if (toolName.toLowerCase().startsWith("stop")) {
-        oldTool.started = false;
-      } else if (toolName.toLowerCase().startsWith("content")) {
-        oldTool.content = toolName.replace("CONTENT", "");
-        if (oldTool.name === Tools.SEMANTIC_SCHOLAR) {
-          oldTool.content = JSON.parse(oldTool.content) as ToolSourceDTO[];
-          sources = [...sources, ...oldTool.content];
-        }
-        oldTool.started = false;
-      } else if (toolName.toLowerCase().startsWith("input")) {
-        oldTool.input = toolName.replace("INPUT", "");
-        if (oldTool.name === Tools.SEMANTIC_SCHOLAR) {
-          oldTool.input = (JSON.parse(oldTool.input) as ToolSourceInputDTO).query;
-        }
-      }
-    }
-    const currentTool = state.messages[message.messageId].tools.length > 0 ? state.messages[message.messageId].tools.slice(0, -1) : [];
-    const tools: ToolDTO[] = [...currentTool, oldTool!];
     return {
       ...state,
       messages: {
         ...state.messages,
         [message.messageId]: {
           ...state.messages[message.messageId],
-          tools: tools,
-          sources: sources
+          tools: tools
         }
       },
     };
@@ -242,7 +213,8 @@ export const paperChatReducer = createReducer(
 // Disconnection Handling
   on(PaperChatActions.disconnectSuccess, (state, {}) => ({
     ...state,
-      connected: false
+    connected: false,
+    error: null
   })),
   on(PaperChatActions.disconnectFailure, (state, {error}) => ({
     ...state,

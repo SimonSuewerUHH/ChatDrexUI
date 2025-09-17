@@ -196,7 +196,6 @@ export class DrugstOneNetworkComponent implements OnInit {
     }
   };
 
-
   ngOnInit() {
     this.networkType = this.network().network.networkType || 'default';
     this.identifier = this.getIdentifier(this.networkType);

@@ -11,20 +11,22 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {NgOptimizedImage} from '@angular/common';
 import {ConversationPart, SystemMessageDTO, ToolSourceDTO} from '../../dto/message';
 import {ToolsPanelComponent} from '../tools-panel/tools-panel.component';
-import {MessageState} from '../../dto/enums';
+import {MessageState, Tools} from '../../dto/enums';
 import {CustomMarkdownComponent} from '../markdown/markdown.component';
 import {DrugstOneNetworkComponent} from '../drugst-one-network/drugst-one-network.component';
-import {DrugstOneGraph} from '../../dto/network';
+import {DrugstOneGraph, DrugstOneNetwork} from '../../dto/network';
 import {environment} from '../../../../../environments/environment';
 import {MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {MatDialog} from '@angular/material/dialog';
 import {ErrorListDialogComponent} from '../error-list-dialog/error-list-dialog.component';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
+import {DigestPlotDTO} from '../../dto/digest';
+import {DigestPlotComponent} from '../digest-plot/digest-plot.component';
 
 @Component({
   selector: 'app-paper-chat-receiving-bubble',
-  imports: [MatProgressBarModule, NgOptimizedImage, ToolsPanelComponent, CustomMarkdownComponent, DrugstOneNetworkComponent, MatIconButton, MatIcon],
+  imports: [MatProgressBarModule, NgOptimizedImage, ToolsPanelComponent, CustomMarkdownComponent, DrugstOneNetworkComponent, MatIconButton, MatIcon, DigestPlotComponent],
   templateUrl: './paper-chat-receiving-bubble.component.html',
   styleUrl: './paper-chat-receiving-bubble.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -54,7 +56,19 @@ export class PaperChatReceivingBubbleComponent implements OnChanges {
   }
 
   getSource(): ToolSourceDTO[] {
-    return this.message().sources
+    return this.message().tools
+      .filter(tool => tool.name === Tools.RESEARCH && tool.structuredContent && tool.structuredContent.length > 0)
+      .flatMap(tool => {
+        const content = tool.structuredContent as any[];
+        if (content.length == 0) {
+          return [];
+        }
+        if (Array.isArray(content[0])) {
+          return (content as ToolSourceDTO[][]).flat();
+        }
+        return content as ToolSourceDTO[];
+      })
+      .filter(source => !!source)
   }
 
   openError() {
@@ -64,18 +78,34 @@ export class PaperChatReceivingBubbleComponent implements OnChanges {
   }
 
   getDrugstOneNetwork(): DrugstOneGraph | undefined {
-    const graphs = this.message().systemMessages
-      .filter((m) => {
-        return typeof m.message === 'object' && m.message !== null && 'drugstOneNetwork' in m.message;
-      })
-      .map((m) => (m.message as SystemMessageDTO).drugstOneNetwork)
+    const graphs = this.message().tools
+      .filter(tool => tool.name === Tools.NETDREX_TOOL && tool.structuredContent && tool.structuredContent.length > 0)
+      .flatMap(tool => tool.structuredContent as DrugstOneNetwork[])
       .filter(network => !!network)
+      .map(n => {
+        return {
+          network: n
+        } as DrugstOneGraph
+      });
 
     if (graphs.length > 0) {
       return graphs[0];
     }
     return undefined;
   }
+
+  getDigestPlotData(): DigestPlotDTO | undefined {
+    const plots = this.message().tools
+      .filter(tool => tool.name === Tools.DIGEST && tool.structuredContent && tool.structuredContent.length > 0)
+      .flatMap(tool => tool.structuredContent as DigestPlotDTO[])
+      .filter(plot => !!plot);
+
+    if (plots.length > 0) {
+      return plots[0];
+    }
+    return undefined;
+  }
+
 
   getRemoteHTML(): string | undefined {
     const urls = this.message().systemMessages

@@ -1,17 +1,23 @@
 export enum ChatMessageType {
-  HUMAN = 'human',
-  AI = 'ai',
-  AI_TOOL = 'aiTool',
-  REASONING = 'reasoning',
-  SYSTEM = 'system',
-  AI_RESEARCH = 'research',
-  API = 'api',
-  ERROR = 'error',
+  HUMAN = 'HUMAN',
+  AI = 'AI',
+  AI_TOOL = 'AI_TOOL',
+  REASONING = 'REASONING',
+  SYSTEM = 'SYSTEM',
+  AI_RESEARCH = 'AI_RESEARCH',
+  API = 'API',
+  ERROR = 'ERROR',
 }
 
 
-export enum Tools{
-  SEMANTIC_SCHOLAR = 'semanticscholar',
+export enum Tools {
+  RESEARCH = 'RESEARCH',
+  UNIPROD = 'UNIPROD',
+  MYGENE = 'MYGENE',
+  NETDREX = 'NETDREX',
+  DIGEST = 'DIGEST',
+  NETDREX_KG = 'NETDREX_KG',
+  NETDREX_TOOL = 'NETDREX_TOOL',
 }
 
 

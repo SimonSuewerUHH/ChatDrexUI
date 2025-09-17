@@ -1,5 +1,5 @@
 import {inject, Injectable} from '@angular/core';
-import {BehaviorSubject, Observable, throwError} from 'rxjs';
+import {EMPTY, Observable} from 'rxjs';
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {HttpErrorResponse} from "@angular/common/http";
 
@@ -27,7 +27,6 @@ export class ApiErrorSnackbarService {
   }
 
   public showSnackBarOnlyText(err: any, errorMessage: string, logConsole?: boolean): Observable<never> {
-
     this.snackBar.open(errorMessage, 'Close', {
       duration: 5000,
       horizontalPosition: 'right',
@@ -36,7 +35,7 @@ export class ApiErrorSnackbarService {
     if (logConsole) {
       console.error(err);
     }
-    return throwError(() => err);
+    return EMPTY;
   }
 
   public showSnackBar(err: HttpErrorResponse, fallback: string, logConsole?: boolean): Observable<never> {
@@ -63,6 +62,6 @@ export class ApiErrorSnackbarService {
     if (logConsole) {
       console.error(err);
     }
-    return throwError(() => err);
+    return EMPTY;
   }
 }

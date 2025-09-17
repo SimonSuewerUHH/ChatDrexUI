@@ -3,10 +3,9 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import {PanelWrapperComponent} from '../panel-wrapper/panel-wrapper.component';
 import {MatIconModule} from '@angular/material/icon';
 import {DecisionPanelComponent} from '../decisions-panel/decision-panel.component';
-import {ConversationPart, ToolDTO} from '../../dto/message';
+import {ConversationPart, ToolDTO, ToolSourceDTO} from '../../dto/message';
 import {ToolPanelComponent} from '../tool-panel/tool-panel.component';
 import {Tools} from '../../dto/enums';
-import {PaperCardComponent} from '../paper-card/paper-card.component';
 import {PapersListComponent} from '../papers-list/papers-list.component';
 
 @Component({
@@ -27,11 +26,22 @@ export class ToolsPanelComponent {
     return this.message().tools.filter(this.isResearch);
   }
 
+  getResearchToolOutput(tool: ToolDTO): ToolSourceDTO[] {
+    const content = tool.structuredContent as any[];
+    if (!content || content.length == 0) {
+      return [];
+    }
+    if (Array.isArray(content[0])) {
+      return (content as ToolSourceDTO[][]).flat();
+    }
+    return content as ToolSourceDTO[];
+  }
+
   getNonResearchTools(): ToolDTO[] {
     return this.message().tools.filter(tool => !this.isResearch(tool));
   }
 
   private isResearch(tool: ToolDTO): boolean {
-    return tool.name === Tools.SEMANTIC_SCHOLAR;
+    return tool.name === Tools.RESEARCH;
   }
 }

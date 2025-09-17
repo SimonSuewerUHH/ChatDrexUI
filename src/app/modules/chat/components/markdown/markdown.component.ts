@@ -19,6 +19,7 @@ import {ResearchPaperDialogComponent} from '../research-paper-dialog/research-pa
 import {Overlay, OverlayRef} from '@angular/cdk/overlay';
 import {ComponentPortal} from '@angular/cdk/portal';
 import {PaperOverlayComponent} from '../paper-overlay/paper-overlay.component';
+import {NedrexInfoDialogComponent} from '../nedrex-info-dialog/nedrex-info-dialog.component';
 
 @Component({
   selector: 'app-sourced-markdown',
@@ -47,16 +48,13 @@ export class CustomMarkdownComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit(): void {
     this.linkCounter = this.linkCountStartNumber();
-    marked.use({
-      hooks: {
-        postprocess: (markdown: string) => this.postProcessMarkdown(markdown)
-      }
-    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['markdown']) {
-      this.parsedMarkdown = this.sanitizer.bypassSecurityTrustHtml(marked.parse(this.markdown()) as string);
+      const markdown = marked.parse(this.markdown()) as string;
+      const post = this.postProcessMarkdown(markdown);
+      this.parsedMarkdown = this.sanitizer.bypassSecurityTrustHtml(post);
       this.cdr.detectChanges();
     }
   }
@@ -68,7 +66,7 @@ export class CustomMarkdownComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private postProcessMarkdown(markdown: string): string {
-    return markdown.replace(/\[[^\]]{0,40}\]/g, (match) => {
+    let replaced = markdown.replace(/\[[^\]]{0,40}\]/g, (match) => {
       const clearMatch = match.replace(/[\[\]]/g, '');
       if (!this.getPaper(clearMatch)) {
         return match;
@@ -77,8 +75,16 @@ export class CustomMarkdownComponent implements OnInit, OnChanges, OnDestroy {
         this.idMap[clearMatch] = this.linkCounter++;
       }
       const displayNumber = this.idMap[clearMatch];
-      return `[<a href="#" data-ref="${clearMatch}" class="ref-link">${displayNumber}</a>]`;
+      return `<a href="#" data-ref="${clearMatch}" class="ref-link">${displayNumber}</a>`;
     });
+    replaced = replaced.replace(/\[NeDRex\]/g, (_match) => {
+      return "<span class='badge'>NeDRex</span>"
+    });
+    replaced = replaced.replace(/(drugbank\.[^\]\s]+|uniprot\.[^\]\s]+|entrez\.[^\]\s]+)/g, (_m, id: string) => {
+      const cleanedId = id.replace(/<.*$/, '');
+      return `<a href="#" class="entity-link" data-id="${cleanedId}">${cleanedId}</a>`;
+    });
+    return replaced;
   }
 
   onLinkClick(event: MouseEvent) {
@@ -94,6 +100,17 @@ export class CustomMarkdownComponent implements OnInit, OnChanges, OnDestroy {
           });
         }
       }
+    }
+    if (target.classList.contains('entity-link')) {
+      event.preventDefault();
+      const id = target.getAttribute('data-id');
+      if (id) {
+        this.dialog.open(NedrexInfoDialogComponent, {
+          data: id,
+          width: '720px'
+        });
+      }
+      return;
     }
   }
 
@@ -135,8 +152,7 @@ export class CustomMarkdownComponent implements OnInit, OnChanges, OnDestroy {
     if (!paperId) {
       return undefined;
     }
-    return this.sources().find(source => source.paper_id === paperId);
+    return this.sources().find(source => source.paperId === paperId);
   }
-
 
 }

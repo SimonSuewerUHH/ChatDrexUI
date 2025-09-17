@@ -99,9 +99,8 @@ export class PaperChatEffects {
       ofType(PaperChatActions.connectToChat),
       withLatestFrom(this.store.select(getAllThreadIds)),
       mergeMap(([{threadId}, threadIds]) =>
-        threadIds.includes(threadId)
-          ? of(PaperChatActions.connectToChatSuccess({threadId}))
-          : of(PaperChatActions.connectToChatFailure())
+        // Always allow connection - threadId will be added to state if it doesn't exist
+        of(PaperChatActions.connectToChatSuccess({threadId}))
       ),
       catchError(() =>
         of(PaperChatActions.connectToChatFailure())
