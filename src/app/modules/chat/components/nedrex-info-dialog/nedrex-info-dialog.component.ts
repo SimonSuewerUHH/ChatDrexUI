@@ -1,7 +1,7 @@
 import {Component, inject, OnInit, signal} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogContent} from '@angular/material/dialog';
 import {NedrexService} from '../../service/nedrex.service';
-import {NetdrexAPIInfoDTO} from '../../dto/nedrex';
+import {NedrexAPIInfoDTO} from '../../dto/nedrex';
 import {DatePipe} from '@angular/common';
 
 @Component({
@@ -19,7 +19,7 @@ export class NedrexInfoDialogComponent implements OnInit {
 
   loading = signal(false);
   error = signal<string | null>(null);
-  info = signal<NetdrexAPIInfoDTO | null>(null);
+  info = signal<NedrexAPIInfoDTO | null>(null);
 
   ngOnInit(): void {
     this.fetch();

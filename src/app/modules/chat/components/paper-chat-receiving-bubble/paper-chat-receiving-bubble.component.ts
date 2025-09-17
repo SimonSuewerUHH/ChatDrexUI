@@ -79,7 +79,7 @@ export class PaperChatReceivingBubbleComponent implements OnChanges {
 
   getDrugstOneNetwork(): DrugstOneGraph | undefined {
     const graphs = this.message().tools
-      .filter(tool => tool.name === Tools.NETDREX_TOOL && tool.structuredContent && tool.structuredContent.length > 0)
+      .filter(tool => tool.name === Tools.NEDREX_TOOL && tool.structuredContent && tool.structuredContent.length > 0)
       .flatMap(tool => tool.structuredContent as DrugstOneNetwork[])
       .filter(network => !!network)
       .map(n => {
