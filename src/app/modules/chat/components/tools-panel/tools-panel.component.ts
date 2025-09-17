@@ -28,7 +28,7 @@ export class ToolsPanelComponent {
 
   getResearchToolOutput(tool: ToolDTO): ToolSourceDTO[] {
     const content = tool.structuredContent as any[];
-    if (content.length == 0) {
+    if (!content || content.length == 0) {
       return [];
     }
     if (Array.isArray(content[0])) {
