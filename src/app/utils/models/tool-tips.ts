@@ -24,9 +24,9 @@ export const toolTips: ToolTip[] = [
   {
     command: '/diamond',
     icon: 'construction',
-    name: 'Diamond',
-    tip: 'Use Diamond',
-    explanation: 'Use the Diamond alogrithm',
+    name: 'DIAMOnD',
+    tip: 'Use DIAMOnD',
+    explanation: 'Use the DIAMOnD alogrithm',
     hints: [
       'NLRP3, TYK2, TNFSF14, VDR genes as input',
       'NLRP3, TYK2, TNFSF14, VDR',

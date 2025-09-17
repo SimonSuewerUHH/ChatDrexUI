@@ -23,6 +23,7 @@ export const hydrationMetaReducer = (
       }
     }
     const nextState = reducer(state, action);
+    debugger;
     localStorage.setItem("state", JSON.stringify(nextState));
     return nextState;
   };
