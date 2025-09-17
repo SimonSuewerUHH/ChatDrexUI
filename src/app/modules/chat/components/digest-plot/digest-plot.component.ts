@@ -180,7 +180,7 @@ export class DigestPlotComponent {
         }
       },
       series: this.series()
-    };
+    } as any;
   });
 
   private escape(s: string) {

@@ -82,7 +82,6 @@ export class CustomMarkdownComponent implements OnInit, OnChanges, OnDestroy {
     });
     replaced = replaced.replace(/(drugbank\.[^\]\s]+|uniprot\.[^\]\s]+|entrez\.[^\]\s]+)/g, (_m, id: string) => {
       const cleanedId = id.replace(/<.*$/, '');
-      debugger;
       return `<a href="#" class="entity-link" data-id="${cleanedId}">${cleanedId}</a>`;
     });
     return replaced;
@@ -105,7 +104,6 @@ export class CustomMarkdownComponent implements OnInit, OnChanges, OnDestroy {
     if (target.classList.contains('entity-link')) {
       event.preventDefault();
       const id = target.getAttribute('data-id');
-      debugger;
       if (id) {
         this.dialog.open(NedrexInfoDialogComponent, {
           data: id,

@@ -19,6 +19,6 @@ export class NedrexService {
 
   getInfo(query: string): Observable<NetdrexAPIInfoDTO> {
     const params = new HttpParams().set('q', query);
-    return this.http.get<NetdrexAPIInfoDTO>(`${this.baseUrl}/netdrex/info`, { params });
+    return this.http.get<NetdrexAPIInfoDTO>(`${this.baseUrl}/nedrex/info`, { params });
   }
 }

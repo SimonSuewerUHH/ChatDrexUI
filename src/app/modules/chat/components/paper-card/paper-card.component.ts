@@ -1,14 +1,13 @@
 import {Component, inject, input} from '@angular/core';
 import {ToolSourceDTO} from '../../dto/message';
 import {MatCardModule} from '@angular/material/card';
-import {JsonPipe} from '@angular/common';
 import {MatIconModule} from '@angular/material/icon';
 import {MatDialog} from '@angular/material/dialog';
 import {ResearchPaperDialogComponent} from '../research-paper-dialog/research-paper-dialog.component';
 
 @Component({
   selector: 'app-paper-card',
-  imports: [MatCardModule, MatIconModule, JsonPipe],
+  imports: [MatCardModule, MatIconModule],
   templateUrl: './paper-card.component.html',
   styleUrl: './paper-card.component.scss'
 })
