@@ -13,10 +13,7 @@ stages:
 
 assemble:production:
   image: node:22.12-alpine
-  needs:
-    - install
-  dependencies:
-    - install
+  stage: install
   script:
     - npm install --prefer-offline
     - npm run build:production
@@ -33,10 +30,7 @@ assemble:production:
 
 assemble:staging:
   image: node:22.12-alpine
-  needs:
-    - install
-  dependencies:
-    - install
+  stage: install
   script:
     - npm install --prefer-offline
     - npm run build:staging
