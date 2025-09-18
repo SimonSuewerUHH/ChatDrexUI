@@ -2,12 +2,55 @@ variables:
   DOCKER_TLS_CERTDIR: ""
 
 stages:
+  - install
   - deploy
 
 .docker_buildx: &docker_buildx
   - docker context create fedDB-context
   - docker buildx create --name fedDBBuilder --use fedDB-context
   - docker buildx inspect --bootstrap
+
+
+assemble:production:
+  image: node:22.12-alpine
+  needs:
+    - install
+  dependencies:
+    - install
+  script:
+    - npm install --prefer-offline
+    - npm run build:production
+  artifacts:
+    paths:
+      - dist
+  cache:
+    key:
+      files:
+        - package.json
+    paths:
+      - node_modules
+    policy: pull
+
+assemble:staging:
+  image: node:22.12-alpine
+  needs:
+    - install
+  dependencies:
+    - install
+  script:
+    - npm install --prefer-offline
+    - npm run build:staging
+  artifacts:
+    paths:
+      - dist
+  cache:
+    key:
+      files:
+        - package.json
+    paths:
+      - node_modules
+    policy: pull
+
 
 deploy:
   image: docker:24.0.5
@@ -18,6 +61,10 @@ deploy:
   services:
     - name: docker:24.0.5-dind
       alias: docker
+  dependencies:
+    - assemble:production
+  needs:
+    - assemble:production
   before_script:
     - docker info
     - *docker_buildx
@@ -32,6 +79,10 @@ deploy:develop:
   services:
     - name: docker:24.0.5-dind
       alias: docker
+  dependencies:
+    - assemble:staging
+  needs:
+    - assemble:staging
   before_script:
     - docker info
     - *docker_buildx
