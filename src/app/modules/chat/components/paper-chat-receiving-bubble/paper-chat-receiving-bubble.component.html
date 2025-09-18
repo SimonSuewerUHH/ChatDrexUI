@@ -12,6 +12,7 @@
     }
     @if(getDigestPlotData()){
       <app-digest-plot [data]="getDigestPlotData()!"></app-digest-plot>
+      <a mat-raised-button href="https://digest-validation.net/documentation#results">Learn more about DIGEST results</a>
     }
     @if (getRemoteHTML()) {
       <iframe class="remote-html" [src]="getSanitizedRemoteHTML()"></iframe>

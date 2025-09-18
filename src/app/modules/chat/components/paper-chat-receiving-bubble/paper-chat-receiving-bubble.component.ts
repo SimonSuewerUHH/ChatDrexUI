@@ -22,7 +22,7 @@ import {CustomMarkdownComponent} from '../markdown/markdown.component';
 import {DrugstOneNetworkComponent} from '../drugst-one-network/drugst-one-network.component';
 import {DrugstOneGraph, DrugstOneNetwork} from '../../dto/network';
 import {environment} from '../../../../../environments/environment';
-import {MatIconButton} from '@angular/material/button';
+import {MatButton, MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {MatDialog} from '@angular/material/dialog';
 import {ErrorListDialogComponent} from '../error-list-dialog/error-list-dialog.component';
@@ -33,7 +33,7 @@ import {FileResultListComponent} from '../file-result-list/file-result-list.comp
 
 @Component({
   selector: 'app-paper-chat-receiving-bubble',
-  imports: [MatProgressBarModule, NgOptimizedImage, ToolsPanelComponent, CustomMarkdownComponent, DrugstOneNetworkComponent, MatIconButton, MatIcon, DigestPlotComponent, FileResultListComponent],
+  imports: [MatProgressBarModule, NgOptimizedImage, ToolsPanelComponent, CustomMarkdownComponent, DrugstOneNetworkComponent, MatIconButton, MatIcon, DigestPlotComponent, FileResultListComponent, MatButton],
   templateUrl: './paper-chat-receiving-bubble.component.html',
   styleUrl: './paper-chat-receiving-bubble.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
