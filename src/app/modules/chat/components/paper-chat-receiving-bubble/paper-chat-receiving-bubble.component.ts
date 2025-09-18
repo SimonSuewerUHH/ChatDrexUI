@@ -9,7 +9,13 @@ import {
 } from '@angular/core';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {NgOptimizedImage} from '@angular/common';
-import {ConversationPart, SystemMessageDTO, ToolSourceDTO} from '../../dto/message';
+import {
+  ConversationPart,
+  SystemMessageDTO,
+  ToolFileResponseDTO,
+  ToolSourceDTO,
+  ToolStructuredContentType
+} from '../../dto/message';
 import {ToolsPanelComponent} from '../tools-panel/tools-panel.component';
 import {MessageState, Tools} from '../../dto/enums';
 import {CustomMarkdownComponent} from '../markdown/markdown.component';
@@ -23,10 +29,11 @@ import {ErrorListDialogComponent} from '../error-list-dialog/error-list-dialog.c
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {DigestPlotDTO} from '../../dto/digest';
 import {DigestPlotComponent} from '../digest-plot/digest-plot.component';
+import {FileResultListComponent} from '../file-result-list/file-result-list.component';
 
 @Component({
   selector: 'app-paper-chat-receiving-bubble',
-  imports: [MatProgressBarModule, NgOptimizedImage, ToolsPanelComponent, CustomMarkdownComponent, DrugstOneNetworkComponent, MatIconButton, MatIcon, DigestPlotComponent],
+  imports: [MatProgressBarModule, NgOptimizedImage, ToolsPanelComponent, CustomMarkdownComponent, DrugstOneNetworkComponent, MatIconButton, MatIcon, DigestPlotComponent, FileResultListComponent],
   templateUrl: './paper-chat-receiving-bubble.component.html',
   styleUrl: './paper-chat-receiving-bubble.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -58,16 +65,9 @@ export class PaperChatReceivingBubbleComponent implements OnChanges {
   getSource(): ToolSourceDTO[] {
     return this.message().tools
       .filter(tool => tool.name === Tools.RESEARCH && tool.structuredContent && tool.structuredContent.length > 0)
-      .flatMap(tool => {
-        const content = tool.structuredContent as any[];
-        if (content.length == 0) {
-          return [];
-        }
-        if (Array.isArray(content[0])) {
-          return (content as ToolSourceDTO[][]).flat();
-        }
-        return content as ToolSourceDTO[];
-      })
+      .flatMap(tool => tool.structuredContent)
+      .filter(tool => tool?.type === ToolStructuredContentType.DRUGST_ONE)
+      .map(tool => tool?.content as ToolSourceDTO)
       .filter(source => !!source)
   }
 
@@ -80,7 +80,9 @@ export class PaperChatReceivingBubbleComponent implements OnChanges {
   getDrugstOneNetwork(): DrugstOneGraph | undefined {
     const graphs = this.message().tools
       .filter(tool => tool.name === Tools.NETDREX_TOOL && tool.structuredContent && tool.structuredContent.length > 0)
-      .flatMap(tool => tool.structuredContent as DrugstOneNetwork[])
+      .flatMap(tool => tool.structuredContent)
+      .filter(tool => tool?.type === ToolStructuredContentType.DRUGST_ONE)
+      .map(tool => tool?.content as DrugstOneNetwork)
       .filter(network => !!network)
       .map(n => {
         return {
@@ -97,11 +99,27 @@ export class PaperChatReceivingBubbleComponent implements OnChanges {
   getDigestPlotData(): DigestPlotDTO | undefined {
     const plots = this.message().tools
       .filter(tool => tool.name === Tools.DIGEST && tool.structuredContent && tool.structuredContent.length > 0)
-      .flatMap(tool => tool.structuredContent as DigestPlotDTO[])
+      .flatMap(tool => tool.structuredContent)
+      .filter(tool => tool?.type === ToolStructuredContentType.DIGEST)
+      .map(tool => tool?.content as DigestPlotDTO)
       .filter(plot => !!plot);
 
     if (plots.length > 0) {
       return plots[0];
+    }
+    return undefined;
+  }
+
+  getRemoteFiles(): ToolFileResponseDTO[] | undefined {
+    const plots = this.message().tools
+      .filter(tool => tool.structuredContent && tool.structuredContent.length > 0)
+      .flatMap(tool => tool.structuredContent)
+      .filter(tool => tool?.type === ToolStructuredContentType.FILE)
+      .map(tool => tool?.content as ToolFileResponseDTO)
+      .filter(plot => !!plot);
+
+    if (plots.length > 0) {
+      return plots;
     }
     return undefined;
   }

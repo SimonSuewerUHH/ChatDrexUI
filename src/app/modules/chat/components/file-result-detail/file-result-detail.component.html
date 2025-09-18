@@ -1,0 +1,137 @@
+<mat-card class="preview-card">
+  <div class="header">
+    <div class="title">
+      <mat-icon class="type-icon" aria-hidden="true">
+        @switch (fileType()) {
+          @case (ToolFileResponseType.CSV) {
+            table_chart
+          }
+          @case (ToolFileResponseType.PNG) {
+            image
+          }
+          @case (ToolFileResponseType.URL) {
+            link
+          }
+          @case (ToolFileResponseType.DOWNLOAD) {
+            download
+          }
+          @case (ToolFileResponseType.IFRAME) {
+            iframe
+          }
+          @default {
+            description
+          }
+        }
+      </mat-icon>
+      <div class="meta">
+        <div class="name" [matTooltip]="filePath()">{{ fileName() }}</div>
+      </div>
+    </div>
+
+    <div class="actions">
+      @if (isHttpUrl()) {
+        <button
+          mat-flat-button
+          color="primary"
+          (click)="openInNewTab()"
+          matTooltip="Open in new tab"
+        >
+          <mat-icon>open_in_new</mat-icon>
+          Open
+        </button>
+      }
+
+      @switch (fileType()) {
+        @case (ToolFileResponseType.DOWNLOAD) {
+          <a
+            mat-flat-button
+            color="accent"
+            [href]="filePath()"
+            [attr.download]="fileName()"
+          >
+            <mat-icon>download</mat-icon>
+            Download
+          </a>
+        }
+      }
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div class="content">
+    @switch (fileType()) {
+
+      @case (ToolFileResponseType.CSV) {
+        <div class="csv-preview">
+          @if (csvLoading()) {
+            <div class="center">
+              <mat-progress-spinner mode="indeterminate" diameter="36"/>
+            </div>
+          } @else if (csvError()) {
+            <div class="error">
+              <mat-icon>error</mat-icon>
+              {{ csvError() }}
+            </div>
+          } @else {
+            @if (csvHeaders().length === 0) {
+              <div class="muted">No data to preview.</div>
+            } @else {
+      <div class="table-wrapper">
+                <table mat-table [dataSource]="csvRows()">
+                  @for (col of csvHeaders(); track $index) {
+                    <ng-container [matColumnDef]="'c' + $index">
+                      <th mat-header-cell *matHeaderCellDef class="mono">
+                        {{ col || ('Column ' + ($index + 1)) }}
+                      </th>
+                      <td mat-cell *matCellDef="let row" class="mono">
+                        {{ row[$index] ?? '' }}
+                      </td>
+                    </ng-container>
+                  }
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns()"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns()"></tr>
+                </table>
+              </div>
+              <div class="hint muted">Showing first {{ csvRows().length }} rows.</div>
+            }
+          }
+        </div>
+      }
+      @case (ToolFileResponseType.PNG) {
+        <div class="image-wrap">
+          <img [src]="filePath()" alt="PNG preview"/>
+        </div>
+      }
+      @case (ToolFileResponseType.URL) {
+        <div class="url-card">
+          <mat-icon>link</mat-icon>
+          <div class="url">
+            <a [href]="filePath()" target="_blank" rel="noopener noreferrer">
+              {{ filePath() }}
+            </a>
+          </div>
+          <div class="muted">External resource</div>
+        </div>
+      }
+      @case (ToolFileResponseType.IFRAME) {
+        <div class="iframe-wrap">
+          <iframe [src]="safeUrl()" loading="lazy"></iframe>
+        </div>
+      }
+      @case (ToolFileResponseType.DOWNLOAD) {
+        <div class="download-wrap">
+          <mat-icon>download</mat-icon>
+          <div class="text">
+            <div class="bold">{{ fileName() }}</div>
+            <div class="muted">Click “Download” above to save the file.</div>
+          </div>
+        </div>
+      }
+      @default {
+        <div class="muted">Unsupported file type.</div>
+      }
+    }
+  </div>
+</mat-card>

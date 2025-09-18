@@ -1,0 +1,17 @@
+<mat-form-field appearance="outline" class="full">
+  <mat-label>Select result</mat-label>
+  <mat-select [(ngModel)]="selectedFile">
+    <mat-option [value]="undefined">– None –</mat-option>
+    @for (f of files(); track f.path) {
+      <mat-option [value]="f">
+        {{ f.name }} ({{ f.type }})
+      </mat-option>
+    }
+  </mat-select>
+</mat-form-field>
+
+@if (selectedFile()) {
+  <div class="info">
+    <app-file-result-detail [file]="selectedFile()!" />
+  </div>
+}

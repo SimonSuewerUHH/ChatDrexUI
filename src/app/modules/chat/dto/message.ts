@@ -32,9 +32,15 @@ export interface ToolDTO {
   name: string;
   started: boolean;
   content?: string[];
-  structuredContent?: ToolSourceDTO[] | DrugstOneNetwork[] | DigestPlotDTO[];
+  structuredContent?: ToolStructuredContentDTO[];
   input: any;
 }
+
+export interface ToolStructuredContentDTO {
+  content?: ToolSourceDTO | DrugstOneNetwork | DigestPlotDTO | ToolFileResponseDTO;
+  type: ToolStructuredContentType;
+}
+
 
 export interface ToolSourceDTO {
   paperId: string;
@@ -48,6 +54,27 @@ export interface ToolSourceDTO {
 
 export interface ToolSourceInputDTO {
   query: string;
+}
+
+export interface ToolFileResponseDTO {
+  path: string;
+  name: string;
+  type: ToolFileResponseType;
+}
+
+export enum ToolStructuredContentType {
+  SOURCE = "SOURCE",
+  DRUGST_ONE = "DRUGST_ONE",
+  DIGEST = "DIGEST",
+  FILE = "FILE",
+}
+
+export enum ToolFileResponseType {
+  CSV = "CSV",
+  PNG = "PNG",
+  URL = "URL",
+  DOWNLOAD = "DOWNLOAD",
+  IFRAME = "IFRAME"
 }
 
 export interface SystemMessageDTO {
