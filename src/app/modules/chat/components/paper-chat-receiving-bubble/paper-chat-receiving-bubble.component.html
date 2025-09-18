@@ -10,15 +10,17 @@
     @if (getDrugstOneNetwork()) {
       <app-drugst-one-network [network]="getDrugstOneNetwork()!"></app-drugst-one-network>
     }
-    @if(getDigestPlotData()){
+    @if (getDigestPlotData()) {
       <app-digest-plot [data]="getDigestPlotData()!"></app-digest-plot>
-      <a mat-raised-button href="https://digest-validation.net/documentation#results">Learn more about DIGEST results</a>
+      <a mat-raised-button href="https://digest-validation.net/documentation#results">Learn more about DIGEST
+        results</a>
+      <br>
     }
     @if (getRemoteHTML()) {
       <iframe class="remote-html" [src]="getSanitizedRemoteHTML()"></iframe>
     }
 
-    @if(getRemoteFiles()){
+    @if (getRemoteFiles()) {
       <app-file-result-list [files]="getRemoteFiles()!"></app-file-result-list>
     }
     <app-sourced-markdown [markdown]="getMarkdown()"

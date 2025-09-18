@@ -85,7 +85,6 @@ export class FileResultDetailComponent {
         return copy;
       });
 
-      debugger;
       this.csvHeaders.set(headers);
       this.csvRows.set(rows);
     } catch (e: any) {

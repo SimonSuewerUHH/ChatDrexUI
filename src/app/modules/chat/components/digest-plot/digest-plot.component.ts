@@ -23,10 +23,10 @@ export class DigestPlotComponent {
   data = input.required<DigestPlotDTO>();
 
   private groupBaseColors: Record<string, RGB> = {
-    'GO.MF': [247, 247, 59],   // yellow
-    'GO.CC': [236, 24, 165],   // dark pink
-    'GO.BP': [68, 235, 112],   // light green
-    'KEGG': [255, 140, 0],    // orange
+    'GO.MF': [66, 135, 245],   // blue
+    'GO.CC': [156, 39, 176],   // purple
+    'GO.BP': [76, 175, 80],    // green
+    'KEGG':  [255, 152, 0],    // amber
   };
 
   // Internal signals
@@ -61,27 +61,17 @@ export class DigestPlotComponent {
         cats.push('', '');
       } // two spacers
       first = false;
-      for (const r of rows) cats.push(r.term);
+      for (const r of rows) cats.push(`${db}::${r.term}::${r.gene}`);
     }
     return cats;
   });
 
-  // Helpers
-  private rgba([r, g, b]: RGB, a: number) {
-    return `rgba(${r},${g},${b},${a})`;
-  }
 
-  private maxScore(arr: number[]) {
-    return arr.length ? Math.max(...arr) : 1;
-  }
-
-  // Series per database. Each series has data aligned with categories; other positions are null.
   private series = computed(() => {
     const cats = this.categories();
     const groups = this.grouped();
     const series: any[] = [];
 
-    // Build an index where each category belongs (to map terms to their row object)
     const termToIndex = new Map<string, number>();
     cats.forEach((c, i) => {
       if (c) termToIndex.set(c, i);
@@ -89,25 +79,16 @@ export class DigestPlotComponent {
 
     for (const db of this.dbList()) {
       const rows = (groups.get(db) ?? []) as DigestEntryDTO[];
-      const scores = rows.map(r => r.score);
-      const max = this.maxScore(scores);
 
-      const base = this.groupBaseColors[db] ?? [120, 120, 120] as RGB;
-
-      // Initialize the data array with nulls (so bars only appear on their lines)
       const data = Array<any>(cats.length).fill(null);
 
       for (const row of rows) {
-        const idx = termToIndex.get(row.term);
+        const idx = termToIndex.get(`${db}::${row.term}::${row.gene}`);
         if (idx == null) continue;
 
-        const alpha = 0.05 + (max > 0 ? (0.8 * row.score / max) : 0);
-        const color = this.rgba(base, Math.min(Math.max(alpha, 0.05), 0.95));
 
         data[idx] = {
           value: row.score,
-          itemStyle: {color},
-          // Tooltip payload
           _payload: row
         };
       }
@@ -116,12 +97,6 @@ export class DigestPlotComponent {
         type: 'bar',
         name: db,
         data,
-        barGap: '30%',
-        barCategoryGap: '25%',
-        // Rounded bars on the right side for nicer look
-        itemStyle: {borderRadius: [0, 6, 6, 0]},
-        // Emphasis styling
-        emphasis: {focus: 'series'}
       });
     }
 
@@ -138,7 +113,6 @@ export class DigestPlotComponent {
       title: {
         text: 'DIGEST Functional Enrichment Analysis Results',
         left: 'center',
-        textStyle: {color: '#000', fontSize: 20}
       },
       grid: {left: 180, right: 40, top: 60, bottom: 40},
       legend: {
@@ -175,8 +149,11 @@ export class DigestPlotComponent {
         nameTextStyle: {color: '#000', fontSize: 14},
         axisLabel: {
           color: '#000',
-          // Hide labels for spacer rows
-          formatter: (val: string) => (val ? val : '')
+          formatter: (val: string) => {
+            if (!val) return '';
+            const parts = val.split('::');
+            return parts.length > 1 ? parts[1] : val;
+          }
         }
       },
       series: this.series()
