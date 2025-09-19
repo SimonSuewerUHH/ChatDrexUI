@@ -2,16 +2,30 @@
 
   <h2>ChatDRex: A Conversational Multi-Agent Platform</h2>
 
-  <img src="assets/abstract.png" alt="ChatDRex Architectural Overview" height="auto" width="100%"/>
+  <img src="assets/poster.png" alt="ChatDRex Architectural Overview" height="auto" width="100%"/>
 
-  <h3>Introduction</h3>
+  <h3>Abstract</h3>
   <p>
-    ChatDRex leverages a novel <strong>multi-agent architecture</strong> built on
-    <strong>LangChain</strong> and <strong>LangGraph</strong> to facilitate complex,
-    network-based drug repurposing analyses through a conversational interface.
-    This approach mitigates biases and hallucinations in Large Language Models (LLMs)
-    by integrating directly with validated biomedical databases and specialized
-    bioinformatics tools, ensuring precise and reliable analyses.
+    Repurposing approved drugs offers a time-efficient and cost-effective alternative to traditional drug development.
+    However, in silico prediction of repurposing candidates is a challenging task requiring effective collaborative
+    efforts of specialists educated in different fields, from pharmacology and medicine to biology and bioinformatics.
+    Fragmented, specialized algorithms and tools often address only narrow aspects of the overall problem, and
+    heterogeneous, unstructured data landscapes require specialized users to be in the loop. Hence, these data services
+    do not integrate smoothly across workflows.
+    With ChatDRex, we present a conversation-based, multi-agent system that facilitates the execution of complex
+    bioinformatic analyses aiming for network-based drug repurposing prediction. It builds on the integrated systems
+    medicine knowledge graph (KG) NeDRex. ChatDRex provides natural language access to its extensive biomedical KG and
+    integrates bioinformatics agents for network analysis and drug repurposing, complemented by agents for functional
+    coherence evaluation for in silico validation, as well as agents for literature mining and for discussing the
+    obtained results in scientific context. Its flexible multi-agent design assigns specific tasks to specialized
+    agents, including query routing, data retrieval, algorithm execution, and result visualization. A dedicated
+    reasoning module keeps the user in the loop and allows for hallucination detection.
+    By empowering clinicians and researchers without computational training to perform complex analyses without the
+    necessity to program while steering the process interactively and conversationally in natural language, ChatDRex
+    democratizes access to bioinformatics as a crucial resource in drug repurposing. It allows clinical experts to
+    generate hypotheses and explore drug repurposing opportunities, ultimately accelerating novel therapy discovery and
+    advancing personalized medicine and translational research.
+
   </p>
 
   <div class="start-wrapper">
@@ -20,44 +34,9 @@
       routerLink="/chat/new"
       class="start-btn">
       <mat-icon>backup_table</mat-icon>
-      <div>Start with your own ChatDrex experience</div>
+      <div>Start with your own ChatDRex experience</div>
     </a>
   </div>
-
-  <h3>Key Features</h3>
-  <ul>
-    <li>
-      <strong>Multi-Agent Orchestration</strong><br/>
-      A directed graph structure coordinates specialized agents, each fulfilling
-      distinct roles in query processing.
-    </li>
-    <li>
-      <strong>Validated Biomedical Data</strong><br/>
-      Direct integration with established databases ensures high-quality, reliable results.
-    </li>
-    <li>
-      <strong>Functional Enrichment Analysis</strong><br/>
-      The DIGEST Node enables researchers to conduct comprehensive gene set analyses
-      to uncover relevant biological pathways.
-    </li>
-    <li>
-      <strong>Network-Based Drug Repurposing</strong><br/>
-      Access NeDRexDB to analyze disease-related networks and identify promising
-      drug targets.
-    </li>
-    <li>
-      <strong>Comprehensive Literature Retrieval</strong><br/>
-      The Research Node queries Semantic Scholar for relevant publications to support
-      findings and hypotheses.
-    </li>
-  </ul>
-  <p>
-    ChatDRex streamlines drug repurposing research by providing an interactive,
-    AI-driven framework that simplifies complex analyses. By leveraging an agent-based
-    architecture and validated biomedical resources, it empowers researchers with
-    an intuitive, reliable, and scalable solution for exploring therapeutic opportunities.
-  </p>
-  <br/>
 
 </div>
 

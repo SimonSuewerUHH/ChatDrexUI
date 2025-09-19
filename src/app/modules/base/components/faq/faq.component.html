@@ -1,4 +1,4 @@
-  <h2>Frequently Asked Questions (FAQ)</h2>
+<h2>ChatDRex — Frequently Asked Questions</h2>
 
   <mat-accordion>
 
@@ -8,78 +8,167 @@
         <mat-panel-title>What is ChatDRex?</mat-panel-title>
       </mat-expansion-panel-header>
       <p>
-        ChatDRex is a conversational multi-agent platform designed to facilitate
-        complex, network-based drug repurposing analyses. It integrates validated
-        biomedical databases and specialized bioinformatics tools, ensuring
-        high accuracy and reliability of results.
+        ChatDRex is a conversational, <strong>no‑code</strong>, multi‑agent system for
+        <strong>network‑based disease‑module identification and drug repurposing</strong>.
+        It provides natural‑language access to the integrated systems medicine
+        knowledge graph <em>NeDRex</em> and orchestrates specialized bioinformatics
+        agents for analysis and in‑silico validation.
+      </p>
+      <p>
+        The approach is described in: <em>“Conversational no‑code multi‑agentic disease module
+        identification and drug repurposing with ChatDRex”</em> by Simon Süwer, Kester Bagemihl,
+        Sylvie Baier, Lucia Dicunta, Markus List, Jan Baumbach, Andreas Maier, and
+        Fernando M. Delgado‑Chaves (shared first/last authors).
       </p>
     </mat-expansion-panel>
 
-    <!-- 2. How does ChatDRex handle multiple agents? -->
+    <!-- 2. Who is ChatDRex for? Do I need coding skills? -->
     <mat-expansion-panel>
       <mat-expansion-panel-header>
-        <mat-panel-title>How does ChatDRex handle multiple agents?</mat-panel-title>
+        <mat-panel-title>Who is ChatDRex for? Do I need coding skills?</mat-panel-title>
       </mat-expansion-panel-header>
       <p>
-        ChatDRex uses a multi-agent architecture orchestrated by the Start Node.
-        Each query is analyzed and then directed to specialized agents—such as
-        the LLM Node, DIGEST Node, Network Node, or Research Node—depending on
-        the user’s request. This design enhances efficiency and accuracy through
-        task specialization.
+        ChatDRex is designed for clinicians and researchers who want to run complex
+        bioinformatics workflows <strong>without programming</strong>. You ask questions in plain
+        language; the system plans the analysis, calls the right tools, and returns
+        interpretable results with links and visualizations.
       </p>
     </mat-expansion-panel>
 
-    <!-- 3. How does ChatDRex address potential hallucinations from LLMs? -->
+    <!-- 3. Which analyses can ChatDRex run end‑to‑end? -->
     <mat-expansion-panel>
       <mat-expansion-panel-header>
-        <mat-panel-title>How does ChatDRex address potential hallucinations from LLMs?</mat-panel-title>
+        <mat-panel-title>Which analyses can ChatDRex run end‑to‑end?</mat-panel-title>
       </mat-expansion-panel-header>
       <p>
-        ChatDRex incorporates a two-stage validation system: the Hallucination Chain
-        and the Grading Chain. The Hallucination Chain cross-verifies generated
-        content with validated references, while the Grading Chain evaluates the
-        clarity, correctness, and relevance of the response, ensuring high-quality
-        and factually accurate outputs.
+        A typical workflow combines:
+      </p>
+      <ul>
+        <li><strong>Schema‑constrained KG querying</strong> over NeDRex (Cypher/Neo4j).</li>
+        <li><strong>Disease‑module expansion</strong> with DIAMOnD (seed‑gene driven).</li>
+        <li><strong>Drug prioritization</strong> via TrustRank or Closeness Centrality.</li>
+        <li><strong>In‑silico validation</strong> with DIGEST (functional coherence from GO/KEGG).</li>
+        <li><strong>Literature grounding</strong> with a Research agent (Semantic Scholar).</li>
+        <li><strong>Interactive visualization</strong> using Drugst.One with a consistent legend.</li>
+      </ul>
+    </mat-expansion-panel>
+
+    <!-- 4. How does the multi‑agent system work? -->
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>How does the multi‑agent system work?</mat-panel-title>
+      </mat-expansion-panel-header>
+      <p>
+        A central <strong>Planning agent</strong> decomposes your request and routes subtasks to
+        expert agents (KG, Network, DIGEST, Research, Visualization, Finalize).
+        Each agent uses few‑shot prompts, short/long‑term memory, and tool calling.
+        Results are merged into a coherent answer with figures and citations.
       </p>
     </mat-expansion-panel>
 
-    <!-- 4. Can I use ChatDRex without coding experience? -->
+    <!-- 5. How are hallucinations and errors mitigated? -->
     <mat-expansion-panel>
       <mat-expansion-panel-header>
-        <mat-panel-title>Can I use ChatDRex without coding experience?</mat-panel-title>
+        <mat-panel-title>How are hallucinations and errors mitigated?</mat-panel-title>
       </mat-expansion-panel-header>
       <p>
-        Yes. ChatDRex is designed as a conversational interface, enabling researchers
-        and scientists to interact naturally using plain language. Its multi-agent
-        system manages complex tasks under the hood, so you can perform network-based
-        analyses without needing specialized programming skills.
+        ChatDRex employs <strong>input guardrails</strong> (prompt‑injection checks),
+        <strong>schema‑constrained Cypher generation</strong> with deterministic templates and
+        embedding‑assisted ID matching, and a <strong>Finalize</strong> step with paragraph‑level
+        verification. If Cypher generation fails repeatedly, a <strong>GraphRAG</strong> fallback
+        retrieves graph‑guided context to maintain accuracy.
       </p>
     </mat-expansion-panel>
 
-    <!-- 5. How do I integrate ChatDRex into my research workflow? -->
+    <!-- 6. Which data sources and tools are integrated? -->
     <mat-expansion-panel>
       <mat-expansion-panel-header>
-        <mat-panel-title>How do I integrate ChatDRex into my research workflow?</mat-panel-title>
+        <mat-panel-title>Which data sources and tools are integrated?</mat-panel-title>
       </mat-expansion-panel-header>
       <p>
-        ChatDRex can be accessed through its web-based interface, allowing you to
-        submit queries related to gene interactions, enrichment analyses, or
-        literature searches. It also features built-in tools like DIGEST and
-        NeDRexDB for specialized functionalities. Simply pose your questions, and
-        ChatDRex routes them to the relevant agents.
+        Core components include <strong>NeDRexDB/NeDRexAPI</strong> (KG access and network tools),
+        <strong>DIAMOnD</strong> (disease‑module detection), <strong>TrustRank</strong> and
+        <strong>Closeness Centrality</strong> (drug ranking), <strong>DIGEST</strong> (functional coherence),
+        <strong>Semantic Scholar</strong> (literature), and <strong>Drugst.One</strong> (graph visualization).
       </p>
     </mat-expansion-panel>
 
-    <!-- 6. How do I cite ChatDRex in my publication? -->
+    <!-- 7. What models does ChatDRex run on? Can I change them? -->
     <mat-expansion-panel>
       <mat-expansion-panel-header>
-        <mat-panel-title>How do I cite ChatDRex in my publication?</mat-panel-title>
+        <mat-panel-title>What models does ChatDRex run on? Can I change them?</mat-panel-title>
       </mat-expansion-panel-header>
       <p>
-        Please cite ChatDRex using the relevant references and links provided in
-        the documentation or on the ChatDRex platform. Including details about
-        the version used, date accessed, and any related tool references helps
-        maintain accurate and transparent reporting of your research methods.
+        By default we use <strong>gpt‑oss‑20b</strong>, hosted via <strong>Ollama</strong> behind a self‑hosted
+        OpenWebUI. The multi‑agent design is modular—administrators can swap or
+        upgrade models per agent as better LLMs become available.
+      </p>
+    </mat-expansion-panel>
+
+    <!-- 8. Do I need to install anything? Is there a web UI? -->
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Do I need to install anything? Is there a web UI?</mat-panel-title>
+      </mat-expansion-panel-header>
+      <p>
+        You can use the hosted web interface: <a href="https://apps.cosy.bio/chatdrex/" target="_blank" rel="noopener">apps.cosy.bio/chatdrex</a>.
+        For local deployments, the <strong>Angular front end</strong> connects to <strong>Quarkus</strong>
+        backends via <strong>WebSocket</strong>; the backend also offers <strong>REST</strong> and an
+        <strong>MCP server</strong> for tool integration.
+      </p>
+    </mat-expansion-panel>
+
+    <!-- 9. Where is the code? What’s the license? -->
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Where is the code? What’s the license?</mat-panel-title>
+      </mat-expansion-panel-header>
+      <p>
+        Source code:
+        <a href="https://github.com/SimonSuewerUHH/ChatDRexAPI4J" target="_blank" rel="noopener">ChatDRexAPI4J</a>
+        and
+        <a href="https://github.com/SimonSuewerUHH/ChatDrexUI" target="_blank" rel="noopener">ChatDrexUI</a>.
+        The software is free for academic and non‑profit use under the
+        <a href="https://opensource.org/license/BSD-3-Clause" target="_blank" rel="noopener">BSD 3‑Clause License</a>.
+        Commercial users: please contact the
+        <a href="https://cosy.bio" target="_blank" rel="noopener">CoSy.Bio Lab (University of Hamburg)</a> for a license.
+      </p>
+    </mat-expansion-panel>
+
+    <!-- 10. How should I cite ChatDRex? -->
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>How should I cite ChatDRex?</mat-panel-title>
+      </mat-expansion-panel-header>
+      <p>
+        Please cite the paper <em>“Conversational no‑code multi‑agentic disease module identification and
+        drug repurposing with ChatDRex”</em> (Süwer <em>et al.</em>, 2025). Include the version used and
+        date accessed, plus related tool references where appropriate.
+      </p>
+    </mat-expansion-panel>
+
+    <!-- 11. What are current limitations? -->
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>What are current limitations?</mat-panel-title>
+      </mat-expansion-panel-header>
+      <p>
+        Results depend on input quality and database coverage; some outputs require
+        expert interpretation. LLMs can still produce plausible but irrelevant
+        content, so guardrails and literature checks are used. Ongoing maintenance is
+        needed as databases and tools evolve.
+      </p>
+    </mat-expansion-panel>
+
+    <!-- 12. Who funds the project? -->
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Who funds the project?</mat-panel-title>
+      </mat-expansion-panel-header>
+      <p>
+        Funded by the European Union (Grant No. 101057619) and partly by the Swiss
+        SERI (Contract No. 22.00115). Views are those of the authors and do not
+        necessarily reflect those of the EU or HADEA.
       </p>
     </mat-expansion-panel>
 
