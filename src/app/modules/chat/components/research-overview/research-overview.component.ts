@@ -3,7 +3,6 @@ import {ConversationPart, ToolDTO, ToolSourceDTO, ToolStructuredContentType} fro
 import {Tools} from '../../dto/enums';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatIconModule} from '@angular/material/icon';
-import {ToolPanelComponent} from '../tool-panel/tool-panel.component';
 import {PapersListComponent} from '../papers-list/papers-list.component';
 
 @Component({
@@ -11,7 +10,6 @@ import {PapersListComponent} from '../papers-list/papers-list.component';
   imports: [
     MatExpansionModule,
     MatIconModule,
-    ToolPanelComponent,
     PapersListComponent],
   templateUrl: './research-overview.component.html',
   styleUrl: './research-overview.component.scss'

@@ -6,11 +6,10 @@ import {DecisionPanelComponent} from '../decisions-panel/decision-panel.componen
 import {ConversationPart, ToolDTO, ToolSourceDTO} from '../../dto/message';
 import {ToolPanelComponent} from '../tool-panel/tool-panel.component';
 import {Tools} from '../../dto/enums';
-import {PapersListComponent} from '../papers-list/papers-list.component';
 
 @Component({
   selector: 'app-tools-panel',
-  imports: [MatExpansionModule, PanelWrapperComponent, MatIconModule, DecisionPanelComponent, ToolPanelComponent, PapersListComponent],
+  imports: [MatExpansionModule, PanelWrapperComponent, MatIconModule, DecisionPanelComponent, ToolPanelComponent],
   templateUrl: './tools-panel.component.html',
   styleUrl: './tools-panel.component.scss'
 })
