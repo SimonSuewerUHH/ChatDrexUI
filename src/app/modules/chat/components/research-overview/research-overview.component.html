@@ -1,0 +1,13 @@
+@if (getResearchTools().length > 0) {
+  @for (tool of getResearchTools(); track tool.id) {
+    <h5>
+      @if (tool.started) {
+        <mat-icon>sync</mat-icon>
+      } @else {
+        <mat-icon>check_circle</mat-icon>
+      }
+      {{ tool.input }}
+    </h5>
+    <app-papers-list content [tool]="getResearchToolOutput(tool)"></app-papers-list>
+  }
+}
