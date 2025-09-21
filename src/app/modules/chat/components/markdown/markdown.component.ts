@@ -66,8 +66,8 @@ export class CustomMarkdownComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private postProcessMarkdown(markdown: string): string {
-    let replaced = markdown.replace(/\[[^\]]{0,40}\]/g, (match) => {
-      const clearMatch = match.replace(/[\[\]]/g, '');
+    let replaced = markdown.replace(/(\[([^\]\s]{1,40})\]|\(([^\)\s]{1,40})\))/g, (match, _whole, squareId, parenId) => {
+      const clearMatch = (squareId || parenId);
       if (!this.getPaper(clearMatch)) {
         return match;
       }

@@ -83,7 +83,7 @@ export class PaperChatReceivingBubbleComponent {
     return this.message().tools
       .filter(tool => tool.name === Tools.RESEARCH && tool.structuredContent && tool.structuredContent.length > 0)
       .flatMap(tool => tool.structuredContent)
-      .filter(tool => tool?.type === ToolStructuredContentType.DRUGST_ONE)
+      .filter(tool => tool?.type === ToolStructuredContentType.SOURCE)
       .map(tool => tool?.content as ToolSourceDTO)
       .filter(source => !!source)
   }
