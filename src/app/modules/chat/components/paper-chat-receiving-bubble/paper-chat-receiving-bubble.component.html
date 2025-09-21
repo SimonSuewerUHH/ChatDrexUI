@@ -1,30 +1,78 @@
 <div class="receive-wrapper">
-  <img ngSrc="assets/logo.png" alt="logo" width="30" height="30" class="logo" [class.rotate]="useLoading"/>
+  @if (useLoading()) {
+    <div class="loading-pill" role="status" aria-live="polite" aria-label="Processing">
+      <span class="dot"></span>
+    </div>
+  } @else {
+    <img ngSrc="assets/logo.png" alt="logo" width="30" height="30" class="logo"/>
+  }
   <div class="receive-bubble">
-    <app-tools-panel [message]="message()"></app-tools-panel>
+    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
+      <mat-tab label="Result">
+        @if (getMarkdown().length == 0) {
+          @if (getDecisions().length > 0) {
+            <app-panel-wrapper header="Decisions" class="decisions">
+              <mat-icon icon>psychology</mat-icon>
+              <app-decisions-panel content [decisions]="getDecisions()"
+              ></app-decisions-panel>
+            </app-panel-wrapper>
+          }
+        }
+        @if (getDrugstOneNetwork()) {
+          <app-drugst-one-network [network]="getDrugstOneNetwork()!"></app-drugst-one-network>
+        }
+        @if (getDigestPlotData()) {
+          <app-digest-plot [data]="getDigestPlotData()!"></app-digest-plot>
+          <a mat-raised-button href="https://digest-validation.net/documentation#results">Learn more about DIGEST
+            results</a>
+          <br>
+        }
+        @if (getRemoteHTML()) {
+          <iframe class="remote-html" [src]="getSanitizedRemoteHTML()"></iframe>
+        }
+        <app-sourced-markdown [markdown]="getMarkdown()"
+                              [sources]="getSource()"
+        ></app-sourced-markdown>
+      </mat-tab>
+      @if (toolsCount() > 0) {
+        <mat-tab label="Tools">
+          <ng-template mat-tab-label>
+            <mat-icon class="file-tab-icon">build</mat-icon>
+            <span class="file-tab-label">Tools</span>
+            <span class="file-tab-count">{{ toolsCount() }}</span>
+
+          </ng-template>
+          <app-tools-panel [message]="message()"></app-tools-panel>
+        </mat-tab>
+      }
+      @if (researchCount() > 0) {
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon class="file-tab-icon">books</mat-icon>
+            <span class="file-tab-label">Sources</span>
+            <span class="file-tab-count">{{ researchCount() }}</span>
+
+          </ng-template>
+          <app-research-overview [message]="message()"></app-research-overview>
+        </mat-tab>
+      }
+
+      @if (getRemoteFiles()) {
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon class="file-tab-icon">file_open</mat-icon>
+            <span class="file-tab-label">Files</span>
+            <span class="file-tab-count">{{ getRemoteFiles()?.length }}</span>
+          </ng-template>
+          <app-file-result-list [files]="getRemoteFiles()!"></app-file-result-list>
+        </mat-tab>
+      }
+
+    </mat-tab-group>
     @if (message().errors.length > 0) {
       <button mat-icon-button class="bug-btn" (click)="openError()">
         <mat-icon>bug_report</mat-icon>
       </button>
     }
-    @if (getDrugstOneNetwork()) {
-      <app-drugst-one-network [network]="getDrugstOneNetwork()!"></app-drugst-one-network>
-    }
-    @if (getDigestPlotData()) {
-      <app-digest-plot [data]="getDigestPlotData()!"></app-digest-plot>
-      <a mat-raised-button href="https://digest-validation.net/documentation#results">Learn more about DIGEST
-        results</a>
-      <br>
-    }
-    @if (getRemoteHTML()) {
-      <iframe class="remote-html" [src]="getSanitizedRemoteHTML()"></iframe>
-    }
-
-    @if (getRemoteFiles()) {
-      <app-file-result-list [files]="getRemoteFiles()!"></app-file-result-list>
-    }
-    <app-sourced-markdown [markdown]="getMarkdown()"
-                          [sources]="getSource()"
-    ></app-sourced-markdown>
   </div>
 </div>

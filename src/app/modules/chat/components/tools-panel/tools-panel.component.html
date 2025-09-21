@@ -1,44 +1,35 @@
-<mat-expansion-panel>
-  <mat-expansion-panel-header>
-    <mat-panel-title> ChatDrex Tools</mat-panel-title>
-  </mat-expansion-panel-header>
+@if (getDecisions().length > 0) {
+  <app-panel-wrapper header="Decisions" class="decisions">
+    <mat-icon icon>psychology</mat-icon>
+    <app-decisions-panel content [decisions]="getDecisions()"
+    ></app-decisions-panel>
+  </app-panel-wrapper>
+}
 
-  @if (message().tools.length > 0) {
-    @if (getResearchTools().length > 0) {
-      <app-panel-wrapper header="Research Tools">
-        <mat-icon icon>search</mat-icon>
-        <div content>
-          @for (tool of getResearchTools(); track tool.id) {
-            <app-tool-panel [tool]="tool">
-              <app-papers-list content [tool]="getResearchToolOutput(tool)"></app-papers-list>
-            </app-tool-panel>
-          }
-        </div>
-      </app-panel-wrapper>
-    }
-    @if (getNonResearchTools().length > 0) {
-      <app-panel-wrapper header="Network Tools">
-        <mat-icon icon>hub</mat-icon>
-        <div content>
-          @for (tool of getNonResearchTools(); track tool.id) {
-            <app-tool-panel [tool]="tool">
-              <span header>{{ tool.name }}</span>
-              <div content>
-                @for (content of tool.content; track $index) {
-                  <p [innerHTML]="content"></p>
-                }
-              </div>
-            </app-tool-panel>
-          }
-        </div>
-      </app-panel-wrapper>
-    }
-  }
-  @if (getDecisions().length > 0) {
-    <app-panel-wrapper header="Decisions">
-      <mat-icon icon>psychology</mat-icon>
-      <app-decisions-panel content [decisions]="getDecisions()"
-      ></app-decisions-panel>
-    </app-panel-wrapper>
-  }
-</mat-expansion-panel>
+
+@if (message().tools.length > 0) {
+
+  <app-panel-wrapper header="ChatDRex Tools">
+    <mat-icon icon>hub</mat-icon>
+    <div content class="tools">
+      @for (tool of getNonResearchTools(); track tool.id) {
+        <app-tool-panel [tool]="tool">
+          <span header>{{ tool.name }}</span>
+          <div content>
+            @for (content of tool.content; track $index) {
+              <p [innerHTML]="content"></p>
+            }
+          </div>
+        </app-tool-panel>
+      }
+      @for (tool of getResearchTools(); track tool.id) {
+        <app-tool-panel [tool]="tool">
+          <span header>{{ tool.name }}</span>
+          <div content>
+            <p>Sources are listed in the corresponding tab. </p>
+          </div>
+        </app-tool-panel>
+      }
+    </div>
+  </app-panel-wrapper>
+}

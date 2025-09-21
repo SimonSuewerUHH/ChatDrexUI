@@ -6,11 +6,16 @@ mat-divider {
   ));
 }
 
-.delete-history-btn{
+.delete-history-btn {
   position: absolute;
   right: 10px;
   bottom: 10px;
   color: var(--mat-sys-on-surface) !important;
+}
+
+.headline {
+  white-space: normal;
+  word-break: break-word;
 }
 
 .sidenav {

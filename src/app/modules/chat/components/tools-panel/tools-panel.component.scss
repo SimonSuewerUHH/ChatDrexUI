@@ -1,0 +1,14 @@
+.tools{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  app-tool-panel{
+    width: 100%;
+  }
+}
+
+.decisions{
+  display: block;
+  margin: 20px 0;
+}

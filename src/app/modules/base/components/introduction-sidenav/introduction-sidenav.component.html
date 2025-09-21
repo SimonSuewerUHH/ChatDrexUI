@@ -26,12 +26,14 @@
     </a>
     <mat-divider></mat-divider>
     @if (headlines$ | async; as headlines) {
-      @for (headline of Object.entries(headlines); track headline[0]) {
+      @for (headline of Object.entries(headlines).slice().reverse(); track headline[0]) {
         <a mat-list-item
            [routerLink]="['/chat', headline[0]]"
            class="sidenav--list-link"
            (click)="onNavigate()">
-          <div matListItemTitle>{{ headline[1] }}</div>
+          <div matListItemTitle class="headline">
+            {{ headline[1] }}
+          </div>
         </a>
       }
     }

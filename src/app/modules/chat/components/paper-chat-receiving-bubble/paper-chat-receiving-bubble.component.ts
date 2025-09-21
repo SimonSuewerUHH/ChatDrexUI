@@ -1,11 +1,9 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
+  computed,
   inject,
-  input,
-  OnChanges,
-  SimpleChanges
+  input
 } from '@angular/core';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {NgOptimizedImage} from '@angular/common';
@@ -22,7 +20,7 @@ import {CustomMarkdownComponent} from '../markdown/markdown.component';
 import {DrugstOneNetworkComponent} from '../drugst-one-network/drugst-one-network.component';
 import {DrugstOneGraph, DrugstOneNetwork} from '../../dto/network';
 import {environment} from '../../../../../environments/environment';
-import {MatButton, MatIconButton} from '@angular/material/button';
+import {MatButtonModule} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {MatDialog} from '@angular/material/dialog';
 import {ErrorListDialogComponent} from '../error-list-dialog/error-list-dialog.component';
@@ -30,33 +28,52 @@ import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {DigestPlotDTO} from '../../dto/digest';
 import {DigestPlotComponent} from '../digest-plot/digest-plot.component';
 import {FileResultListComponent} from '../file-result-list/file-result-list.component';
+import {MatTabsModule} from '@angular/material/tabs';
+import {ResearchOverviewComponent} from '../research-overview/research-overview.component';
+import {DecisionPanelComponent} from '../decisions-panel/decision-panel.component';
+import {PanelWrapperComponent} from '../panel-wrapper/panel-wrapper.component';
 
 @Component({
   selector: 'app-paper-chat-receiving-bubble',
-  imports: [MatProgressBarModule, NgOptimizedImage, ToolsPanelComponent, CustomMarkdownComponent, DrugstOneNetworkComponent, MatIconButton, MatIcon, DigestPlotComponent, FileResultListComponent, MatButton],
+  imports: [
+    MatProgressBarModule,
+    NgOptimizedImage,
+    ToolsPanelComponent,
+    CustomMarkdownComponent,
+    DrugstOneNetworkComponent,
+    MatIcon,
+    DigestPlotComponent,
+    FileResultListComponent,
+    MatButtonModule,
+    MatTabsModule,
+    ResearchOverviewComponent,
+    DecisionPanelComponent,
+    PanelWrapperComponent
+  ],
   templateUrl: './paper-chat-receiving-bubble.component.html',
   styleUrl: './paper-chat-receiving-bubble.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PaperChatReceivingBubbleComponent implements OnChanges {
+export class PaperChatReceivingBubbleComponent {
   private readonly dialog: MatDialog = inject(MatDialog);
-  private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef)
   private readonly sanitizer: DomSanitizer = inject(DomSanitizer);
   readonly message = input.required<ConversationPart>();
-  useLoading: boolean = false;
+  useLoading = computed(() => this.message().state === MessageState.START);
 
+  researchCount = computed(() => {
+    return this.message().tools
+      .filter(tool => tool.name === Tools.RESEARCH)
+      .flatMap(tool => tool.structuredContent)
+      .filter(tool => tool?.type === ToolStructuredContentType.SOURCE)
+      .map(tool => tool?.content as ToolSourceDTO)
+      .filter(source => !!source)
+      .length;
+  });
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes["message"]) {
-      if (changes["message"].currentValue.state === MessageState.START) {
-        this.useLoading = true;
-      }
-      if (changes["message"].currentValue.state === MessageState.END) {
-        this.useLoading = false;
-      }
-      this.cdr.detectChanges();
-    }
-  }
+  toolsCount = computed(() => {
+    return this.message().tools
+      .length;
+  });
 
   getMarkdown(): string {
     return this.message()?.message as string;
@@ -149,6 +166,10 @@ export class PaperChatReceivingBubbleComponent implements OnChanges {
       return undefined
     }
     return this.sanitizer.bypassSecurityTrustResourceUrl(url!);
+  }
+
+  getDecisions(): string[] {
+    return this.message().decisions;
   }
 
 
