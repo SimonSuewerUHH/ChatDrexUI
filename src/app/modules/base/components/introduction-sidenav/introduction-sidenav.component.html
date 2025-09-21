@@ -29,20 +29,37 @@
       @for (headline of Object.entries(headlines).slice().reverse(); track headline[0]) {
         <a mat-list-item
            [routerLink]="['/chat', headline[0]]"
+           routerLinkActive="active"
            class="sidenav--list-link"
            (click)="onNavigate()">
           <div matListItemTitle class="headline">
-            {{ headline[1] }}
+            <span>{{ headline[1] }}</span>
+            <button matIconButton
+                    class="thread-menu-btn"
+                    [matMenuTriggerFor]="menu"
+                    [matMenuTriggerData]="{ threadId: headline[0] }"
+                    aria-label="Thread context menu">
+              <mat-icon>more_horiz</mat-icon>
+            </button>
           </div>
+
         </a>
       }
     }
 
   </mat-list>
-
   <button mat-icon-button
-     class="delete-history-btn"
-     (click)="fireDeleteHistory()">
+          class="delete-history-btn"
+          (click)="fireDeleteHistory()">
     <mat-icon>delete</mat-icon>
   </button>
 </div>
+<mat-menu #menu="matMenu">
+  <ng-template matMenuContent let-threadId="threadId">
+    <button mat-menu-item (click)="fireDeleteThread(threadId)">
+      <mat-icon>delete_forever</mat-icon>
+      <span>Delete</span>
+    </button>
+  </ng-template>
+
+</mat-menu>

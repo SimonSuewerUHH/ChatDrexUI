@@ -3,6 +3,7 @@ import * as PaperChatActions from './paper-chat.actions';
 import {v4 as uuidv4} from 'uuid';
 import {ConversationPart, ToolDTO, ToolSourceDTO} from '../dto/message';
 import {ChatMessageType, MessageState, Tools} from '../dto/enums';
+import {deleteThread} from './paper-chat.actions';
 
 export interface PaperChatState {
   currentThreadId: string;
@@ -91,6 +92,48 @@ export const paperChatReducer = createReducer(
       };
     }
     return state
+  }),
+  on(PaperChatActions.deleteThread, (state, {threadId}) => {
+    if (!state.threadIds.includes(threadId)) {
+      return state;
+    }
+
+    const remainingThreadIds = state.threadIds.filter(id => id !== threadId);
+
+    const { [threadId]: _removedOrder, ...restOrder } = state.messageOrderByThread;
+    const { [threadId]: _removedHeadline, ...restHeadline } = state.headlineByThread;
+
+    const idsToDelete = state.messageOrderByThread[threadId] ?? [];
+    const newMessages = { ...state.messages };
+    for (const mid of idsToDelete) {
+      delete newMessages[mid];
+    }
+
+    let newCurrentThreadId = state.currentThreadId;
+    let newThreadIds = remainingThreadIds;
+    let newOrderByThread = restOrder;
+    let newHeadlineByThread = restHeadline;
+
+    if (state.currentThreadId === threadId) {
+      if (remainingThreadIds.length > 0) {
+        newCurrentThreadId = remainingThreadIds[remainingThreadIds.length - 1];
+      } else {
+        const freshId = uuidv4();
+        newCurrentThreadId = freshId;
+        newThreadIds = [freshId];
+        newOrderByThread = { ...newOrderByThread, [freshId]: [] };
+        newHeadlineByThread = { ...newHeadlineByThread };
+      }
+    }
+
+    return {
+      ...state,
+      threadIds: newThreadIds,
+      currentThreadId: newCurrentThreadId,
+      messageOrderByThread: newOrderByThread,
+      headlineByThread: newHeadlineByThread,
+      messages: newMessages,
+    };
   }),
   on(PaperChatActions.receiveAIMessage, (state, {message}) => {
     if (!(message.messageId in state.messages) || typeof message.message !== 'string' || message.messageType !== ChatMessageType.AI) {

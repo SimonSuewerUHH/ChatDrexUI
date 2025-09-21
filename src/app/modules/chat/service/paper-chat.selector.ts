@@ -1,5 +1,5 @@
-import { createSelector, createFeatureSelector } from '@ngrx/store';
-import { PaperChatState } from './paper-chat.reducer';
+import {createFeatureSelector, createSelector} from '@ngrx/store';
+import {PaperChatState} from './paper-chat.reducer';
 
 // Feature Selector
 export const selectPaperChatFeature = createFeatureSelector<PaperChatState>('paperChat');
@@ -9,7 +9,9 @@ export const selectCurrentMessages = createSelector(
   selectPaperChatFeature,
   (state: PaperChatState) => {
     const messageIds = state.messageOrderByThread[state.currentThreadId] || [];
-    return messageIds.map(id => state.messages[id]);
+    return messageIds.map(id => state.messages[id])
+      .filter(msg => !!msg)
+      .filter(msg => !!msg.timestamp)
   }
 );
 

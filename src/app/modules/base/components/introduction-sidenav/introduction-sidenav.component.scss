@@ -19,7 +19,7 @@ mat-divider {
 }
 
 .sidenav {
-  height: 100%;
+  min-height: 100%;
   width: 100%;
   background-color: var(--mat-sys-surface-container-lowest);
 
@@ -44,31 +44,51 @@ mat-divider {
     &-link {
       display: flex;
       align-items: center;
-      padding: 8px 16px;
+      padding: 8px 0 8px 16px;
       text-decoration: none;
       color: #333 !important;
       font-size: 14px;
 
       cursor: pointer;
 
-      .settings-btn {
-        display: none;
-      }
-
       &:hover {
         background-color: var(--mat-sys-secondary-container);
         color: var(--mat-sys-on-secondary-container);
+
+        .thread-menu-btn {
+          display: block !important;
+        }
       }
 
       &.active {
-        background-color: var(--mat-sys-secondary);
-        color: var(--mat-sys-on-secondary) !important;
+        background-color: var(--mat-sys-secondary-container);
+        color: var(--mat-sys-on-secondary-container);
         font-weight: bold;
 
-        .settings-btn {
-          display: block;
+        .thread-menu-btn {
+          display: block  !important;
+        }
+      }
+
+      .headline {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+
+        .thread-menu-btn {
+          display: none;
+
+          mat-icon {
+            width: 20px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
         }
       }
     }
   }
 }
+

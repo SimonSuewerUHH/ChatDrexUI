@@ -1,7 +1,6 @@
-import { HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import {HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {inject, Injectable} from '@angular/core';
-import {finalize, throwError} from 'rxjs';
-import {SpinnerService} from '../services/spinner.service';
+import {throwError} from 'rxjs';
 import {ApiErrorSnackbarService} from '../services/api-error-snackbar.service';
 import {catchError} from 'rxjs/operators';
 

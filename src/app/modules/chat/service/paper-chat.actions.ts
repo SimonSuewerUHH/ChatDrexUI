@@ -1,11 +1,17 @@
-import { createAction, props } from '@ngrx/store';
-import { MessageDTO } from '../dto/message';
+import {createAction, props} from '@ngrx/store';
+import {MessageDTO} from '../dto/message';
 import {RequestDTO} from '../dto/paper-chat';
 
 
 export const deleteHistory = createAction(
   '[Chat] deleteHistory'
 );
+
+export const deleteThread = createAction(
+  '[Chat] deleteThread',
+  props<{ threadId: string }>()
+);
+
 
 export const newChat = createAction(
   '[Chat] Create new Conversation with setThreadId',
@@ -35,7 +41,7 @@ export const connectSuccess = createAction(
 
 export const connectFailure = createAction(
   '[Chat] Connect Failure',
-  props<{  error: any }>()
+  props<{ error: any }>()
 );
 
 export const sendMessage = createAction(
@@ -45,7 +51,7 @@ export const sendMessage = createAction(
 
 export const requestedMessage = createAction(
   '[Chat] Sended Message',
-  props<{  requestedMessage: RequestDTO }>()
+  props<{ requestedMessage: RequestDTO }>()
 );
 
 export const receiveAIMessage = createAction(
@@ -89,5 +95,5 @@ export const disconnectSuccess = createAction(
 
 export const disconnectFailure = createAction(
   '[Chat] Disconnect Failure',
-  props<{error: any }>()
+  props<{ error: any }>()
 );
