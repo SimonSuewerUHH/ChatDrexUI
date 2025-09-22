@@ -1,9 +1,14 @@
-.send-bubble{
+:host {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.send-bubble {
   padding: 12px;
   border-radius: 12px;
   max-width: 70%;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
 
   background-color: var(--mat-sys-surface-dim);
-  color:  var(--mat-sys-on-surface-dim);
+  color: var(--mat-sys-on-surface-dim);
 }

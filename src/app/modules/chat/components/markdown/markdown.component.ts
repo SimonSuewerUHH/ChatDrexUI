@@ -80,9 +80,15 @@ export class CustomMarkdownComponent implements OnInit, OnChanges, OnDestroy {
     replaced = replaced.replace(/\[NeDRex\]/g, (_match) => {
       return "<span class='badge'>NeDRex</span>"
     });
-    replaced = replaced.replace(/(drugbank\.[^\]\s]+|uniprot\.[^\]\s]+|entrez\.[^\]\s]+)/g, (_m, id: string) => {
-      const cleanedId = id.replace(/<.*$/, '');
-      return `<a href="#" class="entity-link" data-id="${cleanedId}">${cleanedId}</a>`;
+    replaced = replaced.replace(/\b(drugbank|uniprot|entrez)[:\.][^\]\s]+/gi, (_m) => {
+      const splitted = _m.split(/[:\.]/);
+      if (splitted.length > 1) {
+        const cleanedId = splitted[1].replace(/<.*$/, '');
+        const cleanedPrefix = splitted[0].replace(/<.*$/, '');
+        const id = cleanedPrefix.toLowerCase() + "." + cleanedId;
+        return `<a href="#" class="entity-link" data-id="${id}">${cleanedId}</a>`;
+      }
+      return "";
     });
     return replaced;
   }
