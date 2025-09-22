@@ -1,14 +1,34 @@
 mat-list-item {
   height: initial !important;
-  margin:  10px 0 !important;
+  margin: 10px 0 !important;
+
   mat-icon {
     margin-inline-end: 10px;
     color: var(--mat-sys-on-surface);
     align-self: start !important;
   }
+
   ::ng-deep .mat-mdc-list-item-title {
     word-wrap: break-word !important;
     white-space: pre-wrap !important;
   }
 
+  ::ng-deep .step {
+
+    display: grid;
+    gap: 4px;
+
+    .action,
+    .reason,
+    .subtask {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      align-items: start;
+    }
+
+    .head {
+      font-weight: 600;
+      margin-right: 5px;
+    }
+  }
 }

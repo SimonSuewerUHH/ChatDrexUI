@@ -2,7 +2,7 @@
   @for (decision of decisions(); track decision) {
     <mat-list-item class="list-item">
       <mat-icon matListItemIcon>check_circle</mat-icon>
-      <div matListItemTitle>{{ decision }}</div>
+      <div matListItemTitle [innerHTML]="decision"></div>
     </mat-list-item>
   }
 </mat-list>
