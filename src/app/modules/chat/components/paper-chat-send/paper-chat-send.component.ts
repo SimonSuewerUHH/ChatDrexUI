@@ -1,12 +1,12 @@
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component, effect,
+  Component,
+  effect,
   inject,
   input,
-  OnChanges, OnInit,
-  output,
-  SimpleChanges
+  OnInit,
+  output
 } from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -15,10 +15,12 @@ import {MatIconModule} from '@angular/material/icon';
 import {Store} from '@ngrx/store';
 import {sendMessage} from '../../service/paper-chat.actions';
 import {MatButtonModule} from '@angular/material/button';
-import {MatAutocompleteModule, MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatOptionModule} from '@angular/material/core';
 import {toolTips} from '../../../../utils/models/tool-tips';
 import {CommonModule} from '@angular/common';
+import {toSignal} from '@angular/core/rxjs-interop';
+import {selectConnected} from '../../service/paper-chat.selector';
 
 interface Option {
   label: string;
@@ -40,15 +42,18 @@ interface Option {
   styleUrl: './paper-chat-send.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PaperChatSendComponent implements OnInit{
+export class PaperChatSendComponent implements OnInit {
+  private readonly store: Store = inject(Store);
   private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
   readonly threadId = input<string>();
   readonly sendDirectly = input<boolean>(true);
   readonly startMessage = input<string>('');
   readonly deactivated = input<boolean>(false);
+
+  connected = toSignal(this.store.select(selectConnected), {initialValue: false});
+
   newMessage = output<string>();
 
-  private readonly store: Store = inject(Store);
   message: string = '';
 
   options: Option[] = [];
@@ -83,11 +88,11 @@ export class PaperChatSendComponent implements OnInit{
 
   send(): void {
     if (this.message) {
-      if(this.sendDirectly() && this.threadId()){
+      if (this.sendDirectly() && this.threadId()) {
         this.store.dispatch(
           sendMessage({threadId: this.threadId()!, message: this.message})
         );
-      }else{
+      } else {
         this.newMessage.emit(this.message);
       }
       this.message = '';

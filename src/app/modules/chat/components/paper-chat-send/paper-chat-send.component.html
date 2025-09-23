@@ -1,5 +1,16 @@
 <form (ngSubmit)="send()" class="sender-wrapper">
-  <mat-form-field class="full-width">
+  <mat-form-field class="full-width ai-field">
+    <div matPrefix class="ai-field__status" [class.ok]="connected()"
+         [class.fail]="!connected()"
+         [attr.aria-label]="connected() ? 'WebSocket connected' : 'WebSocket disconnected'">
+      <mat-icon class="ai-field__status-icon">
+        {{ connected() ? 'cloud_done' : 'cloud_off' }}
+      </mat-icon>
+      <span class="ai-field__status-text">
+        {{ connected() ? 'Online' : 'Offline' }}
+      </span>
+    </div>
+
     <input
       matInput
       [value]="message"
