@@ -57,7 +57,7 @@ export class DrugstOneNetworkComponent implements OnInit {
         },
         shape: 'circle',
         type: 'default node type'
-      }, 
+      },
       seednode: {
         groupName: 'Seeds',
         borderWidth: 3,
@@ -71,7 +71,7 @@ export class DrugstOneNetworkComponent implements OnInit {
         },
         shape: 'star',
         type: 'default seed node type'
-      }, 
+      },
       diamondnode: {
         groupName: 'Diamond Nodes',
         borderWidth: 3,
@@ -85,7 +85,7 @@ export class DrugstOneNetworkComponent implements OnInit {
         },
         shape: 'diamond',
         type: 'default diamond node type'
-      }, 
+      },
       founddrug: {
         groupName: 'Drugs',
         borderWidth: 3,
@@ -113,7 +113,7 @@ export class DrugstOneNetworkComponent implements OnInit {
         },
         shape: 'circle',
         type: 'default gene node type'
-      }, 
+      },
       disorder: {
         groupName: 'Disorders',
         borderWidth: 3,
@@ -123,11 +123,11 @@ export class DrugstOneNetworkComponent implements OnInit {
           highlight: {
             border: '#d18b19',
             background: '#f1a223'
-          }         
+          }
         },
         shape: 'triangle',
         type: 'default gene node type'
-      }, 
+      },
     },
     edgeGroups: {
       default: {
@@ -206,7 +206,7 @@ export class DrugstOneNetworkComponent implements OnInit {
       edges: this.network().network.edges || []
     };
   }
-  
+
 
   private getIdentifier(networkType: string): string {
     switch (networkType) {
@@ -215,7 +215,7 @@ export class DrugstOneNetworkComponent implements OnInit {
       case 'trustrank_tool':
         return 'uniprot';
       case 'cypher_qa_tool':
-        return 'symbol';
+        return 'entrez';
       default:
         return 'uniprot';
     }

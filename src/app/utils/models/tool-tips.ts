@@ -76,7 +76,7 @@ export const toolTips: ToolTip[] = [
     ]
   },
   {
-    command: '/netdrex',
+    command: '/nedrex',
     icon: 'account_tree',
     name: 'NeDRex',
     tip: 'Ask drug repurposing knowladge graph (NeDRex)',

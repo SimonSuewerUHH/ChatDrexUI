@@ -96,7 +96,7 @@ export class PaperChatReceivingBubbleComponent {
 
   getDrugstOneNetwork(): DrugstOneGraph | undefined {
     const graphs = this.message().tools
-      .filter(tool => tool.name === Tools.NETDREX_TOOL && tool.structuredContent && tool.structuredContent.length > 0)
+      .filter(tool => tool.name === Tools.NEDREX_TOOL && tool.structuredContent && tool.structuredContent.length > 0)
       .flatMap(tool => tool.structuredContent)
       .filter(tool => tool?.type === ToolStructuredContentType.DRUGST_ONE)
       .map(tool => tool?.content as DrugstOneNetwork)

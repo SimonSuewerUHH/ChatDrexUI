@@ -22,6 +22,7 @@ mat-divider {
   min-height: 100%;
   width: 100%;
   background-color: var(--mat-sys-surface-container-lowest);
+  z-index: 1 !important;
 
   &-header {
     display: flex;
@@ -66,7 +67,7 @@ mat-divider {
         font-weight: bold;
 
         .thread-menu-btn {
-          display: block  !important;
+          display: block !important;
         }
       }
 
