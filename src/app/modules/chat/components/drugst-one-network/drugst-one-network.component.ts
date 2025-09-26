@@ -1,5 +1,6 @@
-import {Component, CUSTOM_ELEMENTS_SCHEMA, input, OnInit} from '@angular/core';
-import {DrugstOneGraph} from '../../dto/network';
+import {Component, CUSTOM_ELEMENTS_SCHEMA, effect, inject, input, OnDestroy, OnInit, signal} from '@angular/core';
+import {DrugstOneDTO} from '../../dto/network';
+import {DrugstOneNetworkRegistryService} from '../../../../utils/services/drugst-one-network-registry.service';
 
 @Component({
   selector: 'app-drugst-one-network',
@@ -8,8 +9,21 @@ import {DrugstOneGraph} from '../../dto/network';
   templateUrl: './drugst-one-network.component.html',
   styleUrl: './drugst-one-network.component.scss'
 })
-export class DrugstOneNetworkComponent implements OnInit {
-  readonly network = input.required<DrugstOneGraph>();
+export class DrugstOneNetworkComponent implements OnInit, OnDestroy {
+  private readonly registry = inject(DrugstOneNetworkRegistryService);
+
+  readonly drugstOne = input.required<DrugstOneDTO>();
+
+  private id = -1;
+
+  isActive = signal(false);
+  latestId = this.registry.latestId();
+
+  constructor() {
+    this.id = this.registry.register();
+    const isActiveComputed = this.registry.isActive(this.id);
+    effect(() => this.isActive.set(isActiveComputed()));
+  }
 
   networkType: string = 'default';
   identifier: string = 'entrez';
@@ -141,7 +155,7 @@ export class DrugstOneNetworkComponent implements OnInit {
   config = {
     title: "Drugst.One",
     backendUrl: "",
-    legendUrl:  "assets/drugstone_legend.png",
+    legendUrl: "assets/drugstone_legend.png",
     legendClass: "legend",
     legendPos: "left",
     taskTargetName: "Drug target search",
@@ -197,16 +211,31 @@ export class DrugstOneNetworkComponent implements OnInit {
   };
 
   ngOnInit() {
-    this.networkType = this.network().network.networkType || 'default';
+    this.networkType = this.drugstOne().network.networkType || 'default';
     this.identifier = this.getIdentifier(this.networkType);
     this.config.identifier = this.identifier;
 
     this.formattedNetwork = {
-      nodes: this.network().network.nodes || [],
-      edges: this.network().network.edges || []
+      nodes: this.drugstOne().network.nodes || [],
+      edges: this.drugstOne().network.edges || []
     };
+
+    if (this.drugstOne().groups) {
+      this.groups = this.drugstOne().groups as any;
+    }
+    if (this.drugstOne().groups) {
+      this.config = this.drugstOne().config as any;
+    }
+
   }
 
+  ngOnDestroy() {
+    if (this.id !== -1) this.registry.unregister(this.id);
+  }
+
+  activateThis() {
+    this.registry.setActive(this.id);
+  }
 
   private getIdentifier(networkType: string): string {
     switch (networkType) {

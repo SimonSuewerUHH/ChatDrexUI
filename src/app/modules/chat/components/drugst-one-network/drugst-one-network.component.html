@@ -1,7 +1,16 @@
-<div>
+@if (!isActive()) {
+  <div class="collapsed">
+    <div class="info">
+      <div class="title">Another network is currently visible</div>
+    </div>
+    <button class="toggle-btn" type="button" (click)="activateThis()">
+      Show this network
+    </button>
+  </div>
+} @else {
   <drugst-one
-    [config]="config"
-    [groups]="groups"
-    [network]="formattedNetwork">
+    [config]="drugstOne().config"
+    [groups]="drugstOne().groups"
+    [network]="drugstOne().network">
   </drugst-one>
-</div>
+}

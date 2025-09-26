@@ -1,15 +1,8 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  input
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, inject, input} from '@angular/core';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {NgOptimizedImage} from '@angular/common';
 import {
   ConversationPart,
-  SystemMessageDTO,
   ToolFileResponseDTO,
   ToolSourceDTO,
   ToolStructuredContentType
@@ -18,7 +11,7 @@ import {ToolsPanelComponent} from '../tools-panel/tools-panel.component';
 import {MessageState, Tools} from '../../dto/enums';
 import {CustomMarkdownComponent} from '../markdown/markdown.component';
 import {DrugstOneNetworkComponent} from '../drugst-one-network/drugst-one-network.component';
-import {DrugstOneGraph, DrugstOneNetwork} from '../../dto/network';
+import {DrugstOneDTO} from '../../dto/network';
 import {environment} from '../../../../../environments/environment';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
@@ -94,19 +87,13 @@ export class PaperChatReceivingBubbleComponent {
     });
   }
 
-  getDrugstOneNetwork(): DrugstOneGraph | undefined {
+  getDrugstOneNetwork(): DrugstOneDTO | undefined {
     const graphs = this.message().tools
-      .filter(tool => tool.name === Tools.NEDREX_TOOL && tool.structuredContent && tool.structuredContent.length > 0)
+      .filter(tool => tool.structuredContent && tool.structuredContent.length > 0)
       .flatMap(tool => tool.structuredContent)
       .filter(tool => tool?.type === ToolStructuredContentType.DRUGST_ONE)
-      .map(tool => tool?.content as DrugstOneNetwork)
-      .filter(network => !!network)
-      .map(n => {
-        return {
-          network: n
-        } as DrugstOneGraph
-      });
-
+      .map(tool => tool?.content as DrugstOneDTO)
+      .filter(network => !!network);
     if (graphs.length > 0) {
       return graphs[0];
     }
@@ -147,7 +134,7 @@ export class PaperChatReceivingBubbleComponent {
       .filter((m) => {
         return typeof m.message === 'object' && m.message !== null && 'url' in m.message;
       })
-      .map((m) => (m.message as SystemMessageDTO).url)
+      .map((m) => (m.message as any).url)
       .filter(url => !!url)
       .map((url) => {
         return `${environment.apiBaseUrl}/load/${url!.replace(/^generations\//, '')}`;

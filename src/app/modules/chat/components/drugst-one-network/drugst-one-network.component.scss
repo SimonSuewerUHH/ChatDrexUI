@@ -1,0 +1,33 @@
+.collapsed {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 0.75rem;
+  background: rgba(0, 0, 0, 0.03);
+
+  .info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+
+    .title {
+      font-weight: 600;
+    }
+  }
+
+  .toggle-btn {
+    padding: 0.4rem 0.9rem;
+    border: none;
+    border-radius: 999px;
+    font-weight: 600;
+    background: var(--mat-sys-surface);;
+    color: var(--mat-sys-on-surface);;
+    cursor: pointer;
+
+    &:hover {
+      background:  var(--mat-sys-secondary-container);;
+    }
+  }
+}

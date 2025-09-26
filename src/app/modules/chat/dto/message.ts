@@ -1,5 +1,5 @@
 import {ChatMessageType, MessageState} from './enums';
-import {DrugstOneGraph, DrugstOneNetwork} from './network';
+import {DrugstOneDTO} from './network';
 import {DigestPlotDTO} from './digest';
 
 
@@ -37,7 +37,7 @@ export interface ToolDTO {
 }
 
 export interface ToolStructuredContentDTO {
-  content?: ToolSourceDTO | DrugstOneNetwork | DigestPlotDTO | ToolFileResponseDTO;
+  content?: ToolSourceDTO | DrugstOneDTO | DigestPlotDTO | ToolFileResponseDTO;
   type: ToolStructuredContentType;
 }
 
@@ -77,10 +77,6 @@ export enum ToolFileResponseType {
   IFRAME = "IFRAME"
 }
 
-export interface SystemMessageDTO {
-  drugstOneNetwork?: DrugstOneGraph;
-  url?: string;
-}
 
 export interface ResearchResultsDTO {
   answer: string;

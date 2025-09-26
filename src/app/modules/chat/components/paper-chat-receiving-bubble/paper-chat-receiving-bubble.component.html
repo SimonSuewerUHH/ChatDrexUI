@@ -19,7 +19,7 @@
           }
         }
         @if (getDrugstOneNetwork()) {
-          <app-drugst-one-network [network]="getDrugstOneNetwork()!"></app-drugst-one-network>
+          <app-drugst-one-network [drugstOne]="getDrugstOneNetwork()!"></app-drugst-one-network>
         }
         @if (getDigestPlotData()) {
           <app-digest-plot [data]="getDigestPlotData()!"></app-digest-plot>
