@@ -18,7 +18,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatOptionModule} from '@angular/material/core';
 import {toolTips} from '../../../../utils/models/tool-tips';
-import {CommonModule} from '@angular/common';
+
 import {toSignal} from '@angular/core/rxjs-interop';
 import {selectConnected} from '../../service/paper-chat.selector';
 
@@ -30,14 +30,14 @@ interface Option {
 @Component({
   selector: 'app-paper-chat-send',
   imports: [
-    CommonModule,
     MatAutocompleteModule,
     MatOptionModule,
     FormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatIconModule],
+    MatIconModule
+],
   templateUrl: './paper-chat-send.component.html',
   styleUrl: './paper-chat-send.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
