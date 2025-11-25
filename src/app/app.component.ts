@@ -11,6 +11,12 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {DarkModeToggleComponent} from './utils/components/dark-mode-toggle/dark-mode-toggle.component';
 import {filter} from 'rxjs/operators';
+import {
+  LlmModelSettingDialogComponent
+} from './utils/components/llm-model-setting-dialog/llm-model-setting-dialog.component';
+import {MatDialog} from '@angular/material/dialog';
+import {MatIconButton} from '@angular/material/button';
+import {MatTooltip} from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-root',
@@ -24,12 +30,15 @@ import {filter} from 'rxjs/operators';
     NewchatBtnComponent,
     MatIconModule,
     MatSlideToggleModule,
-    DarkModeToggleComponent
+    DarkModeToggleComponent,
+    MatTooltip,
+    MatIconButton
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
+  private readonly dialog: MatDialog = inject(MatDialog);
   private readonly store: Store = inject(Store);
   private readonly router: Router = inject(Router);
   title = 'ChatDrex';
@@ -63,4 +72,12 @@ export class AppComponent implements OnInit {
     }
   }
 
+  openSettings() {
+    this.dialog.open(LlmModelSettingDialogComponent, {
+      autoFocus: false,
+      height: '600px',
+      width: '600px',
+      maxWidth: '100vw'
+    });
+  }
 }

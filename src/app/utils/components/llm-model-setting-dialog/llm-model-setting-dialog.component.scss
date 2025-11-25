@@ -1,0 +1,32 @@
+.dialog {
+  &--content {
+    min-width: 500px;
+  }
+}
+
+.warning {
+  display: flex;
+  gap: 10px;
+  color: orangered;
+  vertical-align: center;
+  justify-content: center;
+  margin: 30px 0 10px 0;
+}
+
+mat-divider {
+  margin: 20px 0;
+}
+
+
+.maximize{
+  max-height: unset;
+}
+
+.save-btn{
+  background-color: #535353;
+  color: white;
+}
+.delete-btn {
+  background-color: #b30000;
+  color: white;
+}

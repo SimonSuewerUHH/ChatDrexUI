@@ -1,0 +1,27 @@
+.dialog-title {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding-right: 0;
+  padding-bottom: 0;
+
+
+  h2 {
+    margin: 0;
+    overflow: hidden;
+    max-width: 100%;
+    text-overflow: ellipsis;
+    color: var(--mdc-dialog-subhead-color, var(--mat-sys-on-surface, rgba(0, 0, 0, 0.87)));
+    line-height: var(--mdc-dialog-subhead-line-height, var(--mat-sys-headline-small-line-height, 1.5rem));
+    font-size: var(--mdc-dialog-subhead-size, var(--mat-sys-headline-small-size, 1rem));
+    font-weight: var(--mdc-dialog-subhead-weight, var(--mat-sys-headline-small-weight, 400));
+    letter-spacing: var(--mdc-dialog-subhead-tracking, var(--mat-sys-headline-small-tracking, 0.03125em));
+  }
+
+  &--btn {
+    color: var(--mat-sys-on-surface);
+  }
+}
+
+
+

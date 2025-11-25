@@ -4,6 +4,13 @@
   <app-newchat-btn></app-newchat-btn>
   <span class="spacer"></span>
   <app-dark-mode-toggle></app-dark-mode-toggle>
+  <button
+    matTooltip="Specify the settings for the AI models"
+    mat-icon-button
+    (click)="openSettings()"
+    class="settings-btn bug-btn">
+    <mat-icon>settings</mat-icon>
+  </button>
   <a routerLink="/">
     <img ngSrc="assets/logo.png" alt="logo" width="35" height="35"/>
   </a>
