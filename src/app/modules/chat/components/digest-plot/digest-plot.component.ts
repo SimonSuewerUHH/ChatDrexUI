@@ -26,7 +26,7 @@ export class DigestPlotComponent {
     'GO.MF': [66, 135, 245],   // blue
     'GO.CC': [156, 39, 176],   // purple
     'GO.BP': [76, 175, 80],    // green
-    'KEGG':  [255, 152, 0],    // amber
+    'KEGG': [255, 152, 0],    // amber
   };
 
   // Internal signals

@@ -1,7 +1,6 @@
-import {Component, inject, Input, OnDestroy, OnInit} from '@angular/core';
-import {MatDrawer, MatDrawerContainer, MatDrawerContent, MatSidenavModule} from "@angular/material/sidenav";
+import {Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {MatSidenavModule} from "@angular/material/sidenav";
 import {RouterOutlet} from "@angular/router";
-import {Store} from '@ngrx/store';
 import {ClickEventService} from '../../../../utils/services/click-event.service';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {Subscription} from 'rxjs';
@@ -18,19 +17,14 @@ import {NgClass} from '@angular/common';
   styleUrl: './introduction-wrapper.component.scss'
 })
 export class IntroductionWrapperComponent implements OnInit, OnDestroy {
-  private readonly store: Store = inject(Store);
   private readonly clickEventService: ClickEventService = inject(ClickEventService);
   private readonly breakpointObserver: BreakpointObserver = inject(BreakpointObserver);
-  @Input("projectId") projectId?: number;
 
   isSmallScreen = false;
   isOpen = true;
   private clickEventSubscription?: Subscription;
 
   ngOnInit(): void {
-    if (this.projectId) {
-      //this.store.dispatch(retrieveProject({id: this.projectId}));
-    }
     this.breakpointObserver.observe([Breakpoints.Handset])
       .subscribe(result => {
         this.isSmallScreen = result.matches;

@@ -7,7 +7,6 @@ import {Store} from '@ngrx/store';
 import {PaperChatSendComponent} from '../paper-chat-send/paper-chat-send.component';
 import {newChat} from '../../service/paper-chat.actions';
 import {ToolTip, toolTips} from '../../../../utils/models/tool-tips';
-import {ToolDTO} from '../../dto/message';
 import {MatListModule} from '@angular/material/list';
 
 

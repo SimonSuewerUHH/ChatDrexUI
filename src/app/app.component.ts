@@ -1,4 +1,4 @@
-import {Component, effect, inject, OnInit, signal} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {NavigationEnd, Router, RouterLink, RouterOutlet} from '@angular/router';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {NgOptimizedImage} from '@angular/common';
@@ -8,9 +8,7 @@ import {Store} from '@ngrx/store';
 import {connectToWebsocket, disconnect} from './modules/chat/service/paper-chat.actions';
 import {NewchatBtnComponent} from './utils/components/newchat-btn/newchat-btn.component';
 import {MatIconModule} from '@angular/material/icon';
-import {MatSliderModule} from '@angular/material/slider';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
-import {FormsModule} from '@angular/forms';
 import {DarkModeToggleComponent} from './utils/components/dark-mode-toggle/dark-mode-toggle.component';
 import {filter} from 'rxjs/operators';
 
@@ -43,7 +41,7 @@ export class AppComponent implements OnInit {
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
         const isChatRoute = event.url.startsWith('/chat');
-        
+
         if (isChatRoute && !this.isConnected) {
           // Connect to WebSocket when entering chat routes
           console.log('Entering chat route, connecting to WebSocket...');
@@ -56,7 +54,7 @@ export class AppComponent implements OnInit {
           this.isConnected = false;
         }
       });
-    
+
     // Check initial route
     const currentUrl = this.router.url;
     if (currentUrl.startsWith('/chat')) {

@@ -1,9 +1,8 @@
 import {createReducer, on} from '@ngrx/store';
 import * as PaperChatActions from './paper-chat.actions';
 import {v4 as uuidv4} from 'uuid';
-import {ConversationPart, ToolDTO, ToolSourceDTO} from '../dto/message';
-import {ChatMessageType, MessageState, Tools} from '../dto/enums';
-import {deleteThread} from './paper-chat.actions';
+import {ConversationPart, ToolDTO} from '../dto/message';
+import {ChatMessageType, MessageState} from '../dto/enums';
 
 export interface PaperChatState {
   currentThreadId: string;
@@ -100,11 +99,11 @@ export const paperChatReducer = createReducer(
 
     const remainingThreadIds = state.threadIds.filter(id => id !== threadId);
 
-    const { [threadId]: _removedOrder, ...restOrder } = state.messageOrderByThread;
-    const { [threadId]: _removedHeadline, ...restHeadline } = state.headlineByThread;
+    const {[threadId]: _removedOrder, ...restOrder} = state.messageOrderByThread;
+    const {[threadId]: _removedHeadline, ...restHeadline} = state.headlineByThread;
 
     const idsToDelete = state.messageOrderByThread[threadId] ?? [];
-    const newMessages = { ...state.messages };
+    const newMessages = {...state.messages};
     for (const mid of idsToDelete) {
       delete newMessages[mid];
     }
@@ -121,8 +120,8 @@ export const paperChatReducer = createReducer(
         const freshId = uuidv4();
         newCurrentThreadId = freshId;
         newThreadIds = [freshId];
-        newOrderByThread = { ...newOrderByThread, [freshId]: [] };
-        newHeadlineByThread = { ...newHeadlineByThread };
+        newOrderByThread = {...newOrderByThread, [freshId]: []};
+        newHeadlineByThread = {...newHeadlineByThread};
       }
     }
 

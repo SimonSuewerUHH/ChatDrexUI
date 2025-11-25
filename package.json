@@ -8,7 +8,8 @@
     "build:production": "ng build --base-href=/chatdrex/",
     "build:staging": "ng build --base-href=/chatdrex/ --configuration staging",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "lint": "ng lint"
   },
   "private": true,
   "dependencies": {
@@ -40,10 +41,13 @@
     "@angular/compiler-cli": "^21.0.0",
     "@types/jasmine": "~5.1.0",
     "@types/lodash": "^4.17.13",
+    "angular-eslint": "21.0.1",
     "baseline-browser-mapping": "^2.8.31",
+    "eslint": "^9.39.1",
     "jasmine-core": "~5.4.0",
     "jsdom": "^27.2.0",
     "typescript": "~5.9.2",
+    "typescript-eslint": "8.46.4",
     "vitest": "^4.0.13"
   },
   "overrides": {

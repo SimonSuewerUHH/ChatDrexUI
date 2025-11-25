@@ -1,6 +1,6 @@
 import {inject, Injectable} from '@angular/core';
-import {Actions, ofType, createEffect} from '@ngrx/effects';
-import {concatMap, delay, from, of, startWith, switchMap, withLatestFrom} from 'rxjs';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
+import {delay, from, of, startWith, switchMap, withLatestFrom} from 'rxjs';
 import {catchError, filter, map, mergeMap, tap} from 'rxjs/operators';
 import * as PaperChatActions from './paper-chat.actions';
 import {PaperChatWebSocketService} from './paper-chat.service';
@@ -9,7 +9,6 @@ import {getAllThreadIds, selectClientId} from './paper-chat.selector';
 import {ChatMessageType} from '../dto/enums';
 import {v4 as uuidv4} from 'uuid';
 import {Router} from '@angular/router';
-import {newChat} from './paper-chat.actions';
 
 @Injectable()
 export class PaperChatEffects {

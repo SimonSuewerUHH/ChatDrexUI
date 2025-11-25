@@ -1,8 +1,8 @@
 import {ApplicationConfig, ErrorHandler, isDevMode, provideZoneChangeDetection} from '@angular/core';
-import {provideRouter, Router, withComponentInputBinding} from '@angular/router';
+import {provideRouter, withComponentInputBinding} from '@angular/router';
 import {routes} from './app.routes';
 import {provideAnimationsAsync} from '@angular/platform-browser/animations/async';
-import {ActionReducerMap, MetaReducer, provideState, provideStore} from '@ngrx/store';
+import {ActionReducerMap, MetaReducer, provideStore} from '@ngrx/store';
 import {provideEffects} from '@ngrx/effects';
 import {HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 import {LoadingInterceptor} from './utils/interceptors/loading.interceptor';

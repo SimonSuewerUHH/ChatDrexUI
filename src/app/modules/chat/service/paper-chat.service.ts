@@ -29,7 +29,7 @@ export class PaperChatWebSocketService {
     if (this.socket$) {
       this.disconnect();
     }
-    
+
     // Create new message subject for this connection
     this.messageSubject = new Subject<ResponseDTO>();
     this.socket$ = webSocket(wsUrl);
