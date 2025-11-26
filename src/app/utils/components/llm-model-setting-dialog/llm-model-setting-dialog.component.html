@@ -22,7 +22,7 @@
     @if (isOllamaEnabled()) {
       <mat-form-field class="full-width">
         <mat-label>Chat Model</mat-label>
-        <mat-select [field]="form.ollamaModel">
+        <mat-select [field]="form.chatGptModel">     <!-- OPEN WEB UI -->
           @for (ollamaModel of ollamaModels; track $index) {
             <mat-option [value]="ollamaModel.value">{{ ollamaModel.viewValue }}</mat-option>
           }
@@ -30,7 +30,7 @@
       </mat-form-field>
 
       <mat-form-field class="full-width">
-        <mat-label>Ollama Base URL</mat-label>
+        <mat-label>Ollama (OpenWebUI, OpenAI - Endpoint) Base URL</mat-label>
         <input matInput [field]="form.ollamaBaseUrl" />
         <mat-hint>Only if you would like to use a custom one</mat-hint>
       </mat-form-field>

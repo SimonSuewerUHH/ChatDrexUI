@@ -65,10 +65,10 @@ export class LlmModelSettingDialogComponent {
   //https://ollama.com/search?c=tools
   ollamaModels: OllamaModel[] = [
     {value: 'mistral:7b', viewValue: 'mistral:7b'},
-    {value: 'gemma2:9b', viewValue: 'gemma2:9b'},
-    {value: 'llama3.2:latest', viewValue: 'llama3.2:latest'},
+    {value: 'deepseek-r1:8b', viewValue: 'deepseek-r1:8b'},
+    {value: 'gpt-oss:latest', viewValue: 'gpt-oss:20b'},
     {value: 'llama3.3:70b', viewValue: 'llama3.3:70b'},
-    {value: 'gemma2:27b', viewValue: 'gemma2:27b'},
+    {value: 'qwen3:8b', viewValue: 'qwen3:8b'},
     {value: 'gemma3:latest', viewValue: 'gemma3:latest'},
     {value: 'smollm2:latest', viewValue: 'smollm2:latest'},
     {value: 'qwen2.5:latest', viewValue: 'qwen2.5:latest'},
@@ -77,16 +77,18 @@ export class LlmModelSettingDialogComponent {
 
   //https://platform.openai.com/docs/models
   chatGPTModels: OllamaModel[] = [
-    {value: 'gpt-4o-mini', viewValue: 'gpt-4o-mini'},
-    {value: 'gpt-4o', viewValue: 'gpt-4o'},
+    {value: 'gpt-5.1-2025-11-13', viewValue: 'gpt-5.1'},
+    {value: 'gpt-5-mini-2025-08-07', viewValue: 'gpt-5-mini'},
+    {value: 'gpt-5-pro-2025-10-06', viewValue: 'gpt-5-pro'},
+    {value: 'gpt-5-nano-2025-08-07', viewValue: 'gpt-5-nano'},
   ];
 
 
-  //https://platform.openai.com/docs/models
+  //https://ai.google.dev/gemini-api/docs/models?hl=de#gemini-3-pro
   geminiGPTModels: OllamaModel[] = [
     {value: 'gemini-2.0-flash', viewValue: 'gemini-2.0-flash'},
-    {value: 'gemini-1.5-flash', viewValue: 'gemini-1.5-flash'},
-    {value: 'gemini-1.5-flash-8b', viewValue: 'gemini-1.5-flash-8b'},
+    {value: 'gemini-3-pro-preview', viewValue: 'gemini-3-pro preview'},
+    {value: 'gemini-2.5-pro', viewValue: 'gemini-2.5-pro'},
   ];
 
 

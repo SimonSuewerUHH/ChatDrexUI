@@ -7,6 +7,7 @@ import {environment} from '../../../../environments/environment';
 import {Store} from '@ngrx/store';
 import {requestedMessage} from './paper-chat.actions';
 import {MessageType} from '../dto/enums';
+import {loadUserLLMModelSettingJSONString} from '../../../utils/models/llm-setting';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +19,7 @@ export class PaperChatWebSocketService {
   private clientId?: string;
 
   connect(clientId: string): Observable<ResponseDTO> {
-    const wsUrl = `${environment.wsBaseUrl}/${clientId}`;
+    let wsUrl = `${environment.wsBaseUrl}/${clientId}`;
     console.log('Connecting to WebSocket:', wsUrl);
     if (!clientId) {
       clientId = uuidv4();
@@ -28,6 +29,11 @@ export class PaperChatWebSocketService {
     // Clean up existing connection
     if (this.socket$) {
       this.disconnect();
+    }
+    const storedSetting = loadUserLLMModelSettingJSONString();
+    if (storedSetting) {
+      const base64: string = btoa(storedSetting);
+      wsUrl += `?llmsetting=${base64}`;
     }
 
     // Create new message subject for this connection

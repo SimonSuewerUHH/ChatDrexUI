@@ -7,7 +7,6 @@ export enum LlmType {
 export interface UserLLMModelSetting {
   selectedLLM: LlmType;
   ollamaBaseUrl: string;
-  ollamaModel: string;
   chatGptModel: string;
   chatGptApiKey: string;
 
@@ -26,7 +25,7 @@ export interface UserLLMModelSetting {
 }
 
 export const defaultUserLLMModelSetting: UserLLMModelSetting = {
-  ollamaModel: 'qwen2.5:latest',
+  chatGptModel: 'gpt-oss:latest',
   selectedLLM: LlmType.OLLAMA,
 
   // Default values for advanced settings
@@ -38,8 +37,7 @@ export const defaultUserLLMModelSetting: UserLLMModelSetting = {
   numPredict: -1,
   numCtx: 25000,
   semanticScholarApiKey: '',
-  ollamaBaseUrl: '',
-  chatGptModel: '',
+  ollamaBaseUrl: 'https://chat.cosy.bio/api',
   chatGptApiKey: '',
   geminiModel: '',
   geminiApiKey: '',
@@ -99,10 +97,10 @@ export function hasSemanticAPIKey(): boolean {
 }
 
 export function saveUserLLMModelSetting(setting: UserLLMModelSetting): void {
-  localStorage.setItem(`user-llm-model-setting`, JSON.stringify(setting));
+  localStorage.setItem(`chatdrex:user-llm-model-setting`, JSON.stringify(setting));
 }
 
 export function clearUserLLMModelSetting(): void {
-  localStorage.removeItem(`user-llm-model-setting`);
+  localStorage.removeItem(`chatdrex:user-llm-model-setting`);
 }
 
