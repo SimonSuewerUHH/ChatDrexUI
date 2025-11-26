@@ -96,24 +96,6 @@ export class LlmModelSettingDialogComponent {
     this.settingModel,
     (path) => {
       required(path.selectedLLM, { message: 'You must select an LLM' });
-
-      required(path.temperature, { message: 'Temperature is required' });
-      min(path.temperature, 0, { message: 'Temperature cannot be < 0' });
-      max(path.temperature, 2, { message: 'Temperature cannot be > 2' });
-      required(path.topK, { message: 'TopK is required' });
-      min(path.topK, 0, { message: 'TopK must be ≥ 0' });
-      required(path.topP, { message: 'topP is required' });
-      min(path.topP, 0, { message: 'topP must be ≥ 0' });
-      max(path.topP, 1, { message: 'topP cannot be >1' });
-
-      required(path.repeatPenalty, { message: 'Repeat penalty is required' });
-      min(path.repeatPenalty, 1, { message: 'Repeat penalty must be ≥1' });
-      required(path.seed, { message: 'Seed is required' });
-
-      min(path.numPredict, -1, { message: 'numPredict must be ≥ -1' });
-      max(path.numPredict, 8192, { message: 'numPredict cannot exceed 8192' });
-      min(path.numCtx, 1, { message: 'numCtx must be ≥1' });
-      max(path.numCtx, this.currentMaxTokens, { message: `numCtx cannot exceed ${this.currentMaxTokens}` });
     }
   );
 

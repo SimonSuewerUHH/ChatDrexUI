@@ -12,14 +12,6 @@ export interface UserLLMModelSetting {
 
   geminiModel: string;
   geminiApiKey: string;
-// Advanced model settings
-  temperature: number;
-  topK: number;
-  topP: number;
-  repeatPenalty: number;
-  seed: number;
-  numPredict: number;
-  numCtx: number;
 
   semanticScholarApiKey: string;
 }
@@ -28,14 +20,6 @@ export const defaultUserLLMModelSetting: UserLLMModelSetting = {
   chatGptModel: 'gpt-oss:latest',
   selectedLLM: LlmType.OLLAMA,
 
-  // Default values for advanced settings
-  temperature: 0.0,
-  topK: 100,
-  topP: 0.95,
-  repeatPenalty: 1.1,
-  seed: 28,
-  numPredict: -1,
-  numCtx: 25000,
   semanticScholarApiKey: '',
   ollamaBaseUrl: 'https://chat.cosy.bio/api',
   chatGptApiKey: '',
