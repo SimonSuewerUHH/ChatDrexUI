@@ -1,4 +1,4 @@
-export interface NetdrexAPIInfoDTO {
+export interface NedrexAPIInfoDTO {
   primaryDomainId: string | null;
   casNumber: string | null;
   created: string | null;
