@@ -6,8 +6,10 @@
 }
 
 
+
 .sidenav {
-  width: 240px;
+  width: 350px;
+  z-index: 1 !important;
   background-color: #f6f8fa;
   border-right: 1px solid var(--mat-sys-surface-container-highest);
 }
@@ -24,9 +26,6 @@
   }
 }
 
-.sidenav{
-  width: 350px;
-}
 .content {
   width: calc(100vw - 450px);
   padding: 16px;
