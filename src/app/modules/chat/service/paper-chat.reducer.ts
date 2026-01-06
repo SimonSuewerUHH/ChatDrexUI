@@ -44,6 +44,11 @@ export const paperChatReducer = createReducer(
     connected: false,
     error: error
   })),
+  on(PaperChatActions.reconnectToWebsocket, (state,) => ({
+    ...state,
+    connected: false,
+    error: null
+  })),
 
   // Message Handling
   on(PaperChatActions.receiveAPIMessage, (state, {message}) => {

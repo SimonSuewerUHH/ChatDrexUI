@@ -50,5 +50,3 @@ export const getAllThreadIds = createSelector(
   (state: PaperChatState) => state.threadIds
 );
 
-
-

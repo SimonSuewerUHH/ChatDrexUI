@@ -23,6 +23,7 @@ export const connectToChat = createAction(
   props<{ threadId: string }>()
 );
 
+
 export const connectToChatSuccess = createAction(
   '[Chat] Success Switch to a Conversation with threadId',
   props<{ threadId: string }>()
@@ -33,6 +34,10 @@ export const connectToChatFailure = createAction(
 
 export const connectToWebsocket = createAction(
   '[Chat] Connect to Project'
+);
+
+export const reconnectToWebsocket = createAction(
+  '[Chat] reconnect to current Project',
 );
 
 export const connectSuccess = createAction(

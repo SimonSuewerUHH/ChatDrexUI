@@ -1,14 +1,13 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
 import {MatDialogActions, MatDialogContent, MatDialogRef} from '@angular/material/dialog';
 import {MatButton} from '@angular/material/button';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
 import {MatInputModule} from '@angular/material/input';
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 import {MatRadioModule} from '@angular/material/radio';
 import {MatIcon} from '@angular/material/icon';
-import {Store} from '@ngrx/store';
 import {environment} from '../../../../environments/environment';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatDivider} from '@angular/material/divider';
@@ -18,12 +17,13 @@ import {
   defaultUserLLMModelSetting,
   LlmType,
   loadUserLLMModelSetting,
-  MaxTokenPerModel,
   saveUserLLMModelSetting,
   UserLLMModelSetting
 } from '../../models/llm-setting';
 import {DeviceIdService} from '../../services/device-id.service';
-import {required, max, min, form, Field} from '@angular/forms/signals';
+import {Field, form, required} from '@angular/forms/signals';
+import {Store} from '@ngrx/store';
+import {reconnectToWebsocket} from '../../../modules/chat/service/paper-chat.actions';
 
 
 interface OllamaModel {
@@ -57,6 +57,7 @@ interface OllamaModel {
 export class LlmModelSettingDialogComponent {
   private deviceIdService: DeviceIdService = inject(DeviceIdService);
   private readonly dialogRef: MatDialogRef<LlmModelSettingDialogComponent> = inject(MatDialogRef);
+  private readonly store: Store = inject(Store);
 
   readonly settingModel = signal<UserLLMModelSetting>(loadUserLLMModelSetting(true) ?? defaultUserLLMModelSetting);
 
@@ -95,7 +96,7 @@ export class LlmModelSettingDialogComponent {
   readonly form = form(
     this.settingModel,
     (path) => {
-      required(path.selectedLLM, { message: 'You must select an LLM' });
+      required(path.selectedLLM, {message: 'You must select an LLM'});
     }
   );
 
@@ -113,6 +114,7 @@ export class LlmModelSettingDialogComponent {
     if (this.form().valid()) {
       const value = this.form().value();
       saveUserLLMModelSetting(value);
+      this.store.dispatch(reconnectToWebsocket())
       this.dialogRef.close(true);
     }
   }

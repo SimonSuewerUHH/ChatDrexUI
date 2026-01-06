@@ -9,6 +9,7 @@ import {getAllThreadIds, selectClientId} from './paper-chat.selector';
 import {ChatMessageType} from '../dto/enums';
 import {v4 as uuidv4} from 'uuid';
 import {Router} from '@angular/router';
+import {reconnectToWebsocket} from './paper-chat.actions';
 
 @Injectable()
 export class PaperChatEffects {
@@ -137,6 +138,19 @@ export class PaperChatEffects {
       tap(() => console.error("Failed to connect to chat")),
       tap(() => this.router.navigate(['/chat/new'])),
       switchMap(() => of(PaperChatActions.connectToWebsocket()).pipe(delay(3000)))
+    )
+  );
+
+  reConnectToChat$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(PaperChatActions.reconnectToWebsocket),
+      tap(() => console.error("Reconnect to chat")),
+      tap(() => this.wsService.disconnect()),
+      delay(1000),
+      map(() => PaperChatActions.connectToWebsocket()),
+      catchError(() =>
+        of(PaperChatActions.connectToChatFailure())
+      )
     )
   );
 }

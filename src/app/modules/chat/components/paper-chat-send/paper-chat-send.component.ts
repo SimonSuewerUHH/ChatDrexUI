@@ -50,7 +50,7 @@ export class PaperChatSendComponent implements OnInit {
   readonly startMessage = input<string>('');
   readonly deactivated = input<boolean>(false);
 
-  connected = toSignal(this.store.select(selectConnected), {initialValue: false});
+  connected = this.store.selectSignal(selectConnected);
 
   newMessage = output<string>();
 
