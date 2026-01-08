@@ -14,6 +14,13 @@
   <a routerLink="/">
     <img ngSrc="assets/logo.png" alt="logo" width="35" height="35"/>
   </a>
+  @if (!nedrexEmbeddingsAreAvailable()) {
+    <mat-icon
+      class="warning"
+      matTooltip="The NeDRex service is not fully available, which will negatively impact ChatDrex. Please contact the site owner."
+    >warning
+    </mat-icon>
+  }
 </mat-toolbar>
 
 <router-outlet/>

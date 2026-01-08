@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, inject, OnInit, signal} from '@angular/core';
 import {NavigationEnd, Router, RouterLink, RouterOutlet} from '@angular/router';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {NgOptimizedImage} from '@angular/common';
@@ -17,6 +17,7 @@ import {
 import {MatDialog} from '@angular/material/dialog';
 import {MatIconButton} from '@angular/material/button';
 import {MatTooltip} from '@angular/material/tooltip';
+import {NedrexService} from './modules/chat/service/nedrex.service';
 
 @Component({
   selector: 'app-root',
@@ -41,8 +42,10 @@ export class AppComponent implements OnInit {
   private readonly dialog: MatDialog = inject(MatDialog);
   private readonly store: Store = inject(Store);
   private readonly router: Router = inject(Router);
+  private readonly nedrexService: NedrexService = new NedrexService();
   title = 'ChatDrex';
-  private isConnected = false;
+  private isConnected = signal<boolean>(false);
+  nedrexEmbeddingsAreAvailable = signal<boolean>(true);
 
   ngOnInit() {
     // Listen to route changes to manage WebSocket connections
@@ -51,24 +54,27 @@ export class AppComponent implements OnInit {
       .subscribe((event: NavigationEnd) => {
         const isChatRoute = event.url.startsWith('/chat');
 
-        if (isChatRoute && !this.isConnected) {
+        if (isChatRoute && !this.isConnected()) {
           // Connect to WebSocket when entering chat routes
           console.log('Entering chat route, connecting to WebSocket...');
           this.store.dispatch(connectToWebsocket());
-          this.isConnected = true;
-        } else if (!isChatRoute && this.isConnected) {
+          this.isConnected.set(true);
+        } else if (!isChatRoute && this.isConnected()) {
           // Disconnect from WebSocket when leaving chat routes
           console.log('Leaving chat route, disconnecting from WebSocket...');
           this.store.dispatch(disconnect());
-          this.isConnected = false;
+          this.isConnected.set(false);
         }
       });
 
+    this.nedrexService.embeddingsAvailable().subscribe(a => {
+      this.nedrexEmbeddingsAreAvailable.set(a);
+    });
     // Check initial route
     const currentUrl = this.router.url;
     if (currentUrl.startsWith('/chat')) {
       this.store.dispatch(connectToWebsocket());
-      this.isConnected = true;
+      this.isConnected.set(true);
     }
   }
 
