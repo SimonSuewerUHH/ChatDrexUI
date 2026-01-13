@@ -49,9 +49,9 @@ assemble:staging:
 deploy:
   image: docker:24.0.5
   stage: deploy
-  only:
-    - master
-    - main
+ # only:
+ #   - master
+ #   - main
   services:
     - name: docker:24.0.5-dind
       alias: docker
