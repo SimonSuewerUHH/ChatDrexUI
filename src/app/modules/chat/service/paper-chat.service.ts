@@ -67,9 +67,7 @@ export class PaperChatWebSocketService {
         message: message,
         messageType: MessageType.SENDING,
         timestamp: Math.floor(Date.now() / 1000),
-        llmModel: 'gemini-pro'
       };
-      console.log('Sending message:', request);
       this.socket$.next(request);
       this.store.dispatch(requestedMessage({requestedMessage: request}));
     } else {
