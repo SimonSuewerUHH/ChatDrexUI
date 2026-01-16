@@ -77,9 +77,11 @@ mat-divider {
         align-items: center;
         width: 100%;
 
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
+        &--text {
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
 
         .thread-menu-btn {
           display: none;
