@@ -16,16 +16,10 @@ export class PaperChatWebSocketService {
   private readonly store: Store = inject(Store);
   private socket$: WebSocketSubject<any> | null = null;
   private messageSubject = new Subject<ResponseDTO>();
-  private clientId?: string;
 
   connect(clientId: string): Observable<ResponseDTO> {
     let wsUrl = `${environment.wsBaseUrl}/${clientId}`;
     console.log('Connecting to WebSocket:', wsUrl);
-    if (!clientId) {
-      clientId = uuidv4();
-    }
-    this.clientId = clientId;
-
     // Clean up existing connection
     if (this.socket$) {
       this.disconnect();
@@ -84,7 +78,6 @@ export class PaperChatWebSocketService {
     if (this.messageSubject && !this.messageSubject.closed) {
       this.messageSubject.complete();
     }
-    this.clientId = undefined;
   }
 
   reconnect(projectId: string): void {
