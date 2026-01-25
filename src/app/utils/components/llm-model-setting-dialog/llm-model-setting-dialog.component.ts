@@ -21,7 +21,7 @@ import {
   UserLLMModelSetting
 } from '../../models/llm-setting';
 import {DeviceIdService} from '../../services/device-id.service';
-import {Field, form, required} from '@angular/forms/signals';
+import {form, FormField, required} from '@angular/forms/signals';
 import {Store} from '@ngrx/store';
 import {reconnectToWebsocket} from '../../../modules/chat/service/paper-chat.actions';
 
@@ -48,7 +48,7 @@ interface OllamaModel {
     MatExpansionModule,
     MatDivider,
     CloseableDialogComponent,
-    Field
+    FormField,
   ],
   templateUrl: './llm-model-setting-dialog.component.html',
   styleUrl: './llm-model-setting-dialog.component.scss',
