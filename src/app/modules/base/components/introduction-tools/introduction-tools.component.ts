@@ -1,11 +1,8 @@
 import {Component} from '@angular/core';
-import {MatFabAnchor} from '@angular/material/button';
 
 @Component({
   selector: 'app-introduction-tools',
-  imports: [
-    MatFabAnchor
-  ],
+  imports: [],
   templateUrl: './introduction-tools.component.html',
   styleUrl: './introduction-tools.component.scss'
 })
