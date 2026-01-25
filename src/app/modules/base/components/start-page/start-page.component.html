@@ -1,0 +1,89 @@
+<div class="page">
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">
+        <img ngSrc="assets/logo.png" alt="logo" width="85" height="85"/>
+        <span class="word">ChatDrex</span>
+      </div>
+
+      <mat-chip-set aria-label="model tag">
+        <mat-chip color="primary">Multi Agent System</mat-chip>
+      </mat-chip-set>
+    </div>
+
+    <div class="actions">
+      <button mat-stroked-button type="button" (click)="openDisclaimer()">
+        <mat-icon aria-hidden="true">shield</mat-icon>
+        Disclaimer
+      </button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-left">
+      <h1>
+        Network-based drug repurposing,
+        <span class="grad">conversationally</span> enabled.
+      </h1>
+
+      <p class="subtitle">
+        ChatDRex is a conversation-driven, multi-agent system for network medicine–based drug repurposing. Built on the
+        integrated systems medicine knowledge graph NeDRex, it provides natural-language access to large-scale biomedical
+        data and orchestrates specialized bioinformatics agents for network analysis, candidate prioritization, functional
+        validation, and literature mining.
+        <br /><br />
+        By coordinating task-specific agents for query routing, algorithm execution, result visualization, and scientific
+        interpretation—supported by a reasoning module for transparency and hallucination detection—ChatDRex enables
+        clinicians and researchers to perform complex in silico analyses without programming expertise. This democratizes
+        access to bioinformatics, supports hypothesis generation, and accelerates translational research toward personalized
+        therapies.
+      </p>
+      <div class="cta">
+        <button mat-raised-button type="button" (click)="useExample(examplePrompts()[0])">
+          <mat-icon aria-hidden="true">chat</mat-icon>
+          Try the chat
+        </button>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <mat-card class="glass" appearance="outlined">
+        <mat-card-header>
+          <div class="card-head">
+            <div class="title">
+              <mat-icon aria-hidden="true">auto_awesome</mat-icon>
+              <span>What can I ask?</span>
+            </div>
+            <span class="badge">Examples</span>
+          </div>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div class="chips">
+            @for (ex of examplePrompts(); track ex) {
+              <button mat-stroked-button class="chip stagger" type="button" (click)="useExample(ex)">
+                <mat-icon aria-hidden="true">bolt</mat-icon>
+                <span>{{ ex }}</span>
+              </button>
+            }
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <div class="hint">
+            <mat-icon aria-hidden="true">info</mat-icon>
+            <span>Results are research-oriented model outputs and must be validated (see disclaimer).</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <span>© {{ year }} CosyBio</span>
+    <span class="sep">·</span>
+    <span>ChatDrex</span>
+    <span class="sep">·</span>
+    <span class="small">Conversational no-code and multi-agentic disease module identification and drug repurposing prediction with ChatDRex</span>
+  </footer>
+</div>

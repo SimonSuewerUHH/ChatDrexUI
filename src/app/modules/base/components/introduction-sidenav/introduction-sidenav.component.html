@@ -1,28 +1,12 @@
 <div class="sidenav">
   <mat-list>
     <a mat-list-item
-       routerLink="/introduction/home"
+       routerLink="/chat/new"
        routerLinkActive="active"
        class="sidenav--list-link"
        (click)="onNavigate()">
-      <mat-icon matListItemIcon>article</mat-icon>
-      <div matListItemTitle>Introduction</div>
-    </a>
-    <a mat-list-item
-       routerLink="/introduction/faq"
-       routerLinkActive="active"
-       class="sidenav--list-link"
-       (click)="onNavigate()">
-      <mat-icon matListItemIcon>quiz</mat-icon>
-      <div matListItemTitle>FAQ</div>
-    </a>
-    <a mat-list-item
-       routerLink="/introduction/tools"
-       routerLinkActive="active"
-       class="sidenav--list-link"
-       (click)="onNavigate()">
-      <mat-icon matListItemIcon>construction</mat-icon>
-      <div matListItemTitle>Tools</div>
+      <mat-icon matListItemIcon>edit</mat-icon>
+      <div matListItemTitle>New Thread</div>
     </a>
     <mat-divider></mat-divider>
     @if (headlines$ | async; as headlines) {

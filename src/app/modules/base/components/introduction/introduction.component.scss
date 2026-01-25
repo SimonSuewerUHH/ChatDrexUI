@@ -28,3 +28,26 @@
   }
 }
 
+
+.border-round-xl {
+  border-radius: 18px;
+  margin: 20px 0 80px;
+}
+
+.shadow-1 {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+}
+
+.card-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mr-2 {
+  margin-right: 8px;
+}
+
+.m-0 {
+  margin: 0;
+}

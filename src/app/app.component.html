@@ -1,7 +1,23 @@
 <mat-toolbar>
-
   <app-sidenav-btn></app-sidenav-btn>
-  <app-newchat-btn></app-newchat-btn>
+  <a routerLink="/">
+    <img ngSrc="assets/logo.png" alt="logo" width="35" height="35"/>
+  </a>
+  <span class="spacer"></span>
+  <a routerLink="/chat"
+    mat-button
+    matTooltip="to the chat"
+    class="settings-btn bug-btn">
+    <mat-icon>chat</mat-icon>
+    <span>Chat</span>
+  </a>
+  <a routerLink="/introduction"
+     mat-button
+     matTooltip="to the chat"
+     class="settings-btn bug-btn">
+    <mat-icon>info</mat-icon>
+    <span>About</span>
+  </a>
   <span class="spacer"></span>
   <app-dark-mode-toggle></app-dark-mode-toggle>
   <button
@@ -11,9 +27,6 @@
     class="settings-btn bug-btn">
     <mat-icon>settings</mat-icon>
   </button>
-  <a routerLink="/">
-    <img ngSrc="assets/logo.png" alt="logo" width="35" height="35"/>
-  </a>
   @if (!nedrexEmbeddingsAreAvailable()) {
     <mat-icon
       class="warning"
@@ -25,4 +38,13 @@
 
 <router-outlet/>
 
+<!--
+<footer class="footer">
+  <span>© {{ year }} CosyBio</span>
+  <span class="sep">·</span>
+  <span>ChatDrex</span>
+  <span class="sep">·</span>
+  <span class="small">Conversational no-code and multi-agentic disease module identification and drug repurposing prediction with ChatDRex</span>
+</footer>
+-->
 <app-show-message></app-show-message>

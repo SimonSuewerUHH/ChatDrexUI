@@ -12,3 +12,19 @@ app-newchat-btn{
 .warning{
   color: red;
 }
+
+
+.footer {
+  background: var(--mat-toolbar-container-background-color, var(--mat-sys-surface));
+  color: var(--mat-toolbar-container-text-color, var(--mat-sys-on-surface));
+
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  opacity: .75;
+
+  .sep { opacity: .6; }
+  .small { font-size: 12px; }
+}
