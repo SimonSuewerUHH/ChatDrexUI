@@ -8,6 +8,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {DisclaimerDialogComponent} from '../disclaimer-dialog/disclaimer-dialog.component';
 import {NgOptimizedImage} from '@angular/common';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-start-page',
@@ -20,7 +21,8 @@ import {MatSnackBar} from '@angular/material/snack-bar';
     MatChipSet,
     MatChip,
     MatDivider,
-    NgOptimizedImage
+    NgOptimizedImage,
+    RouterLink
   ],
   templateUrl: './start-page.component.html',
   styleUrl: './start-page.component.scss',
@@ -33,11 +35,11 @@ export class StartPageComponent {
   readonly disclaimerAccepted = signal(false);
 
   readonly examplePrompts = signal<string[]>([
-    'What drugs are prioritized for PAH associated with a Bone Morphogenetic Protein Receptor Type 2 mutation?',
-    'What drugs are mechanistically linked to pulmonary arterial hypertension involving BMPR2 signaling?',
-    'I have long QT syndrome, what drugs should I avoid?',
-    'Which drugs may increase the risk of torsade de pointes?',
-    'What adverse reactions are reported for Clozapine?'
+    'Which proteins are known to be expressed in the liver?',
+    'Apply DIGEST to test whether O75431, Q3SYG4 form a statistically significant disease module.',
+    'Use the DIAMOnD algorithm to expand the seed gene set LAG3, PRKCB, MTOR, FOS, IL2, MYC, NFKB1.',
+    'What are the pathways associated with proteins encoded by the gene CFTR?',
+    'Provide the gene type and description for the APC gene.'
   ]);
 
   openDisclaimer(): void {
