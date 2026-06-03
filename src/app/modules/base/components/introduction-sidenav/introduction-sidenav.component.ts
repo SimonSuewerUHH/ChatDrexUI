@@ -1,52 +1,63 @@
-import {Component, inject, input} from '@angular/core';
-import {AsyncPipe} from "@angular/common";
-import {MatDividerModule} from "@angular/material/divider";
-import {MatIconModule} from "@angular/material/icon";
-import {MatButtonModule} from "@angular/material/button";
-import {MatListModule} from "@angular/material/list";
-import {RouterLink, RouterLinkActive} from "@angular/router";
-import {ClickEventService} from '../../../../utils/services/click-event.service';
+import {Component, inject, input, signal} from '@angular/core';
+import {AsyncPipe} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {RouterLink, RouterLinkActive} from '@angular/router';
 import {Store} from '@ngrx/store';
+import {ClickEventService} from '../../../../utils/services/click-event.service';
 import {getAllHeadlines} from '../../../chat/service/paper-chat.selector';
 import {deleteHistory, deleteThread} from '../../../chat/service/paper-chat.actions';
-import {MatMenuModule} from '@angular/material/menu';
 
 @Component({
   selector: 'app-introduction-sidenav',
   imports: [
-    MatIconModule,
-    RouterLink,
-    MatDividerModule,
-    MatButtonModule,
-    MatListModule,
-    RouterLinkActive,
     AsyncPipe,
-    MatMenuModule
+    FormsModule,
+    MatIconModule,
+    MatButtonModule,
+    MatMenuModule,
+    MatTooltipModule,
+    RouterLink,
+    RouterLinkActive,
   ],
   templateUrl: './introduction-sidenav.component.html',
-  styleUrl: './introduction-sidenav.component.scss'
+  styleUrl: './introduction-sidenav.component.scss',
 })
 export class IntroductionSidenavComponent {
   private readonly store: Store = inject(Store);
-
-  readonly isMobile = input.required<boolean>();
   private readonly clickEventService: ClickEventService = inject(ClickEventService);
 
+  readonly isMobile = input.required<boolean>();
+  readonly searchTerm = signal('');
   readonly headlines$ = this.store.select(getAllHeadlines);
 
-  onNavigate() {
+  onNavigate(): void {
     if (this.isMobile()) {
       this.clickEventService.emitClickSideNavEvent();
     }
   }
 
-  fireDeleteHistory() {
+  fireDeleteHistory(): void {
     this.store.dispatch(deleteHistory());
   }
 
-  fireDeleteThread(threadId: string) {
+  fireDeleteThread(threadId: string): void {
     this.store.dispatch(deleteThread({threadId}));
   }
 
-  protected readonly Object = Object;
+  /** Reverse-chronological entries, filtered by a case-insensitive title match. */
+  filterHeadlines(
+    headlines: Record<string, string>,
+    term: string,
+  ): Array<[string, string]> {
+    const entries = Object.entries(headlines).reverse();
+    const t = term.trim().toLowerCase();
+    if (!t) {
+      return entries;
+    }
+    return entries.filter(([, title]) => (title ?? '').toLowerCase().includes(t));
+  }
 }

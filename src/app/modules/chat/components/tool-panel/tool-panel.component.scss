@@ -1,28 +1,134 @@
+// Tool call — Claude Design timeline tool entry (".step-dot / .tl-toolname / .tl-meta")
 .tool-panel {
-  border: 0;
-  box-shadow: none;
   width: 100%;
+  font-family: var(--cd-font);
+  background: var(--cd-surface-2) !important;
+  border: 1px solid var(--cd-border-soft);
+  border-radius: var(--cd-radius-sm) !important;
+  box-shadow: none !important;
+  overflow: hidden;
+  transition: border-color 0.16s;
+
+  &:not(:last-child) {
+    margin-bottom: 0;
+  }
+
+  &--running {
+    border-color: var(--cd-accent-line);
+  }
 
   &--header {
-    display: flex;
     height: auto !important;
-    padding: 0 30px 0 15px !important;
+    padding: 10px 14px !important;
 
-    :nth-child(1) {
-      flex: 0 0 auto;
+    &:hover {
+      background: var(--cd-surface-3) !important;
     }
-
-    :nth-child(3) {
-      word-wrap: break-word;
-      word-break: break-all;
-      max-width: 500px
-    }
-
-
   }
 
   mat-panel-title {
     display: flex;
+    align-items: center;
     gap: 10px !important;
+    min-width: 0;
+  }
+
+  // ----- Status medallion (rounded square tile) -----
+  &__medallion {
+    width: 22px;
+    height: 22px;
+    border-radius: 7px;
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--cd-border-soft);
+    background: var(--cd-surface-3);
+
+    mat-icon {
+      font-size: 13px;
+      width: 13px;
+      height: 13px;
+    }
+
+    &--running {
+      background: var(--cd-accent-soft);
+      border-color: var(--cd-accent-line);
+      color: var(--cd-accent);
+
+      mat-icon {
+        color: inherit;
+        animation: tool-panel-spin 1.1s linear infinite;
+      }
+    }
+
+    &--done {
+      background: oklch(0.74 0.14 158 / 0.16);
+      border-color: oklch(0.74 0.14 158 / 0.4);
+      color: var(--cd-ok);
+
+      mat-icon {
+        color: inherit;
+      }
+    }
+  }
+
+  // ----- Tool name (mono) -----
+  &__name {
+    font-family: var(--cd-mono);
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--cd-text);
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  // ----- Inline input/query preview -----
+  &__input {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--cd-text-3);
+    font-family: var(--cd-mono);
+    font-size: 11.5px;
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  // ----- "running" flag pill -----
+  &__flag {
+    flex: 0 0 auto;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--cd-accent);
+    background: var(--cd-accent-soft);
+    padding: 2px 8px;
+    border-radius: 12px;
+  }
+
+  &__body {
+    padding: 2px 2px 4px;
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--cd-text-2);
+
+    ::ng-deep p {
+      margin: 0 0 6px;
+    }
+  }
+
+  // Tone down the Material expansion indicator to match the muted chevron
+  ::ng-deep .mat-expansion-indicator::after {
+    color: var(--cd-text-3);
+  }
+}
+
+@keyframes tool-panel-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tool-panel__medallion--running mat-icon {
+    animation: none;
   }
 }

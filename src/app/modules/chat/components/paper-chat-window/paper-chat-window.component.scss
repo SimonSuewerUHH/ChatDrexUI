@@ -1,26 +1,126 @@
+@use 'breakpoints' as bp;
+
+// Chat flows naturally inside its scroll ancestor; messages + composer are
+// centered in a comfortable reading column (Claude Design handoff).
 .chat-window {
-  height: calc(100% - 10px);
+  display: flex;
+  flex-direction: column;
   width: 100%;
+  min-height: 100%;
+  position: relative;
+  background: var(--cd-bg);
+  color: var(--cd-text);
+}
+
+.chat-window__messages {
+  // Grow to fill the column so a short thread still pushes the composer to the
+  // bottom of the viewport instead of leaving it floating mid-screen.
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
+  gap: 26px;
+  width: 100%;
+  max-width: var(--cd-col);
+  margin: 0 auto;
+  padding: 30px 24px 140px; // bottom = composer clearance
 }
 
-.messages {
-  flex: 1;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 20px;
+.chat-window__sentinel {
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
 }
 
-app-paper-chat-sending-bubble {
-  align-self: flex-end;
+.chat-window__empty {
+  margin: 64px auto;
+  padding: 24px;
+  color: var(--cd-text-3);
+  text-align: center;
 }
 
+app-paper-chat-sending-bubble,
 app-paper-chat-receiving-bubble {
-  align-self: flex-start;
+  display: block;
   width: 100%;
 }
 
+.chat-window__composer {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  width: 100%;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in oklch, var(--cd-bg) 0%, transparent) 0%,
+    var(--cd-bg) 40%
+  );
+  backdrop-filter: blur(6px);
 
+  > * {
+    display: block;
+    max-width: var(--cd-col);
+    margin: 0 auto;
+    padding: 8px 24px 18px;
+  }
+}
+
+.chat-window__scroll-pill {
+  position: sticky;
+  bottom: 110px;
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  background: var(--cd-accent);
+  color: oklch(0.2 0.02 252);
+  font-weight: 600;
+  font-size: 13px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
+  z-index: 11;
+  animation: scroll-pill-in 160ms ease-out;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: inherit;
+  }
+}
+
+@keyframes scroll-pill-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.chat-window__offline {
+  margin: auto;
+  padding: 96px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--cd-text-3);
+
+  .chat-window__offline-icon {
+    font-size: 36px;
+    width: 36px;
+    height: 36px;
+    color: var(--cd-warn);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chat-window__scroll-pill {
+    animation: none;
+  }
+}

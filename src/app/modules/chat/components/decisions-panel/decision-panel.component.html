@@ -1,8 +1,8 @@
-<mat-list>
+<div class="decisions">
   @for (decision of decisions(); track decision) {
-    <mat-list-item class="list-item">
-      <mat-icon matListItemIcon>check_circle</mat-icon>
-      <div matListItemTitle [innerHTML]="decision"></div>
-    </mat-list-item>
+    <div class="decision">
+      <span class="decision-mark"><mat-icon>check</mat-icon></span>
+      <div class="decision-body" [innerHTML]="decision"></div>
+    </div>
   }
-</mat-list>
+</div>

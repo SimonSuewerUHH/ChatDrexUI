@@ -1,0 +1,31 @@
+@if (violations().length > 0) {
+  <section
+    class="guardrail-violation"
+    role="alert"
+    [class.guardrail-violation--multi]="violations().length > 1"
+  >
+    <header class="guardrail-violation__header">
+      <mat-icon class="violation-icon">{{ icon(violations()[0].guardrail) }}</mat-icon>
+      <h3>
+        @if (violations().length === 1) {
+          {{ title(violations()[0].guardrail) }}
+        } @else {
+          {{ violations().length }} guardrails blocked this request
+        }
+      </h3>
+    </header>
+    <ul class="violations">
+      @for (v of violations(); track $index) {
+        <li class="violation">
+          @if (violations().length > 1) {
+            <div class="violation__title">
+              <mat-icon class="violation__icon">{{ icon(v.guardrail) }}</mat-icon>
+              <span>{{ title(v.guardrail) }}</span>
+            </div>
+          }
+          <p class="violation__desc">{{ description(v.guardrail, v.message) }}</p>
+        </li>
+      }
+    </ul>
+  </section>
+}

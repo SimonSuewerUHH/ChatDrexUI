@@ -1,43 +1,86 @@
-<div class="sidenav">
-  <mat-list>
-    <a mat-list-item
-       routerLink="/chat/new"
-       routerLinkActive="active"
-       class="sidenav--list-link"
-       (click)="onNavigate()">
-      <mat-icon matListItemIcon>edit</mat-icon>
-      <div matListItemTitle>New Thread</div>
-    </a>
-    <mat-divider></mat-divider>
-    @if (headlines$ | async; as headlines) {
-      @for (headline of Object.entries(headlines).slice().reverse(); track headline[0]) {
-        <a mat-list-item
-           [routerLink]="['/chat', headline[0]]"
-           routerLinkActive="active"
-           class="sidenav--list-link"
-           (click)="onNavigate()">
-          <div matListItemTitle class="headline">
-            <span class="headline--text">{{ headline[1] }}</span>
-            <button matIconButton
-                    class="thread-menu-btn"
-                    [matMenuTriggerFor]="menu"
-                    [matMenuTriggerData]="{ threadId: headline[0] }"
-                    aria-label="Thread context menu">
-              <mat-icon>more_horiz</mat-icon>
-            </button>
-          </div>
+<aside class="sidebar">
+  <a
+    routerLink="/chat/new"
+    routerLinkActive="active"
+    class="new-thread"
+    (click)="onNavigate()"
+  >
+    <mat-icon class="new-thread__icon">edit</mat-icon>
+    <span>New thread</span>
+  </a>
 
+  <label class="thread-search">
+    <mat-icon class="thread-search__icon">search</mat-icon>
+    <input
+      type="search"
+      class="thread-search__input"
+      placeholder="Search threads"
+      [ngModel]="searchTerm()"
+      (ngModelChange)="searchTerm.set($event)"
+      aria-label="Search threads"
+    />
+  </label>
+
+  <div class="thread-section-label">Recent</div>
+
+  <div class="thread-list">
+    @if (headlines$ | async; as headlines) {
+      @let filtered = filterHeadlines(headlines, searchTerm());
+      @if (filtered.length === 0) {
+        <p class="thread-list__empty">
+          @if (searchTerm()) {
+            No threads match "{{ searchTerm() }}".
+          } @else {
+            No threads yet — start one above.
+          }
+        </p>
+      }
+      @for (entry of filtered; track entry[0]) {
+        <a
+          [routerLink]="['/chat', entry[0]]"
+          routerLinkActive="active"
+          class="thread"
+          (click)="onNavigate()"
+        >
+          <span class="thread__bar"></span>
+          <span class="thread__main">
+            <span class="thread__title">{{ entry[1] }}</span>
+          </span>
+          <button
+            mat-icon-button
+            class="thread__menu-btn"
+            [matMenuTriggerFor]="menu"
+            [matMenuTriggerData]="{ threadId: entry[0] }"
+            (click)="$event.preventDefault(); $event.stopPropagation()"
+            aria-label="Thread context menu"
+          >
+            <mat-icon>more_horiz</mat-icon>
+          </button>
         </a>
       }
     }
+  </div>
 
-  </mat-list>
-  <button mat-icon-button
-          class="delete-history-btn"
-          (click)="fireDeleteHistory()">
-    <mat-icon>delete</mat-icon>
-  </button>
-</div>
+  <div class="sidebar-foot">
+    <div class="user-chip">
+      <div class="user-chip__avatar">RX</div>
+      <div class="user-chip__meta">
+        <span class="user-chip__name">Research workspace</span>
+        <span class="user-chip__plan">ChatDrex</span>
+      </div>
+      <button
+        mat-icon-button
+        class="user-chip__action"
+        (click)="fireDeleteHistory()"
+        matTooltip="Clear all threads"
+        aria-label="Clear all threads"
+      >
+        <mat-icon>delete_sweep</mat-icon>
+      </button>
+    </div>
+  </div>
+</aside>
+
 <mat-menu #menu="matMenu">
   <ng-template matMenuContent let-threadId="threadId">
     <button mat-menu-item (click)="fireDeleteThread(threadId)">
@@ -45,5 +88,4 @@
       <span>Delete</span>
     </button>
   </ng-template>
-
 </mat-menu>

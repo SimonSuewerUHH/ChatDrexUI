@@ -1,0 +1,66 @@
+.guardrail-violation {
+  padding: 12px 14px;
+  margin: 8px 0 12px;
+  border: 1px solid var(--mat-sys-error);
+  border-left: 4px solid var(--mat-sys-error);
+  border-radius: 12px;
+  background: color-mix(in oklch, var(--mat-sys-error-container) 70%, transparent);
+  color: var(--mat-sys-on-error-container);
+}
+
+.guardrail-violation__header {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+
+  .violation-icon {
+    color: var(--mat-sys-error);
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+  }
+
+  h3 {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.3;
+  }
+}
+
+.violations {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.violation {
+  &__title {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  &__icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    color: var(--mat-sys-error);
+  }
+
+  &__desc {
+    margin: 4px 0 0;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+}
+
+.guardrail-violation--multi .violation + .violation {
+  padding-top: 8px;
+  border-top: 1px dashed color-mix(in oklch, var(--mat-sys-error) 40%, transparent);
+}

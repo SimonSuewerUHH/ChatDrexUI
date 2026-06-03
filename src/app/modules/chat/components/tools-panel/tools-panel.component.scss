@@ -1,14 +1,14 @@
-.tools{
+.tools {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 
-  app-tool-panel{
+  app-tool-panel {
     width: 100%;
   }
 }
 
-.decisions{
+.decisions {
   display: block;
   margin: 20px 0;
 }

@@ -10,6 +10,9 @@ export interface RequestDTO {
   messageType: MessageType;
   timestamp: number;
   llmModel?: string;
+  preExecutionSanityCheckApproved?: boolean;
+  preExecutionSanityCheckApprovalId?: string;
+  preExecutionSanityCheckDisabled?: boolean;
 }
 
 export interface ResponseDTO {

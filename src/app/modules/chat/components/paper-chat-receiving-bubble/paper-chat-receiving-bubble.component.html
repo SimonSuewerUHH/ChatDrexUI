@@ -6,9 +6,32 @@
   } @else {
     <img ngSrc="assets/logo.png" alt="logo" width="30" height="30" class="logo"/>
   }
-  <div class="receive-bubble">
+  <div
+    class="receive-bubble"
+    [class.receive-bubble--streaming]="isStreaming()"
+  >
+    @if (phaseLabel()) {
+      <div class="phase-pill" role="status" aria-live="polite">
+        <span class="phase-pill__dots" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </span>
+        <span>{{ phaseLabel() }}</span>
+      </div>
+    }
+    @if (message().sanityCheckApproval) {
+      <app-sanity-check-panel [message]="message()"></app-sanity-check-panel>
+    }
+    @if (message().guardrailViolations?.length) {
+      <app-guardrail-violation-panel
+        [violations]="message().guardrailViolations!"
+      ></app-guardrail-violation-panel>
+    }
     <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
-      <mat-tab label="Result">
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="file-tab-icon">forum</mat-icon>
+          <span class="file-tab-label">Result</span>
+        </ng-template>
         @if (getMarkdown().length == 0) {
           @if (getDecisions().length > 0) {
             <app-panel-wrapper header="Decisions" class="decisions">
@@ -33,9 +56,12 @@
         <app-sourced-markdown [markdown]="getMarkdown()"
                               [sources]="getSource()"
         ></app-sourced-markdown>
+        @if (isStreaming() && getMarkdown().length > 0) {
+          <span class="stream-caret" aria-hidden="true"></span>
+        }
       </mat-tab>
       @if (toolsCount() > 0) {
-        <mat-tab label="Tools">
+        <mat-tab>
           <ng-template mat-tab-label>
             <mat-icon class="file-tab-icon">build</mat-icon>
             <span class="file-tab-label">Tools</span>
@@ -73,6 +99,31 @@
       <button mat-icon-button class="bug-btn" (click)="openError()">
         <mat-icon>bug_report</mat-icon>
       </button>
+    }
+
+    @if (showFooter()) {
+      <div class="msg-footer">
+        <button
+          type="button"
+          class="msg-footer__btn"
+          [class.is-ok]="copied()"
+          (click)="onCopy()"
+          [matTooltip]="copied() ? 'Copied' : 'Copy answer'"
+          aria-label="Copy answer"
+        >
+          <mat-icon>{{ copied() ? 'check' : 'content_copy' }}</mat-icon>
+        </button>
+        <button
+          type="button"
+          class="msg-footer__btn"
+          (click)="onRetry()"
+          [disabled]="!canRetry()"
+          matTooltip="Retry — ask this again"
+          aria-label="Retry"
+        >
+          <mat-icon>refresh</mat-icon>
+        </button>
+      </div>
     }
   </div>
 </div>

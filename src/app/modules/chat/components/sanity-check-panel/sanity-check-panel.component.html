@@ -1,0 +1,154 @@
+@if (approval(); as a) {
+  <section class="sanity-check" aria-labelledby="sanity-check-title">
+    <header class="sc-header">
+      <span class="sc-badge"><mat-icon>fact_check</mat-icon></span>
+      <div class="sc-header__text">
+        <h3 id="sanity-check-title">Review before running</h3>
+        <p class="sc-subtitle">{{ a.message }}</p>
+      </div>
+    </header>
+
+    @if (plainEnglishSummary()) {
+      <div class="sc-section">
+        <h4 class="sc-label">Summary</h4>
+        <p class="sc-text">{{ plainEnglishSummary() }}</p>
+      </div>
+    }
+
+    @if (riskReason()) {
+      <div class="sc-section sc-risk">
+        <mat-icon class="sc-risk__icon">info</mat-icon>
+        <div>
+          <h4 class="sc-label">Why this needs review</h4>
+          <p class="sc-text">{{ riskReason() }}</p>
+        </div>
+      </div>
+    }
+
+    @if (planSteps().length > 0) {
+      <div class="sc-section">
+        <h4 class="sc-label">Planned steps</h4>
+        <ol class="sc-steps">
+          @for (step of planSteps(); track $index) {
+            <li class="sc-step">
+              <span class="sc-step__index">{{ $index + 1 }}</span>
+              <div class="sc-step__body">
+                @if (step.action) {
+                  <span class="sc-step__action">{{ step.action }}</span>
+                }
+                @if (step.question) {
+                  <span class="sc-step__question">{{ step.question }}</span>
+                }
+                @if (step.rationale) {
+                  <span class="sc-step__rationale">{{ step.rationale }}</span>
+                }
+              </div>
+            </li>
+          }
+        </ol>
+      </div>
+    }
+
+    @if (uncertainties().length > 0) {
+      <div class="sc-section">
+        <h4 class="sc-label">Open questions</h4>
+        <ul class="sc-uncertainties">
+          @for (u of uncertainties(); track u) {
+            <li>{{ u }}</li>
+          }
+        </ul>
+      </div>
+    }
+
+    @if (!resolved()) {
+      <div class="sc-section sc-request">
+        <div class="sc-request__head">
+          <h4 class="sc-label">Your request</h4>
+          @if (hasOriginalMessage() && !editing()) {
+            <button type="button" class="sc-edit-toggle" (click)="toggleEdit()" [disabled]="pending()">
+              <mat-icon>edit</mat-icon> Edit
+            </button>
+          }
+        </div>
+
+        @if (!hasOriginalMessage()) {
+          <p class="sc-hint sc-hint--warn" role="alert">
+            <mat-icon>warning</mat-icon>
+            Could not find your original message — please retype it below.
+          </p>
+        }
+
+        @if (editing() || !hasOriginalMessage()) {
+          <mat-form-field appearance="outline" class="sc-draft">
+            <textarea
+              matInput
+              rows="3"
+              [disabled]="pending()"
+              [ngModel]="draft()"
+              (ngModelChange)="draft.set($event)"
+              placeholder="Adjust your request before running"
+            ></textarea>
+          </mat-form-field>
+          <p class="sc-hint">Edit the request, then run it.</p>
+        } @else {
+          <p class="sc-request__text">“{{ draft() }}”</p>
+        }
+
+        @if (error(); as err) {
+          <p class="sc-hint sc-hint--error" role="alert">
+            <mat-icon>error</mat-icon>
+            {{ err }}
+          </p>
+        }
+      </div>
+    }
+
+    <footer class="sc-actions">
+      @if (resolved() === 'APPROVED') {
+        <span class="sc-resolved"><mat-icon>check_circle</mat-icon> Approved and running</span>
+      } @else if (resolved() === 'DISABLED') {
+        <span class="sc-resolved"><mat-icon>check_circle</mat-icon> Running without review</span>
+      } @else if (resolved() === 'DECLINED') {
+        <span class="sc-resolved sc-resolved--muted"><mat-icon>cancel</mat-icon> Declined — not run</span>
+      } @else {
+        <button
+          type="button"
+          class="sc-btn sc-btn--primary"
+          [disabled]="pending() || draft().trim().length === 0"
+          (click)="onApprove()"
+        >
+          @if (pending()) {
+            <mat-spinner diameter="16"></mat-spinner>
+          } @else {
+            <mat-icon>{{ isEdited() ? 'play_arrow' : 'check' }}</mat-icon>
+          }
+          {{ isEdited() ? 'Run edited request' : 'Agree & run' }}
+        </button>
+
+        <button
+          type="button"
+          class="sc-btn sc-btn--ghost"
+          [disabled]="pending()"
+          (click)="onDecline()"
+          matTooltip="Don't run this workflow"
+        >
+          <mat-icon>close</mat-icon>
+          Decline
+        </button>
+
+        @if (canDisable()) {
+          <button
+            type="button"
+            class="sc-btn sc-btn--ghost sc-btn--skip"
+            [disabled]="pending()"
+            (click)="onDisable()"
+            matTooltip="Run without the pre-execution sanity check"
+          >
+            <mat-icon>skip_next</mat-icon>
+            Run without review
+          </button>
+        }
+      }
+    </footer>
+  </section>
+}

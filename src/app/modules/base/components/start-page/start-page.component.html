@@ -1,89 +1,122 @@
-<div class="page">
-  <header class="topbar">
-    <div class="brand">
-      <div class="logo" aria-hidden="true">
-        <img ngSrc="assets/logo.png" alt="logo" width="85" height="85"/>
-        <span class="word">ChatDrex</span>
-      </div>
+<div class="home-scroll">
+  <div class="home-inner">
 
-      <mat-chip-set aria-label="model tag">
-        <mat-chip color="primary">Multi Agent System</mat-chip>
-      </mat-chip-set>
-    </div>
+    <!-- ============== HERO ============== -->
+    <section class="home-hero">
+      <div class="hero-copy">
+        <span class="hero-eyebrow">
+          <svg class="eyebrow-logo" width="16" height="16" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <circle cx="11" cy="11" r="4" fill="var(--cd-accent)"/>
+            <circle cx="22" cy="21" r="3" fill="none" stroke="var(--cd-accent)" stroke-width="2"/>
+            <line x1="13.5" y1="13.5" x2="20" y2="19" stroke="var(--cd-accent)" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          Multi-agent system · built on NeDRex
+        </span>
 
-    <div class="actions">
-      <button mat-stroked-button type="button" (click)="openDisclaimer()">
-        <mat-icon aria-hidden="true">shield</mat-icon>
-        Disclaimer
-      </button>
-    </div>
-  </header>
+        <h1 class="hero-title">
+          Network-based drug repurposing,
+          <span class="hero-accent">conversationally enabled.</span>
+        </h1>
 
-  <section class="hero">
-    <div class="hero-left">
-      <h1>
-        Network-based drug repurposing,
-        <span class="grad">conversationally</span> enabled.
-      </h1>
+        <p class="hero-lede">
+          ChatDrex is a conversation-driven, multi-agent system for network medicine–based drug
+          repurposing. It gives clinicians and researchers natural-language access to large-scale
+          biomedical data — orchestrating specialized bioinformatics agents for network analysis,
+          candidate prioritization, functional validation, and literature mining.
+        </p>
 
-      <p class="subtitle">
-        ChatDRex is a conversation-driven, multi-agent system for network medicine–based drug repurposing. Built on the
-        integrated systems medicine knowledge graph NeDRex, it provides natural-language access to large-scale biomedical
-        data and orchestrates specialized bioinformatics agents for network analysis, candidate prioritization, functional
-        validation, and literature mining.
-        <br /><br />
-        By coordinating task-specific agents for query routing, algorithm execution, result visualization, and scientific
-        interpretation, supported by a reasoning module for transparency and hallucination detection, ChatDRex enables
-        clinicians and researchers to perform complex in silico analyses without programming expertise. This democratizes
-        access to bioinformatics, supports hypothesis generation, and accelerates translational research toward personalized
-        therapies.
-      </p>
-      <div class="cta">
-        <a mat-raised-button type="button" routerLink="/chat">
-          <mat-icon aria-hidden="true">chat</mat-icon>
-          Try the chat
-        </a>
-      </div>
-    </div>
-
-    <div class="hero-right">
-      <mat-card class="glass" appearance="outlined">
-        <mat-card-header>
-          <div class="card-head">
-            <div class="title">
-              <mat-icon aria-hidden="true">auto_awesome</mat-icon>
-              <span>What can I ask?</span>
-            </div>
-            <span class="badge">Examples</span>
-          </div>
-        </mat-card-header>
-
-        <mat-card-content>
-          <div class="chips">
-            @for (ex of examplePrompts(); track ex) {
-              <button mat-stroked-button class="chip stagger" type="button" (click)="useExample(ex)">
-                <mat-icon aria-hidden="true">bolt</mat-icon>
-                <span>{{ ex }}</span>
-              </button>
-            }
-          </div>
-
-          <mat-divider></mat-divider>
-
-          <div class="hint">
+        <div class="hero-cta">
+          <a mat-flat-button class="btn-primary" routerLink="/chat/new">
+            <mat-icon aria-hidden="true">chat</mat-icon>
+            Try the chat
+          </a>
+          <button mat-stroked-button class="btn-ghost" type="button" (click)="openDisclaimer()">
             <mat-icon aria-hidden="true">info</mat-icon>
-            <span>Results are research-oriented model outputs and must be validated (see disclaimer).</span>
-          </div>
-        </mat-card-content>
-      </mat-card>
-    </div>
-  </section>
+            Read the disclaimer
+          </button>
+        </div>
 
-  <footer class="footer">
-    <span>© {{ year }} CosyBio</span>
-    <span class="sep">·</span>
-    <span>ChatDrex</span>
-    <span class="sep">·</span>
-    <span class="small">Conversational no-code and multi-agentic disease module identification and drug repurposing prediction with ChatDRex</span>
-  </footer>
+        <div class="hero-stats">
+          <div class="hstat">
+            <span class="hstat-num">6</span>
+            <span class="hstat-label">specialized agents</span>
+          </div>
+          <span class="hstat-div"></span>
+          <div class="hstat">
+            <span class="hstat-num">NeDRex</span>
+            <span class="hstat-label">knowledge graph</span>
+          </div>
+          <span class="hstat-div"></span>
+          <div class="hstat">
+            <span class="hstat-num">0</span>
+            <span class="hstat-label">lines of code needed</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============== ASK PANEL ============== -->
+      <aside class="hero-ask">
+        <div class="ask-head">
+          <span class="ask-title">
+            <span class="ask-spark"><mat-icon aria-hidden="true">psychology</mat-icon></span>
+            What can I ask?
+          </span>
+          <span class="ask-badge">Examples</span>
+        </div>
+
+        <div class="ask-list">
+          @for (ex of examples(); track ex.text) {
+            <button class="ask-item" type="button" (click)="startChat(ex.text)">
+              <span class="ask-bolt"><mat-icon aria-hidden="true">science</mat-icon></span>
+              <span class="ask-text">{{ ex.text }}</span>
+              <span class="ask-tag">{{ ex.tag }}</span>
+              <span class="ask-arrow"><mat-icon aria-hidden="true">chevron_right</mat-icon></span>
+            </button>
+          }
+        </div>
+
+        <div class="ask-note">
+          <mat-icon aria-hidden="true">info</mat-icon>
+          <span>Results are research-oriented model outputs and must be validated.</span>
+        </div>
+      </aside>
+    </section>
+
+    <!-- ============== CAPABILITIES ============== -->
+    <section class="home-cap">
+      <div class="cap-head">
+        <span class="cap-kicker">How it works</span>
+        <h2 class="cap-title">One conversation, a coordinated team of agents</h2>
+        <p class="cap-sub">
+          Each request is routed through task-specific agents and a reasoning module that keeps
+          the analysis transparent and verifiable.
+        </p>
+      </div>
+
+      <div class="cap-grid">
+        @for (cap of capabilities(); track cap.title; let i = $index) {
+          <div class="cap-card">
+            <span class="cap-ic"><mat-icon aria-hidden="true">{{ cap.icon }}</mat-icon></span>
+            <div class="cap-step">{{ stepLabel(i) }}</div>
+            <div class="cap-name">{{ cap.title }}</div>
+            <div class="cap-body">{{ cap.body }}</div>
+          </div>
+        }
+      </div>
+    </section>
+
+    <!-- ============== FOOTER ============== -->
+    <footer class="home-foot">
+      <span class="foot-brand">
+        <svg width="18" height="18" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <circle cx="11" cy="11" r="4" fill="var(--cd-accent)"/>
+          <circle cx="22" cy="21" r="3" fill="none" stroke="var(--cd-accent)" stroke-width="2"/>
+          <line x1="13.5" y1="13.5" x2="20" y2="19" stroke="var(--cd-accent)" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        ChatDrex
+      </span>
+      <span class="foot-note">© {{ year }} CosyBio · Network medicine, made conversational.</span>
+    </footer>
+
+  </div>
 </div>

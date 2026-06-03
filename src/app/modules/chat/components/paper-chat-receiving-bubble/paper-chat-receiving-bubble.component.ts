@@ -1,5 +1,7 @@
-import {ChangeDetectionStrategy, Component, computed, inject, input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, inject, input, signal} from '@angular/core';
+import {Store} from '@ngrx/store';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {NgOptimizedImage} from '@angular/common';
 import {
   ConversationPart,
@@ -25,6 +27,10 @@ import {MatTabsModule} from '@angular/material/tabs';
 import {ResearchOverviewComponent} from '../research-overview/research-overview.component';
 import {DecisionPanelComponent} from '../decisions-panel/decision-panel.component';
 import {PanelWrapperComponent} from '../panel-wrapper/panel-wrapper.component';
+import {SanityCheckPanelComponent} from '../sanity-check-panel/sanity-check-panel.component';
+import {GuardrailViolationPanelComponent} from '../guardrail-violation-panel/guardrail-violation-panel.component';
+import {retryMessage} from '../../service/paper-chat.actions';
+import {selectConnected} from '../../service/paper-chat.selector';
 
 @Component({
   selector: 'app-paper-chat-receiving-bubble',
@@ -39,9 +45,12 @@ import {PanelWrapperComponent} from '../panel-wrapper/panel-wrapper.component';
     FileResultListComponent,
     MatButtonModule,
     MatTabsModule,
+    MatTooltipModule,
     ResearchOverviewComponent,
     DecisionPanelComponent,
-    PanelWrapperComponent
+    PanelWrapperComponent,
+    SanityCheckPanelComponent,
+    GuardrailViolationPanelComponent
   ],
   templateUrl: './paper-chat-receiving-bubble.component.html',
   styleUrl: './paper-chat-receiving-bubble.component.scss',
@@ -50,8 +59,50 @@ import {PanelWrapperComponent} from '../panel-wrapper/panel-wrapper.component';
 export class PaperChatReceivingBubbleComponent {
   private readonly dialog: MatDialog = inject(MatDialog);
   private readonly sanitizer: DomSanitizer = inject(DomSanitizer);
+  private readonly store: Store = inject(Store);
   readonly message = input.required<ConversationPart>();
-  useLoading = computed(() => this.message().state === MessageState.START);
+
+  private readonly connected = this.store.selectSignal(selectConnected);
+  readonly copied = signal(false);
+
+  /** True while we are still receiving streaming output for this bubble. */
+  readonly isStreaming = computed(() => this.message().state !== MessageState.END);
+
+  /** Footer (copy / retry) shows once the answer is complete and has content. */
+  readonly showFooter = computed(
+    () => !this.isStreaming() && this.getMarkdown().length > 0,
+  );
+  readonly canRetry = computed(() => this.connected() && !this.isStreaming());
+  /** Avatar-area loading indicator: still in progress AND we have no body content yet. */
+  readonly useLoading = computed(() => {
+    if (!this.isStreaming()) {
+      return false;
+    }
+    return (this.message().message?.length ?? 0) === 0;
+  });
+
+  /** Inline phase label shown at top of bubble while content is being produced. */
+  readonly phaseLabel = computed(() => {
+    if (!this.isStreaming()) {
+      return '';
+    }
+    const m = this.message();
+    if ((m.message?.length ?? 0) > 0) {
+      return 'Writing…';
+    }
+    const runningTools = m.tools.filter(t => t.started);
+    if (runningTools.length > 0) {
+      const name = runningTools[runningTools.length - 1].name;
+      return name ? `Calling ${name}…` : 'Calling tools…';
+    }
+    if (m.tools.length > 0) {
+      return 'Processing tool result…';
+    }
+    if (m.decisions.length > 0) {
+      return 'Reasoning…';
+    }
+    return 'Thinking…';
+  });
 
   researchCount = computed(() => {
     return this.message().tools
@@ -85,6 +136,28 @@ export class PaperChatReceivingBubbleComponent {
     this.dialog.open(ErrorListDialogComponent, {
       data: this.message()
     });
+  }
+
+  /** Copy the rendered answer (markdown source) to the clipboard. */
+  onCopy(): void {
+    const text = this.getMarkdown();
+    if (!text) {
+      return;
+    }
+    navigator.clipboard?.writeText(text)
+      .then(() => {
+        this.copied.set(true);
+        setTimeout(() => this.copied.set(false), 1400);
+      })
+      .catch(() => {/* clipboard unavailable — no-op */});
+  }
+
+  /** Re-ask the user question that produced this answer. */
+  onRetry(): void {
+    if (!this.canRetry()) {
+      return;
+    }
+    this.store.dispatch(retryMessage({messageId: this.message().messageId}));
   }
 
   getDrugstOneNetwork(): DrugstOneDTO | undefined {

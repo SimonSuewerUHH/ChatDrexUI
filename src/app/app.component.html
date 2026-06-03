@@ -1,50 +1,52 @@
-<mat-toolbar>
-  <app-sidenav-btn></app-sidenav-btn>
-  <a routerLink="/">
-    <img ngSrc="assets/logo.png" alt="logo" width="35" height="35"/>
-  </a>
-  <span class="spacer"></span>
-  <a routerLink="/chat"
-    mat-button
-    matTooltip="to the chat"
-    class="settings-btn bug-btn">
-    <mat-icon>chat</mat-icon>
-    <span>Chat</span>
-  </a>
-  <a routerLink="/introduction"
-     mat-button
-     matTooltip="to the chat"
-     class="settings-btn bug-btn">
-    <mat-icon>info</mat-icon>
-    <span>About</span>
-  </a>
-  <span class="spacer"></span>
-  <app-dark-mode-toggle></app-dark-mode-toggle>
-  <button
-    matTooltip="Specify the settings for the AI models"
-    mat-icon-button
-    (click)="openSettings()"
-    class="settings-btn bug-btn">
-    <mat-icon>settings</mat-icon>
-  </button>
-  @if (!nedrexEmbeddingsAreAvailable()) {
-    <mat-icon
-      class="warning"
-      matTooltip="The NeDRex service is not fully available, which will negatively impact ChatDrex. Please contact the site owner."
-    >warning
-    </mat-icon>
-  }
-</mat-toolbar>
+<header class="topbar">
+  <div class="topbar-left">
+    <app-sidenav-btn></app-sidenav-btn>
+    <a routerLink="/" class="brand" aria-label="ChatDrex home">
+      <img ngSrc="assets/logo.png" alt="" width="26" height="26" class="brand-logo"/>
+      <span class="brand-name">ChatDrex</span>
+    </a>
+  </div>
+
+  <nav class="topnav" aria-label="Primary">
+    <a
+      routerLink="/"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="topnav-item"
+    >
+      <mat-icon>home</mat-icon>
+      <span class="topnav-item__label">Home</span>
+    </a>
+    <a routerLink="/chat" routerLinkActive="active" class="topnav-item">
+      <mat-icon>chat</mat-icon>
+      <span class="topnav-item__label">Chats</span>
+    </a>
+    <a routerLink="/introduction" routerLinkActive="active" class="topnav-item">
+      <mat-icon>info</mat-icon>
+      <span class="topnav-item__label">About</span>
+    </a>
+  </nav>
+
+  <div class="topbar-right">
+    @if (!nedrexEmbeddingsAreAvailable()) {
+      <mat-icon
+        class="topbar-warning"
+        matTooltip="The NeDRex service is not fully available, which will negatively impact ChatDrex. Please contact the site owner."
+      >warning</mat-icon>
+    }
+    <app-dark-mode-toggle></app-dark-mode-toggle>
+    <button
+      matTooltip="Specify the settings for the AI models"
+      mat-icon-button
+      class="topbar-icon-btn"
+      (click)="openSettings()"
+      aria-label="AI model settings"
+    >
+      <mat-icon>settings</mat-icon>
+    </button>
+  </div>
+</header>
 
 <router-outlet/>
 
-<!--
-<footer class="footer">
-  <span>© {{ year }} CosyBio</span>
-  <span class="sep">·</span>
-  <span>ChatDrex</span>
-  <span class="sep">·</span>
-  <span class="small">Conversational no-code and multi-agentic disease module identification and drug repurposing prediction with ChatDRex</span>
-</footer>
--->
 <app-show-message></app-show-message>

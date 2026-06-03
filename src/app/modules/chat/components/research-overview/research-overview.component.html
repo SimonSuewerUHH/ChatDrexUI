@@ -1,13 +1,17 @@
 @if (getResearchTools().length > 0) {
   @for (tool of getResearchTools(); track tool.id) {
-    <h5>
-      @if (tool.started) {
-        <mat-icon>sync</mat-icon>
-      } @else {
-        <mat-icon>check_circle</mat-icon>
-      }
-      {{ tool.input }}
-    </h5>
-    <app-papers-list content [tool]="getResearchToolOutput(tool)"></app-papers-list>
+    <div class="research-tool">
+      <h5 class="research-tool__title">
+        @if (tool.started) {
+          <mat-icon class="research-tool__icon research-tool__icon--running" aria-label="Running">sync</mat-icon>
+        } @else {
+          <mat-icon class="research-tool__icon research-tool__icon--done" aria-label="Done">check_circle</mat-icon>
+        }
+        <span class="research-tool__input">{{ tool.input }}</span>
+      </h5>
+      <app-papers-list content [tool]="getResearchToolOutput(tool)"></app-papers-list>
+    </div>
   }
+} @else {
+  <p class="empty">No sources retrieved for this query.</p>
 }

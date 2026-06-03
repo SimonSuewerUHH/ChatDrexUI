@@ -3,6 +3,58 @@
 
 @include mat.core();
 
+/* =====================================================================
+   ChatDrex design system — tokens mirrored from the Claude Design handoff.
+   Coexists with the Material theme: Material components keep using
+   --mat-sys-*, while custom chat surfaces use --cd-* tokens below.
+   ===================================================================== */
+:root {
+  --cd-accent-h: 195;
+  --cd-accent: oklch(0.72 0.12 var(--cd-accent-h));
+  --cd-accent-soft: oklch(0.72 0.12 var(--cd-accent-h) / 0.16);
+  --cd-accent-line: oklch(0.72 0.12 var(--cd-accent-h) / 0.42);
+  --cd-user: oklch(0.58 0.13 248);
+  --cd-user-soft: oklch(0.58 0.13 248 / 0.18);
+  --cd-ok: oklch(0.74 0.14 158);
+  --cd-warn: oklch(0.78 0.12 78);
+
+  /* light surfaces — default */
+  --cd-bg: oklch(0.975 0.004 252);
+  --cd-bg-side: oklch(0.955 0.005 252);
+  --cd-surface: oklch(1 0 0);
+  --cd-surface-2: oklch(0.97 0.005 252);
+  --cd-surface-3: oklch(0.93 0.008 252);
+  --cd-border: oklch(0.88 0.01 252);
+  --cd-border-soft: oklch(0.91 0.008 252);
+  --cd-text: oklch(0.24 0.02 252);
+  --cd-text-2: oklch(0.44 0.02 252);
+  --cd-text-3: oklch(0.58 0.02 252);
+  --cd-shadow: 0 10px 30px -14px oklch(0.5 0.03 252 / 0.35);
+
+  --cd-radius: 14px;
+  --cd-radius-sm: 10px;
+  --cd-col: 990px;
+  --cd-font: "IBM Plex Sans", "Open Sans", system-ui, sans-serif;
+  --cd-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+/* dark surfaces — applied via Angular Material dark class */
+.dark-mode {
+  --cd-bg: oklch(0.17 0.018 252);
+  --cd-bg-side: oklch(0.15 0.018 252);
+  --cd-surface: oklch(0.215 0.018 252);
+  --cd-surface-2: oklch(0.255 0.018 252);
+  --cd-surface-3: oklch(0.30 0.02 252);
+  --cd-border: oklch(0.32 0.018 252 / 0.7);
+  --cd-border-soft: oklch(0.32 0.018 252 / 0.45);
+  --cd-text: oklch(0.96 0.005 252);
+  --cd-text-2: oklch(0.76 0.012 252);
+  --cd-text-3: oklch(0.6 0.015 252);
+  --cd-shadow: 0 10px 34px -12px oklch(0.1 0.02 252 / 0.7);
+  --cd-accent: oklch(0.72 0.12 var(--cd-accent-h));
+  --cd-accent-soft: oklch(0.72 0.12 var(--cd-accent-h) / 0.16);
+}
+
 :root {
   @include mat.theme(
       (
@@ -20,7 +72,7 @@
           theme-type: dark,
         ),
       ),
-    $overrides: ("background": #24292e)
+    $overrides: ("background": #1a1f2b)
   );
 }
 
@@ -32,7 +84,24 @@ body {
 
 body {
   margin: 0;
-  font-family: 'Open Sans', sans-serif;
+  font-family: var(--cd-font);
+  font-size: 15px;
+  background: var(--cd-bg);
+  color: var(--cd-text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Slim scrollbars — match design */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb {
+  background: var(--cd-surface-3);
+  border-radius: 20px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--cd-border);
+  background-clip: padding-box;
 }
 
 .main-container {

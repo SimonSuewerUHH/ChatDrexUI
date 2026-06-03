@@ -1,34 +1,102 @@
-mat-list-item {
-  height: initial !important;
-  margin: 10px 0 !important;
+// Agent decisions — Claude Design ".decisions / .decision / .decision-line"
+.decisions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 4px 0 2px;
+  font-family: var(--cd-font);
+}
+
+.decision {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.decision-mark {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  flex: none;
+  display: grid;
+  place-items: center;
+  background: var(--cd-accent-soft);
+  color: var(--cd-accent);
+  margin-top: 2px;
 
   mat-icon {
-    margin-inline-end: 10px;
-    color: var(--mat-sys-on-surface);
-    align-self: start !important;
+    font-size: 12px;
+    width: 12px;
+    height: 12px;
+    color: inherit;
   }
+}
 
-  ::ng-deep .mat-mdc-list-item-title {
-    word-wrap: break-word !important;
-    white-space: pre-wrap !important;
-  }
+.decision-body {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1;
+  min-width: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--cd-text-2);
 
-  ::ng-deep .step {
+  // Plain-text decisions (no structured markup)
+  text-wrap: pretty;
 
-    display: grid;
-    gap: 4px;
+  // ----- Structured decision markup coming through [innerHTML] -----
+  // Backend emits: <div class="step"><div class="action|reason|subtask">
+  //                  <span class="head">Label</span> value</div>…</div>
+  ::ng-deep {
+    .step {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
 
     .action,
     .reason,
     .subtask {
       display: grid;
-      grid-template-columns: 80px 1fr;
-      align-items: start;
+      grid-template-columns: 72px 1fr;
+      gap: 10px;
+      align-items: baseline;
     }
 
     .head {
+      color: var(--cd-text-3);
+      font-family: var(--cd-font);
       font-weight: 600;
-      margin-right: 5px;
+      font-size: 11px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    // Action value reads as a mono accent token (matches design .decision-action)
+    .action {
+      color: var(--cd-accent);
+      font-family: var(--cd-mono);
+      font-weight: 600;
+      font-size: 12.5px;
+    }
+
+    .reason,
+    .subtask {
+      color: var(--cd-text-2);
+      text-wrap: pretty;
+    }
+
+    // Keep the label cell on the base font even inside accent-colored rows
+    .action .head,
+    .reason .head,
+    .subtask .head {
+      color: var(--cd-text-3);
+      font-family: var(--cd-font);
+    }
+
+    p {
+      margin: 0;
     }
   }
 }

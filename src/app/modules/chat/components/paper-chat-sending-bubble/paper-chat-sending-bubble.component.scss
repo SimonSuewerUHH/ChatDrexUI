@@ -1,14 +1,22 @@
+// User bubble — right-aligned within the message column.
 :host {
   display: flex;
-  flex-direction: row-reverse;
+  justify-content: flex-end;
+  width: 100%;
 }
 
 .send-bubble {
-  padding: 12px;
-  border-radius: 12px;
-  max-width: 70%;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
-
-  background-color: var(--mat-sys-surface-dim);
-  color: var(--mat-sys-on-surface-dim);
+  background: var(--cd-user);
+  color: white;
+  padding: 11px 16px;
+  border-radius: 16px 16px 4px 16px;
+  max-width: 76%;
+  font-family: var(--cd-font);
+  font-size: 14.5px;
+  line-height: 1.5;
+  font-weight: 450;
+  white-space: pre-wrap;
+  word-break: break-word;
+  box-shadow: var(--cd-shadow);
+  float: right;
 }

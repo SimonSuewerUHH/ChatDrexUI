@@ -1,7 +1,14 @@
 import {createReducer, on} from '@ngrx/store';
 import * as PaperChatActions from './paper-chat.actions';
 import {v4 as uuidv4} from 'uuid';
-import {ConversationPart, ToolDTO} from '../dto/message';
+import {
+  ConversationPart,
+  GUARDRAIL_VIOLATION_CODE,
+  GuardrailViolationDTO,
+  PRE_EXECUTION_SANITY_CHECK_APPROVAL_REQUIRED,
+  SanityCheckApprovalDTO,
+  ToolDTO,
+} from '../dto/message';
 import {ChatMessageType, MessageState} from '../dto/enums';
 
 export interface PaperChatState {
@@ -14,7 +21,9 @@ export interface PaperChatState {
     [messageId: string]: ConversationPart
   };
   connected: boolean;
-  error: any
+  error: any;
+  reconnectAttempt: number;
+  reconnectNextRetryMs: number;
 }
 
 export const initialState: PaperChatState = {
@@ -26,6 +35,8 @@ export const initialState: PaperChatState = {
   connected: false,
   error: null,
   headlineByThread: {},
+  reconnectAttempt: 0,
+  reconnectNextRetryMs: 0,
 };
 
 export const paperChatReducer = createReducer(
@@ -37,7 +48,9 @@ export const paperChatReducer = createReducer(
   on(PaperChatActions.connectSuccess, (state, {}) => ({
     ...state,
     connected: true,
-    error: null
+    error: null,
+    reconnectAttempt: 0,
+    reconnectNextRetryMs: 0,
   })),
   on(PaperChatActions.connectFailure, (state, {error}) => ({
     ...state,
@@ -49,34 +62,57 @@ export const paperChatReducer = createReducer(
     connected: false,
     error: null
   })),
+  on(PaperChatActions.reconnectAttempt, (state, {attempt, nextRetryMs}) => ({
+    ...state,
+    connected: false,
+    reconnectAttempt: attempt,
+    reconnectNextRetryMs: nextRetryMs,
+  })),
+  on(PaperChatActions.reconnectReset, (state) => ({
+    ...state,
+    reconnectAttempt: 0,
+    reconnectNextRetryMs: 0,
+  })),
 
   // Message Handling
   on(PaperChatActions.receiveAPIMessage, (state, {message}) => {
     const messageText = (message.message as string).toUpperCase();
     if (messageText === 'START') {
+      // If this START is the answer to a just-resolved sanity check, drop the
+      // resolved parent bubble entirely — the new bubble replaces it in the UI.
+      const ancestorId = findResolvedSanityCheckAncestor(state, state.currentThreadId);
+
+      const prevOrder = state.messageOrderByThread[state.currentThreadId] ?? [];
+      const nextOrder = ancestorId
+        ? [...prevOrder.filter(id => id !== ancestorId), message.messageId]
+        : [...prevOrder, message.messageId];
+
+      const nextMessages: typeof state.messages = {...state.messages};
+      if (ancestorId) {
+        delete nextMessages[ancestorId];
+      }
+      nextMessages[message.messageId] = {
+        message: '',
+        timestamp: message.timestamp,
+        messageId: message.messageId,
+        threadId: message.threadId,
+        state: MessageState.START,
+        tools: [],
+        errors: [],
+        decisions: [],
+        isHuman: false,
+        sources: [],
+        systemMessages: [],
+      };
+
       return {
         ...state,
         messageOrderByThread: {
           ...state.messageOrderByThread,
-          [state.currentThreadId]: [...(state.messageOrderByThread[state.currentThreadId] ?? []), message.messageId]
+          [state.currentThreadId]: nextOrder,
         },
-        messages: {
-          ...state.messages,
-          [message.messageId]: {
-            message: "",
-            timestamp: message.timestamp,
-            messageId: message.messageId,
-            threadId: message.threadId,
-            state: MessageState.START,
-            tools: [],
-            errors: [],
-            decisions: [],
-            isHuman: false,
-            sources: [],
-            systemMessages: []
-          }
-        },
-      }
+        messages: nextMessages,
+      };
     }
 
     if (!(message.messageId in state.messages)) {
@@ -171,7 +207,39 @@ export const paperChatReducer = createReducer(
     };
   }),
   on(PaperChatActions.receiveErrorMessage, (state, {message}) => {
-    if (!(message.messageId in state.messages) || typeof message.message !== 'string' || message.messageType !== ChatMessageType.ERROR) {
+    if (!(message.messageId in state.messages) || message.messageType !== ChatMessageType.ERROR) {
+      return state;
+    }
+    const sanityCheck = extractSanityCheckPayload(message.message);
+    if (sanityCheck) {
+      return {
+        ...state,
+        messages: {
+          ...state.messages,
+          [message.messageId]: {
+            ...state.messages[message.messageId],
+            sanityCheckApproval: sanityCheck,
+            sanityCheckPending: false,
+            sanityCheckResolved: undefined,
+          }
+        },
+      };
+    }
+    const violation = extractGuardrailViolation(message.message);
+    if (violation) {
+      const existing = state.messages[message.messageId].guardrailViolations ?? [];
+      return {
+        ...state,
+        messages: {
+          ...state.messages,
+          [message.messageId]: {
+            ...state.messages[message.messageId],
+            guardrailViolations: [...existing, violation],
+          }
+        },
+      };
+    }
+    if (typeof message.message !== 'string') {
       return state;
     }
     return {
@@ -181,6 +249,72 @@ export const paperChatReducer = createReducer(
         [message.messageId]: {
           ...state.messages[message.messageId],
           errors: [...state.messages[message.messageId].errors, message.message]
+        }
+      },
+    };
+  }),
+  on(PaperChatActions.approveSanityCheck, (state, {messageId}) => {
+    if (!(messageId in state.messages)) {
+      return state;
+    }
+    return {
+      ...state,
+      messages: {
+        ...state.messages,
+        [messageId]: {
+          ...state.messages[messageId],
+          sanityCheckPending: true,
+          sanityCheckResolved: 'APPROVED',
+        }
+      },
+    };
+  }),
+  on(PaperChatActions.disableSanityCheck, (state, {messageId}) => {
+    if (!(messageId in state.messages)) {
+      return state;
+    }
+    return {
+      ...state,
+      messages: {
+        ...state.messages,
+        [messageId]: {
+          ...state.messages[messageId],
+          sanityCheckPending: true,
+          sanityCheckResolved: 'DISABLED',
+        }
+      },
+    };
+  }),
+  on(PaperChatActions.declineSanityCheck, (state, {messageId}) => {
+    if (!(messageId in state.messages)) {
+      return state;
+    }
+    return {
+      ...state,
+      messages: {
+        ...state.messages,
+        [messageId]: {
+          ...state.messages[messageId],
+          sanityCheckPending: false,
+          sanityCheckResolved: 'DECLINED',
+          sanityCheckError: undefined,
+        }
+      },
+    };
+  }),
+  on(PaperChatActions.sanityCheckError, (state, {messageId, reason}) => {
+    if (!(messageId in state.messages)) {
+      return state;
+    }
+    return {
+      ...state,
+      messages: {
+        ...state.messages,
+        [messageId]: {
+          ...state.messages[messageId],
+          sanityCheckPending: false,
+          sanityCheckResolved: undefined,
+          sanityCheckError: reason,
         }
       },
     };
@@ -273,3 +407,51 @@ export const paperChatReducer = createReducer(
     threadIds: !state.threadIds.includes(threadId) ? [...state.threadIds, threadId] : state.threadIds,
   })),
 );
+
+/**
+ * Returns the id of the most recent AI bubble whose sanity check was just
+ * resolved (approved or skipped). When the backend follows up with a new bubble
+ * after approval, that resolved parent gets deleted from state so the new
+ * bubble replaces it visually.
+ */
+function findResolvedSanityCheckAncestor(
+  state: PaperChatState,
+  threadId: string,
+): string | undefined {
+  const order = state.messageOrderByThread[threadId];
+  if (!order || order.length === 0) {
+    return undefined;
+  }
+  const lastId = order[order.length - 1];
+  const last = state.messages[lastId];
+  if (!last || last.isHuman) {
+    return undefined;
+  }
+  return last.sanityCheckResolved ? lastId : undefined;
+}
+
+function extractSanityCheckPayload(payload: unknown): SanityCheckApprovalDTO | null {
+  if (!payload || typeof payload !== 'object') {
+    return null;
+  }
+  const obj = payload as { code?: unknown };
+  if (obj.code !== PRE_EXECUTION_SANITY_CHECK_APPROVAL_REQUIRED) {
+    return null;
+  }
+  return payload as SanityCheckApprovalDTO;
+}
+
+function extractGuardrailViolation(payload: unknown): GuardrailViolationDTO | null {
+  if (!payload || typeof payload !== 'object') {
+    return null;
+  }
+  const obj = payload as { code?: unknown; guardrail?: unknown; message?: unknown };
+  if (obj.code !== GUARDRAIL_VIOLATION_CODE || typeof obj.guardrail !== 'string') {
+    return null;
+  }
+  return {
+    code: GUARDRAIL_VIOLATION_CODE,
+    guardrail: obj.guardrail,
+    message: typeof obj.message === 'string' ? obj.message : '',
+  };
+}

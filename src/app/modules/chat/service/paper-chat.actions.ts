@@ -49,9 +49,43 @@ export const connectFailure = createAction(
   props<{ error: any }>()
 );
 
+export const reconnectAttempt = createAction(
+  '[Chat] Reconnect Attempt',
+  props<{ attempt: number; nextRetryMs: number }>()
+);
+
+export const reconnectReset = createAction(
+  '[Chat] Reconnect Reset'
+);
+
 export const sendMessage = createAction(
   '[Chat] Send Message',
   props<{ threadId: string; message: string }>()
+);
+
+export const retryMessage = createAction(
+  '[Chat] Retry Message',
+  props<{ messageId: string }>()
+);
+
+export const approveSanityCheck = createAction(
+  '[Chat] Approve Sanity Check',
+  props<{ messageId: string; messageText?: string }>()
+);
+
+export const disableSanityCheck = createAction(
+  '[Chat] Disable Sanity Check',
+  props<{ messageId: string }>()
+);
+
+export const declineSanityCheck = createAction(
+  '[Chat] Decline Sanity Check',
+  props<{ messageId: string }>()
+);
+
+export const sanityCheckError = createAction(
+  '[Chat] Sanity Check Error',
+  props<{ messageId: string; reason: string }>()
 );
 
 export const requestedMessage = createAction(

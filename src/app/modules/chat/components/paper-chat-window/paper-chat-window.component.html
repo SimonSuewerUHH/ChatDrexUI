@@ -1,23 +1,45 @@
 <div class="chat-window">
-  @if (connected$ | async) {
-    <div class="messages" #messagesContainer>
-      @if ((messages$ | async); as messages) {
-        @if (messages && messages.length > 0) {
-          @for (message of messages; track message?.timestamp ?? $index) {
-            @if (message?.isHuman) {
-              <app-paper-chat-sending-bubble [message]="message"></app-paper-chat-sending-bubble>
-            } @else {
-              <app-paper-chat-receiving-bubble [message]="message"></app-paper-chat-receiving-bubble>
-            }
+  @if (connected()) {
+    <div class="chat-window__messages">
+      @let msgs = messages();
+      @if (msgs.length > 0) {
+        @for (message of msgs; track message.messageId) {
+          @if (message.isHuman) {
+            <app-paper-chat-sending-bubble [message]="message"></app-paper-chat-sending-bubble>
+          } @else {
+            <app-paper-chat-receiving-bubble [message]="message"></app-paper-chat-receiving-bubble>
           }
         }
+      } @else {
+        <div class="chat-window__empty">
+          <p>No messages yet — ask ChatDrex anything to get started.</p>
+        </div>
       }
+      <div class="chat-window__sentinel" #bottomSentinel aria-hidden="true"></div>
     </div>
 
-    @if (threadId) {
-      <app-paper-chat-send [threadId]="threadId"></app-paper-chat-send>
+    @if (showScrollPill()) {
+      <button
+        type="button"
+        mat-flat-button
+        class="chat-window__scroll-pill"
+        (click)="scrollToLatest()"
+        aria-live="polite"
+      >
+        <mat-icon>arrow_downward</mat-icon>
+        <span>{{ unreadCount() }} new</span>
+      </button>
+    }
+
+    @if (threadId(); as id) {
+      <div class="chat-window__composer">
+        <app-paper-chat-send [threadId]="id"></app-paper-chat-send>
+      </div>
     }
   } @else {
-    <p>Not connected. Please reload</p>
+    <div class="chat-window__offline" role="status" aria-live="polite">
+      <mat-icon class="chat-window__offline-icon">cloud_off</mat-icon>
+      <p>Reconnecting to ChatDrex…</p>
+    </div>
   }
 </div>

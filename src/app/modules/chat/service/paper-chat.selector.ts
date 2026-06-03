@@ -11,7 +11,7 @@ export const selectCurrentMessages = createSelector(
     const messageIds = state.messageOrderByThread[state.currentThreadId] || [];
     return messageIds.map(id => state.messages[id])
       .filter(msg => !!msg)
-      .filter(msg => !!msg.timestamp)
+      .filter(msg => !!msg.timestamp);
   }
 );
 
@@ -19,6 +19,16 @@ export const selectCurrentMessages = createSelector(
 export const selectConnected = createSelector(
   selectPaperChatFeature,
   (state: PaperChatState) => state.connected || false
+);
+
+export const selectReconnectAttempt = createSelector(
+  selectPaperChatFeature,
+  (state: PaperChatState) => state.reconnectAttempt || 0
+);
+
+export const selectReconnectNextRetryMs = createSelector(
+  selectPaperChatFeature,
+  (state: PaperChatState) => state.reconnectNextRetryMs || 0
 );
 
 

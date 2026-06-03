@@ -1,18 +1,29 @@
 <mat-accordion [hideToggle]="!hideToggle">
-  <mat-expansion-panel class="tool-panel">
+  <mat-expansion-panel class="tool-panel" [class.tool-panel--running]="tool().started">
     <mat-expansion-panel-header class="tool-panel--header">
       <mat-panel-title>
         @if (tool().started) {
-          <mat-icon>sync</mat-icon>
+          <span class="tool-panel__medallion tool-panel__medallion--running" aria-label="Running">
+            <mat-icon>sync</mat-icon>
+          </span>
         } @else {
-          <mat-icon>check_circle</mat-icon>
+          <span class="tool-panel__medallion tool-panel__medallion--done" aria-label="Done">
+            <mat-icon>check</mat-icon>
+          </span>
         }
-        <ng-content select="[header]">
-          <span>{{ tool().input }}</span>
-        </ng-content>
-        <span>{{ tool().input }}</span>
+        <span class="tool-panel__name">
+          <ng-content select="[header]"></ng-content>
+        </span>
+        @if (toolInputDisplay()) {
+          <span class="tool-panel__input">{{ toolInputDisplay() }}</span>
+        }
+        @if (tool().started) {
+          <span class="tool-panel__flag">running</span>
+        }
       </mat-panel-title>
     </mat-expansion-panel-header>
-    <ng-content select="[content]"></ng-content>
+    <div class="tool-panel__body">
+      <ng-content select="[content]"></ng-content>
+    </div>
   </mat-expansion-panel>
 </mat-accordion>

@@ -1,30 +1,63 @@
-<form (ngSubmit)="send()" class="sender-wrapper">
-  <mat-form-field class="full-width ai-field">
-    <div matPrefix class="ai-field__status" [class.ok]="connected()"
-         [class.fail]="!connected()"
-         [attr.aria-label]="connected() ? 'WebSocket connected' : 'WebSocket disconnected'">
-      <mat-icon class="ai-field__status-icon">
-        {{ connected() ? 'cloud_done' : 'cloud_off' }}
-      </mat-icon>
-      <span class="ai-field__status-text">
-        {{ connected() ? 'Online' : 'Offline' }}
-      </span>
-    </div>
+<form (ngSubmit)="send()" class="composer-wrap">
+  <div class="composer" [class.is-busy]="isBusy()">
+    <mat-form-field class="full-width ai-field" appearance="outline" floatLabel="always">
+      <textarea
+        matInput
+        cdkTextareaAutosize
+        cdkAutosizeMinRows="1"
+        cdkAutosizeMaxRows="6"
+        rows="1"
+        [value]="message"
+        name="message"
+        [placeholder]="connected() ? (isBusy() ? 'Waiting for response…' : 'Ask ChatDrex about a drug, gene, or pathway…  Type / for commands') : 'Reconnecting…'"
+        required
+        [disabled]="deactivated() || !connected() || isBusy()"
+        (keydown)="onKeyDown($event)"
+        (keyup)="onKeyUp($event)"
+        [matAutocomplete]="auto"
+        aria-label="Message ChatDrex"
+      ></textarea>
 
-    <input
-      matInput
-      [value]="message"
-      name="message"
-      placeholder="Ask ChatDrex for a question or type '/' for commands"
-      required
-      [disabled]="deactivated()"
-      (keyup)="onKeyUp($event)"
-      [matAutocomplete]="auto">
-    <button mat-icon-button matSuffix type="submit">
-      <mat-icon matSuffix>send</mat-icon>
+      @if (unknownCommand) {
+        <mat-hint class="unknown-cmd" align="start">
+          Unknown command — type / to see available commands.
+        </mat-hint>
+      }
+    </mat-form-field>
+
+    <button
+      type="submit"
+      class="comp-send"
+      [disabled]="!canSend() || isBusy()"
+      [attr.aria-label]="isBusy() ? 'Waiting for ChatDrex response' : 'Send message'"
+      [matTooltip]="isBusy() ? 'Waiting for response…' : (canSend() ? 'Send' : 'Type a message')"
+    >
+      @if (isBusy()) {
+        <mat-spinner diameter="20"></mat-spinner>
+      } @else {
+        <mat-icon>send</mat-icon>
+      }
     </button>
+  </div>
 
-  </mat-form-field>
+  <div class="composer-meta">
+    <span class="chip-tool">
+      <mat-icon class="chip-icon">build</mat-icon>
+      Chatdrex
+    </span>
+    <span class="comp-hint">⏎ send · ⇧⏎ newline</span>
+    <span
+      class="comp-status"
+      role="status"
+      aria-live="polite"
+      [class.ok]="connected()"
+      [class.fail]="!connected()"
+      [matTooltip]="statusTooltip()"
+    >
+      <span class="status-dot"></span>
+      <span class="status-text">{{ statusText() }}</span>
+    </span>
+  </div>
 
   <mat-autocomplete
     #auto="matAutocomplete"
@@ -32,8 +65,8 @@
   >
     @for (option of filteredOptions; track option.value) {
       <mat-option [value]="option">
-        <span class="value"> {{ option.value }}</span>
-        <span class="label"> {{ option.label }}</span>
+        <span class="value">{{ option.value }}</span>
+        <span class="label">{{ option.label }}</span>
       </mat-option>
     }
   </mat-autocomplete>

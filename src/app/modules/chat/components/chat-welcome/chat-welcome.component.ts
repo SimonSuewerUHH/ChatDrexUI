@@ -1,4 +1,5 @@
 import {Component, inject} from '@angular/core';
+import {NgOptimizedImage} from '@angular/common';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatIconModule} from '@angular/material/icon';
@@ -18,7 +19,8 @@ import {MatListModule} from '@angular/material/list';
     MatIconModule,
     MatButtonModule,
     PaperChatSendComponent,
-    MatListModule
+    MatListModule,
+    NgOptimizedImage,
   ],
   templateUrl: './chat-welcome.component.html',
   styleUrl: './chat-welcome.component.scss'

@@ -1,36 +1,38 @@
-<div class="container">
-  <h1>How can i help you?</h1>
+<div class="empty-state">
+  <div class="empty-logo">
+    <img ngSrc="assets/logo.png" alt="ChatDrex" width="48" height="48" priority/>
+  </div>
+  <h1 class="empty-h1">ChatDrex</h1>
+  <p class="empty-tag">Agentic literature &amp; network analysis for drug discovery.</p>
 
   <app-paper-chat-send
+    class="empty-composer"
     [sendDirectly]="false"
     [startMessage]="startMessage"
     (newMessage)="onSend($event)"
   ></app-paper-chat-send>
 
   @if (!selectedTool) {
-
-
-    <div class="action-buttons">
+    <div class="prompt-grid">
       @for (tip of tools; track tip.command) {
-        <button mat-stroked-button color="primary" (click)="selectTool(tip)">
-          <mat-icon>{{ tip.icon }}</mat-icon>
-          {{ tip.tip }}
+        <button type="button" class="prompt-card" (click)="selectTool(tip)">
+          <span class="prompt-ic">
+            <mat-icon>{{ tip.icon }}</mat-icon>
+          </span>
+          <span class="prompt-text">{{ tip.tip }}</span>
         </button>
       }
     </div>
   } @else {
-
-
     <div class="action-hint">
-      <button mat-icon-button color="primary" class="close-hint-btn" (click)="unselectTool()">
+      <button mat-icon-button class="close-hint-btn" (click)="unselectTool()" aria-label="Close hints">
         <mat-icon>close</mat-icon>
       </button>
-      <mat-list role="list">
+      <ul class="hint-list">
         @for (hint of selectedTool.hints; track hint) {
-          <mat-list-item role="listitem" class="hint" (click)="selectHint(hint)">{{hint}}</mat-list-item>
+          <li class="hint" (click)="selectHint(hint)">{{ hint }}</li>
         }
-      </mat-list>
+      </ul>
     </div>
   }
-
 </div>

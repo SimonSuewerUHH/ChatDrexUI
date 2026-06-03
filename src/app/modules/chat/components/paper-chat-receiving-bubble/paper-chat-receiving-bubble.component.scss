@@ -1,37 +1,44 @@
 @use 'breakpoints' as bp;
 
-.bug-btn {
-  color: var(--mat-sys-on-error-container);
-  background: var(--mat-sys-error-container);
-  position: absolute;
-  right: -20px;
-  top: -20px
-}
-
+// Assistant message — Claude Design "msg--assistant + answer-card"
 .receive-wrapper {
   display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  width: 100%;
 
   .logo {
-    margin: 7px 10px 0 0;
+    width: 32px;
+    height: 32px;
+    margin-top: 2px;
+    flex: 0 0 auto;
+    border-radius: 9px;
+    background: var(--cd-surface);
+    border: 1px solid var(--cd-border-soft);
+    padding: 4px;
   }
 
   .loading-pill {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 30px;
-    height: 30px;
-    color: var(--mat-sys-primary);
-    margin: 0 8px 8px 0;
+    width: 32px;
+    height: 32px;
+    flex: 0 0 auto;
+    margin-top: 2px;
+    border-radius: 9px;
+    background: var(--cd-accent-soft);
+    border: 1px solid var(--cd-accent-line);
+    color: var(--cd-accent);
 
     .dot {
       display: inline-block;
-      width: 18px;
-      height: 18px;
+      width: 12px;
+      height: 12px;
       border-radius: 50%;
       background: currentColor;
       position: relative;
-      animation: chat-pulse 1.4s ease-in-out infinite, chat-color 3.2s ease-in-out infinite;
+      animation: chat-pulse 1.4s ease-in-out infinite;
     }
 
     .dot::after {
@@ -41,51 +48,18 @@
       border-radius: 50%;
       border: 2px solid currentColor;
       opacity: 0.35;
-      transform: scale(1);
       animation: chat-ring 1.8s ease-out infinite;
     }
   }
 
   @keyframes chat-pulse {
-    0% {
-      transform: scale(0.75);
-      opacity: 0.6;
-    }
-    50% {
-      transform: scale(1);
-      opacity: 1;
-    }
-    100% {
-      transform: scale(0.75);
-      opacity: 0.6;
-    }
-  }
-
-  @keyframes chat-color {
-    0% {
-      background: color-mix(in oklch, var(--mat-sys-primary) 80%, var(--mat-sys-surface) 20%);
-    }
-    50% {
-      background: color-mix(in oklch, var(--mat-sys-secondary) 70%, var(--mat-sys-surface) 30%);
-    }
-    100% {
-      background: color-mix(in oklch, var(--mat-sys-tertiary) 80%, var(--mat-sys-surface) 20%);
-    }
+    0%, 100% { transform: scale(0.75); opacity: 0.6; }
+    50%      { transform: scale(1);    opacity: 1; }
   }
 
   @keyframes chat-ring {
-    0% {
-      transform: scale(1);
-      opacity: 0.35;
-    }
-    70% {
-      transform: scale(1.6);
-      opacity: 0;
-    }
-    100% {
-      transform: scale(1.6);
-      opacity: 0;
-    }
+    0%        { transform: scale(1);   opacity: 0.35; }
+    70%, 100% { transform: scale(1.6); opacity: 0; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -94,44 +68,134 @@
       animation: none !important;
     }
   }
-
-  .rotate {
-    animation: rotate 2s linear infinite;
-  }
-
-  @keyframes rotate {
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-
-  @include bp.respond-to(small) {
-    flex-direction: column;
-  }
 }
 
 .receive-bubble {
-
-  background-color: var(--mat-sys-surface-container);
-  color: var(--mat-sys-on-surface-container);;
-  padding: 12px;
-  border-radius: 12px;
-  max-width: 65%;
-  width: 1200px;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  background: var(--cd-surface);
+  color: var(--cd-text);
+  padding: 20px 24px;
+  border-radius: var(--cd-radius);
+  border: 1px solid var(--cd-border-soft);
+  max-width: 100%;
+  flex: 1 1 auto;
+  min-width: 0;
+  box-shadow: var(--cd-shadow);
   position: relative;
+  font-family: var(--cd-font);
+  font-size: 14.5px;
+  line-height: 1.68;
+  transition: box-shadow 200ms ease, border-color 200ms ease;
+
+  &--streaming {
+    border-color: var(--cd-accent-line);
+    box-shadow: var(--cd-shadow),
+                0 0 0 3px var(--cd-accent-soft);
+  }
 
   @include bp.respond-to(small) {
-    max-width: calc(100vw - 45px);
-    margin: 10px;
+    padding: 14px 16px;
+  }
+
+  // Material tab restyle inside the bubble — matches the design's quiet tab row.
+  ::ng-deep .mat-mdc-tab-header {
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--cd-border-soft);
+  }
+
+  ::ng-deep .mat-mdc-tab-label-container {
+    overflow-x: auto;
+  }
+
+  ::ng-deep .mdc-tab__text-label {
+    color: var(--cd-text-3);
+    font-family: var(--cd-font);
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.02em;
+  }
+
+  ::ng-deep .mdc-tab--active .mdc-tab__text-label {
+    color: var(--cd-accent);
+  }
+
+  ::ng-deep .mdc-tab-indicator__content--underline {
+    border-color: var(--cd-accent) !important;
+  }
+}
+
+.bug-btn {
+  color: white;
+  background: var(--cd-warn);
+  position: absolute;
+  right: -14px;
+  top: -14px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+}
+
+.phase-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 4px 11px;
+  border-radius: 20px;
+  background: var(--cd-accent-soft);
+  color: var(--cd-accent);
+  font-family: var(--cd-font);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+
+  &__dots {
+    display: inline-flex;
+    gap: 3px;
+
+    span {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: currentColor;
+      animation: phase-bounce 1.2s ease-in-out infinite;
+
+      &:nth-child(2) { animation-delay: 0.15s; }
+      &:nth-child(3) { animation-delay: 0.3s; }
+    }
+  }
+}
+
+@keyframes phase-bounce {
+  0%, 80%, 100% { transform: translateY(0); opacity: 0.5; }
+  40%           { transform: translateY(-3px); opacity: 1; }
+}
+
+.stream-caret {
+  display: inline-block;
+  width: 8px;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  background: var(--cd-accent);
+  border-radius: 1px;
+  animation: stream-blink 1s steps(2, start) infinite;
+}
+
+@keyframes stream-blink {
+  to { visibility: hidden; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .phase-pill__dots span,
+  .stream-caret {
+    animation: none;
   }
 }
 
 .remote-html {
   width: 100%;
   height: 400px;
+  border: 0;
+  border-radius: var(--cd-radius-sm);
 }
-
 
 .file-tab-icon {
   font-size: 16px;
@@ -139,30 +203,78 @@
   height: 16px;
   vertical-align: middle;
   margin-right: 4px;
+  color: inherit;
 }
 
 .file-tab-label {
   margin-right: 6px;
   vertical-align: middle;
+  max-width: 9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .file-tab-count {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 18px;
+  min-width: 18px;
   height: 18px;
-  padding: 3px;
-  border-radius: 50%;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--mat-sys-on-surface);
-  background-color: var(--mat-sys-surface-container-lowest);
-  border-color: var(--mat-sys-surface-container-highest);
+  padding: 0 6px;
+  border-radius: 999px;
+  font-family: var(--cd-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--cd-accent);
+  background: var(--cd-accent-soft);
 }
 
-.decisions{
+.decisions {
   display: block;
-  margin: 20px 0;
+  margin: 16px 0;
 }
 
+// Message actions — Claude Design ".msg-footer" (copy / retry)
+.msg-footer {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--cd-border-soft);
+
+  &__btn {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border: 0;
+    border-radius: 9px;
+    background: transparent;
+    color: var(--cd-text-3);
+    cursor: pointer;
+    transition: background 0.14s, color 0.14s;
+
+    mat-icon {
+      font-size: 17px;
+      width: 17px;
+      height: 17px;
+      color: inherit;
+    }
+
+    &:hover:not(:disabled) {
+      background: var(--cd-surface-2);
+      color: var(--cd-text);
+    }
+
+    &.is-ok {
+      color: var(--cd-ok);
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  }
+}

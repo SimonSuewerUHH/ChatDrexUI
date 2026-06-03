@@ -1,0 +1,56 @@
+.research-tool {
+  margin-top: 8px;
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--mat-sys-on-surface);
+  }
+
+  &__icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    flex: 0 0 auto;
+
+    &--running {
+      color: var(--mat-sys-primary);
+      animation: research-spin 1.5s linear infinite;
+    }
+
+    &--done {
+      color: var(--mat-sys-tertiary);
+    }
+  }
+
+  &__input {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+    color: var(--mat-sys-on-surface-variant);
+    font-weight: 500;
+  }
+}
+
+.empty {
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 14px;
+  margin: 16px 0;
+}
+
+@keyframes research-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .research-tool__icon--running {
+    animation: none;
+  }
+}

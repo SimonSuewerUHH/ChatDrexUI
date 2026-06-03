@@ -1,19 +1,17 @@
 import {Component, inject, OnInit, signal} from '@angular/core';
-import {RouterLink, RouterOutlet} from '@angular/router';
-import {MatToolbarModule} from '@angular/material/toolbar';
+import {RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
 import {NgOptimizedImage} from '@angular/common';
 import {ShowMessageComponent} from './utils/components/show-message/show-message.component';
 import {SidenavBtnComponent} from './utils/components/sidenav-btn/sidenav-btn.component';
 import {Store} from '@ngrx/store';
 import {connectToWebsocket} from './modules/chat/service/paper-chat.actions';
 import {MatIconModule} from '@angular/material/icon';
-import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {DarkModeToggleComponent} from './utils/components/dark-mode-toggle/dark-mode-toggle.component';
 import {
   LlmModelSettingDialogComponent
 } from './utils/components/llm-model-setting-dialog/llm-model-setting-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
-import {MatButton, MatIconButton} from '@angular/material/button';
+import {MatIconButton} from '@angular/material/button';
 import {MatTooltip} from '@angular/material/tooltip';
 import {NedrexService} from './modules/chat/service/nedrex.service';
 
@@ -21,17 +19,15 @@ import {NedrexService} from './modules/chat/service/nedrex.service';
   selector: 'app-root',
   imports: [
     RouterOutlet,
-    MatToolbarModule,
     NgOptimizedImage,
     ShowMessageComponent,
     SidenavBtnComponent,
     RouterLink,
+    RouterLinkActive,
     MatIconModule,
-    MatSlideToggleModule,
     DarkModeToggleComponent,
     MatTooltip,
-    MatIconButton,
-    MatButton
+    MatIconButton
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'

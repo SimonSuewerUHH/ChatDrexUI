@@ -1,26 +1,34 @@
 import {
   AfterViewInit,
-  ChangeDetectionStrategy, ChangeDetectorRef,
+  ChangeDetectionStrategy,
   Component,
+  computed,
+  DestroyRef,
+  effect,
   ElementRef,
-  inject, Input,
-  OnDestroy,
+  inject,
   OnInit,
-  ViewChild
+  signal,
+  ViewChild,
 } from '@angular/core';
 import {Store} from '@ngrx/store';
-import {connectToChat, disconnect} from '../../service/paper-chat.actions';
+import {connectToChat} from '../../service/paper-chat.actions';
 import {PaperChatSendingBubbleComponent} from '../paper-chat-sending-bubble/paper-chat-sending-bubble.component';
 import {PaperChatReceivingBubbleComponent} from '../paper-chat-receiving-bubble/paper-chat-receiving-bubble.component';
 import {PaperChatSendComponent} from '../paper-chat-send/paper-chat-send.component';
-import {EMPTY, Observable, Subscription} from 'rxjs';
-import {AsyncPipe} from '@angular/common';
+import {map} from 'rxjs/operators';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatDialog} from '@angular/material/dialog';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
 import {PaperChatSettingDialogComponent} from '../paper-chat-setting-dialog/paper-chat-setting-dialog.component';
 import {ClickEventService} from '../../../../utils/services/click-event.service';
-import {selectConnected, selectCurrentMessages, selectCurrentThreadId} from '../../service/paper-chat.selector';
-import {ConversationPart} from '../../dto/message';
 import {ActivatedRoute} from '@angular/router';
+import {
+  selectConnected,
+  selectCurrentMessages,
+  selectCurrentThreadId,
+} from '../../service/paper-chat.selector';
 
 @Component({
   selector: 'app-paper-chat-window',
@@ -28,105 +36,147 @@ import {ActivatedRoute} from '@angular/router';
     PaperChatSendingBubbleComponent,
     PaperChatReceivingBubbleComponent,
     PaperChatSendComponent,
-    AsyncPipe
+    MatIconModule,
+    MatButtonModule,
   ],
   templateUrl: './paper-chat-window.component.html',
   styleUrl: './paper-chat-window.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PaperChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
-  private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+export class PaperChatWindowComponent implements OnInit, AfterViewInit {
   private readonly store: Store = inject(Store);
   private readonly dialog: MatDialog = inject(MatDialog);
   private readonly clickEventService: ClickEventService = inject(ClickEventService);
+  private readonly destroyRef: DestroyRef = inject(DestroyRef);
   private readonly route: ActivatedRoute = inject(ActivatedRoute);
 
-  @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
+  @ViewChild('bottomSentinel') private bottomSentinel?: ElementRef<HTMLElement>;
 
-  messages$: Observable<ConversationPart[]> = EMPTY
-  connected$: Observable<boolean> = EMPTY;
+  readonly messages = this.store.selectSignal(selectCurrentMessages);
+  readonly connected = this.store.selectSignal(selectConnected);
+  readonly threadId = this.store.selectSignal(selectCurrentThreadId());
 
-  threadId?: string;
+  readonly atBottom = signal(true);
+  readonly unreadCount = signal(0);
+  readonly showScrollPill = computed(() => !this.atBottom() && this.unreadCount() > 0);
 
-  private autoScrollEnabled = true;
-  private scrollEventSubscription!: Subscription;
-  private clickEventSubscription?: Subscription;
+  private lastMessageSignature = '';
+  private viewReady = signal(false);
+  private bottomObserver?: IntersectionObserver;
 
-  ngOnInit(): void {
+  constructor() {
+    effect(() => {
+      if (!this.viewReady()) {
+        return;
+      }
+      const msgs = this.messages();
+      const signature = this.signatureFor(msgs);
+      if (signature === this.lastMessageSignature) {
+        return;
+      }
+      const grew = msgs.length > this.previousMessageCount();
+      this.lastMessageSignature = signature;
 
-    this.route.params.subscribe(
-      params => {
-        this.threadId = params['threadId'];
-        if (this.threadId) {
-          this.store.dispatch(connectToChat({threadId: this.threadId}));
+      queueMicrotask(() => {
+        if (this.atBottom()) {
+          this.scrollToBottom('auto');
+        } else if (grew) {
+          this.unreadCount.update(c => c + 1);
         }
-        this.store.select(selectCurrentThreadId()).subscribe((threadId) => {
-          if (!threadId) {
-            return;
-          }
-          this.threadId = threadId;
-          //this.store.dispatch(connectToProject({projectId: this.projectId}));
-          this.messages$ = this.store.select(selectCurrentMessages);
-          this.connected$ = this.store.select(selectConnected);
-          this.cdr.detectChanges();
-        });
-        this.clickEventSubscription = this.clickEventService.clickSettingEvent$.subscribe(() => {
-          this.openChatSettingsDialog();
-          this.cdr.detectChanges();
-        });
-      }
-    );
-  }
-
-  ngAfterViewInit() {
-    this.messages$.subscribe(() => this.scrollToBottom());
-    this.scrollEventSubscription = this.monitorScrollEvents();
-  }
-
-  ngOnDestroy(): void {
-    // Clean up subscriptions - WebSocket disconnection is handled by app component
-    if (this.scrollEventSubscription) {
-      this.scrollEventSubscription.unsubscribe();
-    }
-    if (this.clickEventSubscription) {
-      this.clickEventSubscription.unsubscribe();
-    }
-  }
-
-  private monitorScrollEvents(): Subscription {
-    if (!this.messagesContainer) {
-      console.error('messagesContainer is not defined');
-      return new Subscription();
-    }
-    const container = this.messagesContainer.nativeElement;
-
-    return new Observable<void>((observer) => {
-      const onScroll = () => {
-        const isAtBottom = container.scrollHeight - container.scrollTop <= container.clientHeight + 1; // Add a small threshold
-        this.autoScrollEnabled = isAtBottom;
-      };
-      container.addEventListener('scroll', onScroll);
-
-      return () => container.removeEventListener('scroll', onScroll);
-    }).subscribe();
-  }
-
-  private scrollToBottom(): void {
-    if (!this.autoScrollEnabled || !this.messagesContainer) {
-      return;
-    }
-    this.messagesContainer.nativeElement.scrollTop = this.messagesContainer.nativeElement.scrollHeight;
-  }
-
-  private openChatSettingsDialog(): void {
-    if (!this.threadId) {
-      return;
-    }
-    this.dialog.open(PaperChatSettingDialogComponent, {
-      data: {
-        threadId: this.threadId
-      }
+      });
     });
   }
 
+  ngOnInit(): void {
+    this.route.params
+      .pipe(
+        map(params => params['threadId'] as string | undefined),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe(threadId => {
+        if (threadId) {
+          this.store.dispatch(connectToChat({threadId}));
+        }
+      });
+
+    this.clickEventService.clickSettingEvent$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.openChatSettingsDialog());
+  }
+
+  ngAfterViewInit(): void {
+    const sentinel = this.bottomSentinel?.nativeElement;
+    if (!sentinel) {
+      return;
+    }
+
+    // IntersectionObserver needs the actual scroll container as its `root`.
+    // Without it, observer uses the document viewport — wrong when an ancestor
+    // (mat-drawer-content) has its own overflow.
+    const root = this.findScrollAncestor(sentinel);
+    this.bottomObserver = new IntersectionObserver(
+      entries => {
+        const atBottom = entries[0]?.isIntersecting === true;
+        this.atBottom.set(atBottom);
+        if (atBottom) {
+          this.unreadCount.set(0);
+        }
+      },
+      {root, rootMargin: '0px 0px 120px 0px', threshold: 0},
+    );
+    this.bottomObserver.observe(sentinel);
+    this.destroyRef.onDestroy(() => this.bottomObserver?.disconnect());
+
+    this.viewReady.set(true);
+  }
+
+  scrollToLatest(): void {
+    this.scrollToBottom('smooth');
+    this.atBottom.set(true);
+    this.unreadCount.set(0);
+  }
+
+  private previousMessageCount(): number {
+    if (!this.lastMessageSignature) {
+      return 0;
+    }
+    const colon = this.lastMessageSignature.indexOf(':');
+    return Number(colon < 0 ? this.lastMessageSignature : this.lastMessageSignature.slice(0, colon)) || 0;
+  }
+
+  private scrollToBottom(behavior: ScrollBehavior): void {
+    const sentinel = this.bottomSentinel?.nativeElement;
+    if (!sentinel) {
+      return;
+    }
+    sentinel.scrollIntoView({behavior, block: 'end'});
+  }
+
+  private findScrollAncestor(el: HTMLElement): HTMLElement | null {
+    let node: HTMLElement | null = el.parentElement;
+    while (node && node !== document.body) {
+      const style = getComputedStyle(node);
+      if (/(auto|scroll|overlay)/.test(style.overflowY)) {
+        return node;
+      }
+      node = node.parentElement;
+    }
+    return null;
+  }
+
+  private signatureFor(msgs: ReturnType<typeof this.messages>): string {
+    if (msgs.length === 0) {
+      return '0';
+    }
+    const last = msgs[msgs.length - 1];
+    return `${msgs.length}:${last.messageId}:${typeof last.message === 'string' ? last.message.length : 0}`;
+  }
+
+  private openChatSettingsDialog(): void {
+    const id = this.threadId();
+    if (!id) {
+      return;
+    }
+    this.dialog.open(PaperChatSettingDialogComponent, {data: {threadId: id}});
+  }
 }

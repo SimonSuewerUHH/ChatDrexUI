@@ -1,30 +1,134 @@
 @use 'breakpoints' as bp;
 
-app-newchat-btn{
-  margin-left: 240px;
+// Top navbar — Claude Design ".topbar / .topnav / .topnav-item"
+.topbar {
+  height: 56px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 14px;
+  background: var(--cd-bg-side);
+  border-bottom: 1px solid var(--cd-border-soft);
+  position: relative;
+  z-index: 30;
+  font-family: var(--cd-font);
+}
+
+.topbar-left,
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 200px;
 
   @include bp.respond-to(small) {
-    margin-left: 20px;
-
+    min-width: 0;
   }
 }
 
-.warning{
-  color: red;
+.topbar-right {
+  justify-content: flex-end;
 }
 
-
-.footer {
-  background: var(--mat-toolbar-container-background-color, var(--mat-sys-surface));
-  color: var(--mat-toolbar-container-text-color, var(--mat-sys-on-surface));
-
-  width: 100%;
+/* brand */
+.brand {
   display: flex;
-  gap: 10px;
-  justify-content: center;
   align-items: center;
-  opacity: .75;
+  gap: 9px;
+  padding-left: 4px;
+  text-decoration: none;
 
-  .sep { opacity: .6; }
-  .small { font-size: 12px; }
+  .brand-logo {
+    border-radius: 7px;
+    flex: none;
+  }
+
+  .brand-name {
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    font-size: 16px;
+    color: var(--cd-text);
+
+    @include bp.respond-to(small) {
+      display: none;
+    }
+  }
+}
+
+/* centered pill nav */
+.topnav {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background: var(--cd-surface);
+  border: 1px solid var(--cd-border-soft);
+  border-radius: 12px;
+
+  @include bp.respond-to(small) {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+.topnav-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  text-decoration: none;
+  color: var(--cd-text-3);
+  font-size: 13.5px;
+  font-weight: 500;
+  padding: 7px 14px;
+  border-radius: 8px;
+  transition: background 0.15s, color 0.15s;
+
+  mat-icon {
+    font-size: 17px;
+    width: 17px;
+    height: 17px;
+    color: inherit;
+  }
+
+  &:hover {
+    color: var(--cd-text-2);
+  }
+
+  // active route highlight
+  &.active {
+    background: var(--cd-surface-3);
+    color: var(--cd-text);
+  }
+
+  @include bp.respond-to(small) {
+    padding: 7px 10px;
+
+    &__label {
+      display: none;
+    }
+  }
+}
+
+/* right-side actions */
+.topbar-icon-btn {
+  color: var(--cd-text-2);
+
+  mat-icon {
+    color: inherit;
+  }
+
+  &:hover {
+    color: var(--cd-text);
+  }
+}
+
+.topbar-warning {
+  color: var(--cd-warn);
+}
+
+/* keep sidenav menu button visually consistent */
+:host ::ng-deep app-sidenav-btn .mat-mdc-icon-button {
+  color: var(--cd-text-2);
 }

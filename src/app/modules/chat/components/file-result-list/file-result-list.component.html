@@ -1,17 +1,31 @@
-<mat-form-field appearance="outline" class="full">
-  <mat-label>Select result</mat-label>
-  <mat-select [(ngModel)]="selectedFile">
-    <mat-option [value]="undefined">– None –</mat-option>
-    @for (f of files(); track f.path) {
-      <mat-option [value]="f">
-        {{ f.name }} ({{ f.type }})
-      </mat-option>
-    }
-  </mat-select>
-</mat-form-field>
-
-@if (selectedFile()) {
-  <div class="info">
-    <app-file-result-detail [file]="selectedFile()!" />
+@if (files().length === 0) {
+  <p class="empty">No files in this response.</p>
+} @else {
+  <div class="file-result-layout">
+    <nav class="file-result-nav" aria-label="Files">
+      <ul>
+        @for (f of files(); track f.path; let i = $index) {
+          <li>
+            <button
+              type="button"
+              class="file-result-nav__item"
+              [class.active]="i === selectedIndex()"
+              (click)="select(i)"
+              [attr.aria-current]="i === selectedIndex() ? 'true' : null"
+              [matTooltip]="f.name"
+            >
+              <mat-icon class="file-result-nav__icon">{{ iconFor(f.type) }}</mat-icon>
+              <span class="file-result-nav__name">{{ f.name }}</span>
+              <span class="file-result-nav__type">{{ f.type }}</span>
+            </button>
+          </li>
+        }
+      </ul>
+    </nav>
+    <div class="file-result-detail">
+      @if (selectedFile(); as file) {
+        <app-file-result-detail [file]="file" />
+      }
+    </div>
   </div>
 }

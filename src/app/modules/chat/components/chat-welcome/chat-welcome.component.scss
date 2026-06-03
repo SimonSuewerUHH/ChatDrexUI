@@ -1,38 +1,143 @@
-.container {
-  padding: 2rem;
-  border-radius: 6px;
-  width: 800px;
-  max-width: 90%;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-h1 {
-  margin-bottom: 1rem;
-}
-
-.full-width {
+// Empty state — Claude Design "empty-state / prompt-grid"
+:host {
+  display: block;
   width: 100%;
-  margin-bottom: 1rem;
+  font-family: var(--cd-font);
 }
 
-.action-buttons {
+.empty-state {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 12vh 24px 40px;
+  text-align: center;
+}
+
+.empty-logo {
+  display: inline-grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  border-radius: 20px;
+  background: var(--cd-surface);
+  border: 1px solid var(--cd-border-soft);
+  margin-bottom: 22px;
+  box-shadow: var(--cd-shadow);
+}
+
+.empty-h1 {
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0 0 8px;
+  color: var(--cd-text);
+}
+
+.empty-tag {
+  font-size: 15px;
+  color: var(--cd-text-2);
+  margin: 0 0 34px;
+}
+
+.empty-composer {
+  display: block;
+  text-align: left;
+  margin-bottom: 28px;
+}
+
+.prompt-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  text-align: left;
+
+  @media (max-width: 620px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.prompt-card {
   display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
+  align-items: center;
+  gap: 13px;
+  padding: 16px;
+  border-radius: 13px;
+  border: 1px solid var(--cd-border-soft);
+  background: var(--cd-surface);
+  color: var(--cd-text-2);
+  font-family: var(--cd-font);
+  cursor: pointer;
+  transition: 0.15s;
+  text-align: left;
 
-.close-hint-btn{
-  position: absolute;
-  right: 30px;
-  z-index: 99;
-}
-
-.hint{
   &:hover {
-    background-color: var(--mat-sys-secondary-container);
-    color: var(--mat-sys-on-secondary-container);
+    border-color: var(--cd-accent-line);
+    background: var(--cd-accent-soft);
+    color: var(--cd-text);
+    transform: translateY(-1px);
+  }
+}
+
+.prompt-ic {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: var(--cd-accent-soft);
+  color: var(--cd-accent);
+  flex: none;
+
+  mat-icon {
+    color: inherit;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.prompt-text {
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.action-hint {
+  position: relative;
+  text-align: left;
+  background: var(--cd-surface);
+  border: 1px solid var(--cd-border-soft);
+  border-radius: 13px;
+  padding: 8px 8px 8px 12px;
+  margin-top: 4px;
+}
+
+.close-hint-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  z-index: 2;
+  color: var(--cd-text-3);
+}
+
+.hint-list {
+  list-style: none;
+  margin: 0;
+  padding: 8px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.hint {
+  padding: 10px 12px;
+  font-size: 13.5px;
+  color: var(--cd-text-2);
+  border-radius: 9px;
+  cursor: pointer;
+  transition: 0.13s;
+
+  &:hover {
+    background: var(--cd-accent-soft);
+    color: var(--cd-text);
   }
 }
